@@ -482,6 +482,10 @@ fn search_routes(
 ) -> impl Filter<Extract = (impl warp::Reply,), Error = Rejection> + Clone {
     search_get_handler(search_service.clone())
         .or(search_post_handler(search_service.clone()))
+        .or(crate::cheminee_api::similarity_handler(
+            search_service.clone(),
+        ))
+        .or(crate::cheminee_api::openapi_handler())
         .or(search_plan_get_handler(search_service.clone()))
         .or(search_plan_post_handler(search_service.clone()))
         .recover(recover_fn)

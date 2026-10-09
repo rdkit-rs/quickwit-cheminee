@@ -32,12 +32,20 @@ use crate::doc_mapper::FastFieldWarmupInfo;
 use crate::{Automaton, QueryParserError, TermRange, WarmupInfo};
 
 #[derive(Default)]
-struct RangeQueryFields {
+struct QueryFastFields {
     range_query_field_names: HashSet<String>,
 }
 
-impl<'a> QueryAstVisitor<'a> for RangeQueryFields {
+impl<'a> QueryAstVisitor<'a> for QueryFastFields {
     type Err = Infallible;
+
+    fn visit_tanimoto(
+        &mut self,
+        query: &'a quickwit_query::query_ast::TanimotoQueryAst,
+    ) -> Result<(), Infallible> {
+        self.range_query_field_names.insert(query.spec.field_name());
+        self.visit(&query.candidates)
+    }
 
     fn visit_range(&mut self, range_query: &'a RangeQuery) -> Result<(), Infallible> {
         self.range_query_field_names
@@ -170,7 +178,7 @@ pub(crate) fn build_query(
         query_ast
     };
 
-    let mut range_query_fields = RangeQueryFields::default();
+    let mut range_query_fields = QueryFastFields::default();
     // This cannot fail. The error type is Infallible.
     let Ok(_) = range_query_fields.visit(&query_ast);
     let range_query_fast_fields =
@@ -975,5 +983,53 @@ mod test {
         let mut expected = std::collections::HashMap::new();
         expected.insert(field, expected_inner);
         assert_eq!(extractor1.term_ranges_to_warm_up, expected);
+    }
+}
+
+#[cfg(test)]
+mod chemistry_tests {
+    use tantivy::schema::{FAST, STRING};
+
+    use super::*;
+
+    fn ast() -> QueryAst {
+        serde_json::from_value(serde_json::json!({
+            "type":"tanimoto",
+            "candidates":{"type":"term","field":"family","value":"public"},
+            "spec":{"format":"morgan-r3-2048-lsb0-v1","rdkit_version":"2025.03.1","preparation_id":"sanitize-only-v1"},
+            "fingerprint_hex":format!("01{}", "00".repeat(255)),
+            "minimum":0.4
+        })).unwrap()
+    }
+
+    #[test]
+    fn chemistry_warms_fingerprints_and_candidate_postings() {
+        let query = ast().parse_user_query(&[]).unwrap();
+        let QueryAst::Tanimoto(chemistry) = &query else {
+            panic!()
+        };
+        let field_name = chemistry.spec.field_name();
+        let mut builder = Schema::builder();
+        builder.add_bytes_field(&field_name, FAST);
+        let family = builder.add_text_field("family", STRING);
+        let schema = builder.build();
+        let (_, warmup) =
+            build_query(query, &BuildTantivyAstContext::for_test(&schema), None).unwrap();
+        assert!(
+            warmup
+                .fast_fields
+                .iter()
+                .any(|field| field.name == field_name)
+        );
+        assert!(warmup.terms_grouped_by_field.contains_key(&family));
+    }
+
+    #[test]
+    fn incompatible_split_does_not_become_match_none() {
+        let mut builder = Schema::builder();
+        builder.add_text_field("family", STRING);
+        let schema = builder.build();
+        let context = BuildTantivyAstContext::for_test(&schema).without_validation();
+        assert!(build_query(ast().parse_user_query(&[]).unwrap(), &context, None).is_err());
     }
 }

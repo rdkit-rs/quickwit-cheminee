@@ -21,6 +21,8 @@ use tantivy::schema::Schema as TantivySchema;
 
 use crate::tokenizers::TokenizerManager;
 
+mod tanimoto_query;
+pub use tanimoto_query::TanimotoQueryAst;
 mod bool_query;
 mod cache_node;
 mod field_presence;
@@ -57,6 +59,7 @@ use crate::{BooleanOperand, InvalidQuery, NotNaNf32};
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
 pub enum QueryAst {
+    Tanimoto(TanimotoQueryAst),
     Bool(BoolQuery),
     Term(TermQuery),
     TermSet(TermSetQuery),
@@ -82,6 +85,11 @@ impl QueryAst {
         default_search_fields: &[String],
     ) -> anyhow::Result<QueryAst> {
         match self {
+            QueryAst::Tanimoto(mut query) => {
+                query.candidates =
+                    Box::new(query.candidates.parse_user_query(default_search_fields)?);
+                Ok(QueryAst::Tanimoto(query))
+            }
             QueryAst::Bool(BoolQuery {
                 must,
                 must_not,
@@ -223,7 +231,10 @@ trait BuildTantivyAst {
         let tantivy_ast_res = self.build_tantivy_ast_impl(context);
         if !context.with_validation && tantivy_ast_res.is_err() {
             return match tantivy_ast_res {
-                res @ Ok(_) | res @ Err(InvalidQuery::UserQueryNotParsed) => res,
+                res @ Ok(_)
+                | res @ Err(InvalidQuery::UserQueryNotParsed | InvalidQuery::InvalidChemistry(_)) => {
+                    res
+                }
                 Err(_) => Ok(TantivyQueryAst::match_none()),
             };
         }
@@ -237,6 +248,7 @@ impl BuildTantivyAst for QueryAst {
         context: &BuildTantivyAstContext,
     ) -> Result<TantivyQueryAst, InvalidQuery> {
         match self {
+            QueryAst::Tanimoto(query) => query.build_tantivy_ast_call(context),
             QueryAst::Bool(bool_query) => bool_query.build_tantivy_ast_call(context),
             QueryAst::Term(term_query) => term_query.build_tantivy_ast_call(context),
             QueryAst::Range(range_query) => range_query.build_tantivy_ast_call(context),

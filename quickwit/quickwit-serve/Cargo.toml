@@ -11,6 +11,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+tantivy-rdkit = { workspace = true, features = ["openapi"] }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
 base64 = { workspace = true }
