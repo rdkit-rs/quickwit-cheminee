@@ -15,6 +15,7 @@
 #![recursion_limit = "256"]
 
 mod build_info;
+mod cheminee_api;
 mod cluster_api;
 #[cfg(feature = "datafusion")]
 mod datafusion_api;

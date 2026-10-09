@@ -16,6 +16,8 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum InvalidQuery {
+    #[error("invalid chemistry query: {0}")]
+    InvalidChemistry(String),
     #[error("query is incompatible with schema. {0})")]
     SchemaError(String),
     #[error("expected `{expected_value_type}` boundary for field `{field_name}`")]
