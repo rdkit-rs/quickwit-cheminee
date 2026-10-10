@@ -128,13 +128,17 @@ jobs:
     name: Lints
     runs-on: "ubuntu-latest"
     container: ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7
+    env:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: ${{ github.workspace }}
     timeout-minutes: 60
     permissions:
       contents: read
       actions: write
     steps:
       - name: Install container tools
-        run: apt-get update && apt-get install -y sudo git ca-certificates curl build-essential pkg-config libssl-dev
+        run: apt-get update && apt-get install -y sudo git ca-certificates curl build-essential pkg-config libssl-dev clang libclang-dev cmake
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Install pinned native RDKit
         run: bash quickwit/tantivy-rdkit-mapper/ci/install-rdkit.sh
