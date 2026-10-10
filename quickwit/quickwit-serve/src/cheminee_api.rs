@@ -79,7 +79,7 @@ pub struct ChemistryError {
 
 #[derive(utoipa::OpenApi)]
 #[openapi(
-    paths(similarity_handler, smiles_similarity_handler),
+    paths(similarity_handler, smiles::smiles_similarity_handler),
     components(schemas(
         SimilarityRequest,
         SmilesSimilarityRequest,
