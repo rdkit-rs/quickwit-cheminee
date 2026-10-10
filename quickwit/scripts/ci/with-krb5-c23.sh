@@ -20,4 +20,6 @@ printf '%s  %s\n' a04b2f0dfefd7b54af22d22768dc3ab1ed5e55e6d5ff6af3f619069aa17c0b
 tar --extract --gzip --file "$krb5_work_dir/krb5-src.crate" --directory "$krb5_work_dir"
 patch --batch --fuzz=0 --directory "$krb5_work_dir/krb5-src-0.3.4" --strip=1 \
     < "$script_dir/krb5-c23.patch"
-cargo --config "paths=[\"$krb5_work_dir/krb5-src-0.3.4\"]" "$@"
+cargo_command=$1
+shift
+cargo "$cargo_command" --config "paths=[\"$krb5_work_dir/krb5-src-0.3.4\"]" "$@"
