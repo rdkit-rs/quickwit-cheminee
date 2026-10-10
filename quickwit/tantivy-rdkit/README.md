@@ -1,3 +1,7 @@
+# Native follow-up
+
+The two-crate native SMILES path and packaging contract are documented in [tantivy-rdkit-mapper](../tantivy-rdkit-mapper/README.md). The assessment and measured results below describe the original PR #1 packed-fingerprint prototype.
+
 # Cheminee worker-local similarity proof of concept
 
 This private workspace crate demonstrates exact binary Morgan/Tanimoto scoring inside Quickwit split workers. It has no native RDKit dependency and is not a Cheminee or RX replacement. Quickwit remains responsible for splits, storage, publication, search distribution and result merging. The integration requires a maintained Quickwit source extension; this is not a runtime plugin or a drop-in replacement Tantivy crate.

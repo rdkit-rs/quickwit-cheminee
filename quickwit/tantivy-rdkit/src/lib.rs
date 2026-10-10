@@ -1,9 +1,26 @@
+// Copyright 2021-Present Datadog, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use tantivy::columnar::BytesColumn;
 use tantivy::query::{EnableScoring, Explanation, Query, Scorer, Weight};
 use tantivy::schema::{FieldType, Schema};
 use tantivy::{DocId, DocSet, Score, SegmentReader, TERMINATED, TantivyError, Term};
+
+mod schema;
+pub use schema::MoleculeFields;
 
 pub const FINGERPRINT_BYTES: usize = 256;
 
@@ -62,7 +79,7 @@ impl FingerprintSpec {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PackedFingerprint([u8; FINGERPRINT_BYTES]);
 
 impl PackedFingerprint {
@@ -71,12 +88,25 @@ impl PackedFingerprint {
         hex::decode_to_slice(value, &mut bytes).map_err(|_| {
             invalid("fingerprint must encode exactly 2048 bits as 512 hexadecimal characters")
         })?;
+        Self::from_bytes(&bytes)
+    }
+
+    pub fn from_bytes(value: &[u8]) -> tantivy::Result<Self> {
+        let bytes: [u8; FINGERPRINT_BYTES] = value
+            .try_into()
+            .map_err(|_| invalid("fingerprint must contain exactly 256 bytes"))?;
         if bytes.iter().all(|byte| *byte == 0) {
-            return Err(invalid(
-                "query fingerprint must contain at least one set bit",
-            ));
+            return Err(invalid("fingerprint must contain at least one set bit"));
         }
         Ok(Self(bytes))
+    }
+
+    pub fn as_bytes(&self) -> &[u8; FINGERPRINT_BYTES] {
+        &self.0
+    }
+
+    pub fn to_hex(&self) -> String {
+        hex::encode(self.0)
     }
 
     pub fn tanimoto(&self, other: &[u8]) -> tantivy::Result<f32> {

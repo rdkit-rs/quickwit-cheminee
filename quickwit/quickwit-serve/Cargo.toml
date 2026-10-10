@@ -11,6 +11,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+tantivy-rdkit-mapper = { workspace = true, optional = true }
 tantivy-rdkit = { workspace = true, features = ["openapi"] }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
@@ -113,6 +114,7 @@ quickwit-search = { workspace = true, features = ["testsuite"] }
 quickwit-storage = { workspace = true, features = ["testsuite"] }
 
 [features]
+native-chemistry = ["dep:tantivy-rdkit-mapper", "quickwit-doc-mapper/native-chemistry", "quickwit-indexing/native-chemistry"]
 datafusion = ["dep:quickwit-datafusion"]
 pprof = [
   "dep:pprof"

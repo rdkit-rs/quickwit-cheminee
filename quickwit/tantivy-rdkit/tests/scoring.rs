@@ -1,3 +1,17 @@
+// Copyright 2021-Present Datadog, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 use tantivy::collector::{Count, TopDocs};
 use tantivy::query::{AllQuery, Query, TermQuery};
 use tantivy::schema::{FAST, INDEXED, IndexRecordOption, Schema};
@@ -120,5 +134,21 @@ fn rejects_invalid_specs_queries_and_schema() {
             minimum,
         );
         assert!(query.is_err());
+    }
+}
+
+#[test]
+fn packed_bytes_are_fixed_width_and_lsb0() {
+    let mut bytes = [0; 256];
+    bytes[0] = 0x81;
+    bytes[255] = 0x80;
+    let fingerprint = PackedFingerprint::from_bytes(&bytes).unwrap();
+    assert_eq!(fingerprint.as_bytes(), &bytes);
+    assert_eq!(
+        PackedFingerprint::from_hex(&fingerprint.to_hex()).unwrap(),
+        fingerprint
+    );
+    for wrong in [vec![], vec![1; 255], vec![1; 257], vec![0; 256]] {
+        assert!(PackedFingerprint::from_bytes(&wrong).is_err());
     }
 }

@@ -1,0 +1,17 @@
+[package]
+name = "tantivy-rdkit-mapper"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+rdkit.workspace = true
+tantivy-rdkit.workspace = true
+tantivy.workspace = true
+thiserror.workspace = true
+cxx.workspace = true
+
+[build-dependencies]
+cxx-build.workspace = true
+pkg-config.workspace = true

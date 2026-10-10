@@ -558,6 +558,7 @@ impl crate::TestableForRegression for IndexConfig {
         )
         .unwrap();
         let doc_mapping = DocMapping {
+            chemistry: None,
             doc_mapping_uid: DocMappingUid::for_test(1),
             mode: Mode::default(),
             field_mappings: vec![

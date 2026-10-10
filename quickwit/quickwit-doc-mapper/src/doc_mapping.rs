@@ -18,7 +18,7 @@ use std::num::NonZeroU32;
 use quickwit_proto::types::DocMappingUid;
 use serde::{Deserialize, Serialize};
 
-use crate::{FieldMappingEntry, QuickwitJsonOptions, TokenizerEntry};
+use crate::{ChemistryMapping, FieldMappingEntry, QuickwitJsonOptions, TokenizerEntry};
 
 /// Defines how unmapped fields should be handled.
 #[derive(Clone, Copy, Default, Debug, Eq, PartialEq, Serialize, Deserialize, utoipa::ToSchema)]
@@ -95,6 +95,9 @@ impl Default for Mode {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(deny_unknown_fields)]
 pub struct DocMapping {
+    #[allow(missing_docs)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub chemistry: Option<ChemistryMapping>,
     /// Doc mapping UID.
     ///
     /// Splits with the same doc mapping UID share the same schema and should use the same doc
@@ -180,6 +183,7 @@ mod tests {
     #[test]
     fn test_doc_mapping_serde_roundtrip() {
         let doc_mapping = DocMapping {
+            chemistry: None,
             doc_mapping_uid: DocMappingUid::random(),
             mode: Mode::Strict,
             field_mappings: vec![

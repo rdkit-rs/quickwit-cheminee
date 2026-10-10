@@ -82,6 +82,7 @@ quickwit-proto = { workspace = true, features = ["testsuite"] }
 quickwit-storage = { workspace = true, features = ["testsuite"] }
 
 [features]
+native-chemistry = ["quickwit-serve/native-chemistry", "quickwit-indexing/native-chemistry"]
 datafusion = ["quickwit-serve/datafusion"]
 jemalloc = ["dep:tikv-jemalloc-ctl", "dep:tikv-jemallocator"]
 jemalloc-profiled = [
