@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use serde_json::json;
+#[cfg(feature = "native-chemistry")]
 use tantivy::schema::Value;
 use tantivy_rdkit::{FingerprintFormat, FingerprintSpec};
 
