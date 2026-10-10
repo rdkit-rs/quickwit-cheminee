@@ -10,7 +10,9 @@ selects GNU C17 for the bundled library's pre-C23 function declarations.
 [`ad4dcf1856dadc4b352b5c8ff08e51c7290fb41f`](https://github.com/krb5/krb5/commit/ad4dcf1856dadc4b352b5c8ff08e51c7290fb41f).
 The hunks are adapted to 1.19.2; PKINIT plugins and responder tests are omitted
 because `krb5-src` does not build them. The extracted source retains its upstream
-license notices.
+license notices. The patch also corrects the Rust build script's misspelled
+`dragonflybsd` target and removes its obsolete `bitrig` target condition, so the
+local source override passes the lint job's strict Rust warning flags.
 
 From the Quickwit workspace, run:
 
