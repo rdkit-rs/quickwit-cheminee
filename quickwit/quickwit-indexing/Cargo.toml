@@ -68,6 +68,7 @@ quickwit-proto = { workspace = true }
 quickwit-storage = { workspace = true }
 
 [features]
+native-chemistry = ["quickwit-doc-mapper/native-chemistry"]
 gcp-pubsub = [
   "dep:google-cloud-auth",
   "dep:google-cloud-gax",

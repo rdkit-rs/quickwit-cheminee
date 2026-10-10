@@ -1,3 +1,18 @@
+// Copyright 2021-Present Datadog, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+mod smiles;
 use std::sync::Arc;
 
 use quickwit_config::validate_index_id_pattern;
@@ -5,6 +20,8 @@ use quickwit_proto::search::{SearchRequest, SortField, SortOrder, SortValue};
 use quickwit_query::query_ast::{QueryAst, TanimotoQueryAst, query_ast_from_user_text};
 use quickwit_search::{SearchError, SearchService};
 use serde::{Deserialize, Serialize};
+use smiles::SmilesSimilarityRequest;
+pub use smiles::smiles_similarity_handler;
 use tantivy_rdkit::{FingerprintFormat, FingerprintSpec, PackedFingerprint};
 use warp::{Filter, Rejection};
 
@@ -62,9 +79,10 @@ pub struct ChemistryError {
 
 #[derive(utoipa::OpenApi)]
 #[openapi(
-    paths(similarity_handler),
+    paths(similarity_handler, smiles_similarity_handler),
     components(schemas(
         SimilarityRequest,
+        SmilesSimilarityRequest,
         FingerprintSpec,
         FingerprintFormat,
         SimilarityResponse,
@@ -274,7 +292,7 @@ mod tests {
         assert_eq!(first.body(), second.body());
         let spec: serde_json::Value = serde_json::from_slice(first.body()).unwrap();
         assert_eq!(spec["openapi"], "3.0.3");
-        assert_eq!(spec["paths"].as_object().unwrap().len(), 1);
+        assert_eq!(spec["paths"].as_object().unwrap().len(), 2);
         assert_eq!(
             spec["paths"]["/api/v1/{index_id}/cheminee/search/similarity"]["post"]["operationId"],
             "chemineeSearchSimilarity"
