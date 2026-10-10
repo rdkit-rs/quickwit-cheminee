@@ -20,8 +20,7 @@ use tantivy_rdkit::FingerprintSpec;
 use warp::{Filter, Rejection, Reply};
 
 use super::{
-    SimilarityRequest, SimilarityResponse, default_filter, default_limit,
-    default_minimum,
+    SimilarityRequest, SimilarityResponse, default_filter, default_limit, default_minimum,
 };
 use crate::rest_api_response::into_rest_api_response;
 use crate::{BodyFormat, with_arg};

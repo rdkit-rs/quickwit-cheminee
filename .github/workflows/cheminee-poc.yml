@@ -43,8 +43,8 @@ jobs:
         run: |
           cargo test --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-query --lib --tests
           cargo test --locked -p quickwit-doc-mapper --features native-chemistry chemistry --lib
-          cargo test --locked -p quickwit-doc-mapper chemistry_tests --lib
           cargo test --locked -p quickwit-serve --features native-chemistry cheminee_api --lib
+          cargo test --locked -p quickwit-serve --features native-chemistry ensure_schemas_resolve --lib
       - name: Build and inspect pure scoring worker
         run: |
           cargo tree --locked -p quickwit-search -e normal > /tmp/scoring-dependencies.txt
