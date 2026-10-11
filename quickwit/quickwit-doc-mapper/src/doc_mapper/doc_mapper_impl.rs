@@ -662,6 +662,7 @@ impl DocMapper {
         with_validation: bool,
         cache_context: Option<(Arc<dyn quickwit_query::query_ast::PredicateCache>, String)>,
     ) -> Result<(Box<dyn Query>, WarmupInfo), QueryParserError> {
+        crate::chemistry::validate_graph_contract(&query_ast, self.chemistry.as_ref())?;
         build_query(
             query_ast,
             &BuildTantivyAstContext {

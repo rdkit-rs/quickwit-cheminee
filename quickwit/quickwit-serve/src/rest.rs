@@ -216,6 +216,9 @@ pub(crate) async fn start_rest_server(
 
     // Combine all the routes together.
     let rest_routes = api_v1_root_route
+        .or(crate::cheminee_api::v1::routes(
+            quickwit_services.search_service.clone(),
+        ))
         .or(api_doc)
         .or(redirect_root_to_ui_route)
         .or(ui_handler())

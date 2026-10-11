@@ -1,4 +1,4 @@
-# Native SMILES mapping
+# Native SMILES mapping and graph verification
 
 `tantivy-rdkit` owns the fingerprint contract, fixed-width packed bytes, schema helpers and the Tantivy Query/Weight/Scorer. It has no RDKit or CXX dependency. `tantivy-rdkit-mapper` depends on that core and the pinned rdkit-rs binding revision `0ae060c9cfc14626172070989fee890b16454373` from the open ownership-modernization PR [rdkit-rs/rdkit#57](https://github.com/rdkit-rs/rdkit/pull/57). Updating that revision requires revalidation; this does not imply the binding PR has merged.
 
@@ -6,13 +6,13 @@ Quickwit configuration, JSON field handling, validation and error routing live i
 
 ## Contract and preparation
 
-The supported native contract is `morgan-r3-2048-lsb0-v1`, RDKit `2026.09.1`, preparation `sanitize-only-v1`. This is RDKit's default `SmilesToMol` preparation: sanitization and default hydrogen handling, with salts/fragments, charges, isotopes and stereochemistry retained. There is no neutralization, fragment selection, tautomer canonicalization or feature invariant substitution. Morgan radius is 3, width 2048 bits (256 bytes), packing LSB0, chirality and feature invariants disabled. The binding calls `getFingerprintAsBitVect(mol, 3, 2048)` and converts every bit to its corresponding little-endian byte position.
+The legacy native contract is `morgan-r3-2048-lsb0-v1`, RDKit `2026.09.1`, preparation `sanitize-only-v1`. This is RDKit's default `SmilesToMol` preparation: sanitization and default hydrogen handling, with salts/fragments, charges, isotopes and stereochemistry retained. In this legacy mode there is no neutralization, fragment selection, tautomer canonicalization or feature invariant substitution. The additional versioned Cheminee normalization contracts are described in [GRAPH_SEARCH.md](GRAPH_SEARCH.md). Morgan radius is 3, width 2048 bits (256 bytes), packing LSB0, chirality and feature invariants disabled. The binding calls `getFingerprintAsBitVect(mol, 3, 2048)` and converts every bit to its corresponding little-endian byte position.
 
-The existing field hash includes the format, RDKit version and preparation identifier. A different version has a different `morgan_<sha256>` field. Native preparation rejects any other contract and also checks the linked RDKit runtime version. Packed queries can still score existing contracts without native RDKit.
+The existing field hash includes the format, RDKit version and preparation identifier. A different version has a different `morgan_<sha256>` field. Native preparation rejects unsupported contracts and also checks the linked RDKit runtime version. Packed queries can still score existing contracts without native RDKit.
 
 Invalid parsing/sanitization and empty/zero-bit molecules return explicit errors. The adapter rejects absent, null or multivalued SMILES, missing/non-u64 IDs and caller-supplied derived fields. It never returns an indexable document without its fingerprint. Ingest validation uses the same adapter and reports per-document schema failures; indexing independently repeats preparation and routes failures through the existing document-mapper counters/logs. This currently computes twice when ingestion validation is enabled. Disabling upstream validation does not disable indexing-time validation.
 
-Canonical **isomeric** SMILES from the prepared molecule are stored for future graph verification, separately from the original input SMILES. They retain the supported molecular graph, isotope and stereo information; they are not an RDKit binary pickle or a preservation format for arbitrary CXSMILES properties/conformers. Native molecule handles are local owned values and never cross asynchronous tasks or enter a shared mapper. Query and indexing use exactly `PreparedMolecule::from_smiles`.
+Canonical **isomeric** SMILES from the prepared molecule are stored for graph verification, separately from the original input SMILES. They retain the supported molecular graph, isotope and stereo information; they are not an RDKit binary pickle or a preservation format for arbitrary CXSMILES properties/conformers. Native molecule handles are local owned values and never cross asynchronous tasks or enter a shared mapper. Query and indexing use exactly `PreparedMolecule::from_smiles`.
 
 ## Native package and linkage
 
@@ -36,7 +36,7 @@ cargo tree --locked -p quickwit-search -e normal
 cargo build --locked -p quickwit-cli --bin quickwit
 ```
 
-That dependency tree must not contain `rdkit`, `rdkit-sys`, CXX or `tantivy-rdkit-mapper`, and the binary must not contain RDKit dynamic dependencies. It can load chemistry schemas and score packed queries. Native SMILES ingestion and the SMILES endpoint explicitly error when the feature is absent. Features are additive across a Cargo invocation: do not enable a native adapter elsewhere in a build intended to prove pure scoring isolation.
+That dependency tree must not contain `rdkit`, `rdkit-sys`, CXX or `tantivy-rdkit-mapper`, and the binary must not contain RDKit dynamic dependencies. It can load chemistry schemas and score packed queries. Native SMILES ingestion, SMILES endpoints, and graph queries explicitly error when the feature is absent. Features are additive across a Cargo invocation: do not enable a native adapter elsewhere in a build intended to prove pure scoring isolation.
 
 ## Quickwit configuration
 
@@ -73,4 +73,7 @@ python3 -m venv /tmp/cheminee-python
 
 The raw mode ingests no external fingerprints; Python RDKit 2026.09.1 is solely an independent test oracle and fixture source. That Python wheel is distinct from the C++ APT package used by the application. Both the original packed mode and raw mode retain 168 exhaustive score/count/ID comparisons and the 10,051-match top-1 no-cap check. Raw mode additionally compares the native SMILES query path, tests invalid ingestion, verifies retained prepared molecules, and generates a client for typed success/error responses on both endpoints.
 
-This remains the bounded prototype from PR #1. No exact graph sub/superstructure search, new physical column, broader chemical type system, large-scale benchmark, deployment or release is implemented. The dictionary scan and per-document cardinality checks remain unchanged. Canonicalization can change across RDKit releases, which is why native version and preparation are part of the contract. Historical PR #1 measurements describe its original Python/precomputed path, not proof of this native path; current run results must be inspected separately.
+The fingerprint-only path remains compatible with PR #1. Exact graph identity and containment search now use the same distributed collection path; see [GRAPH_SEARCH.md](GRAPH_SEARCH.md). No new physical column, broader chemical type system, large-scale benchmark, deployment or release is implemented. The dictionary scan and per-document cardinality checks remain unchanged. Canonicalization can change across RDKit releases, which is why native version and preparation are part of the contract. Historical PR #1 measurements describe its original Python/precomputed path, not proof of this native path; current run results must be inspected separately.
+
+[Distributed graph predicates, REST routes, normalization and reindexing](GRAPH_SEARCH.md)
+extend the original sanitize-only workflow while preserving fingerprint-only workers.

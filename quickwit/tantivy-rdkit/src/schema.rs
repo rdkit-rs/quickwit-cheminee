@@ -31,7 +31,7 @@ impl MoleculeFields {
         spec.validate()?;
         Ok(Self {
             fingerprint: builder.add_bytes_field(&spec.field_name(), FAST),
-            prepared_smiles: builder.add_text_field(prepared_name, STORED),
+            prepared_smiles: builder.add_text_field(prepared_name, STORED | FAST),
         })
     }
 

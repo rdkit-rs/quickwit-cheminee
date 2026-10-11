@@ -125,3 +125,34 @@ fn chemistry_mapping_requires_native_feature_for_ingestion() {
         .unwrap_err();
     assert!(error.to_string().contains("native-chemistry"));
 }
+
+#[test]
+fn graph_contract_checks_mapping_and_field_inside_boolean_filters() {
+    use quickwit_query::query_ast::{BoolQuery, GraphQueryAst, QueryAst};
+    use tantivy_rdkit::{GraphPredicate, GraphRanking};
+    let mapping: crate::ChemistryMapping =
+        serde_json::from_value(config()["chemistry"].clone()).unwrap();
+    let graph = GraphQueryAst {
+        candidates: Box::new(QueryAst::MatchAll),
+        spec: spec(),
+        prepared_field: "prepared_smiles".into(),
+        prepared_smiles: "CC".into(),
+        predicate: GraphPredicate::Identity,
+        ranking: GraphRanking::BestMatch,
+        use_chirality: false,
+        include_identity: true,
+    };
+    let valid = QueryAst::Graph(graph.clone());
+    assert!(super::validate_graph_contract(&valid, Some(&mapping)).is_ok());
+    assert!(super::validate_graph_contract(&valid, None).is_err());
+    let mut wrong = graph;
+    wrong.prepared_field = "smiles".into();
+    let nested = QueryAst::Bool(BoolQuery {
+        filter: vec![QueryAst::Graph(wrong)],
+        ..Default::default()
+    });
+    assert!(super::validate_graph_contract(&nested, Some(&mapping)).is_err());
+    let mut other_mapping = mapping;
+    other_mapping.spec.preparation_id = "other".into();
+    assert!(super::validate_graph_contract(&valid, Some(&other_mapping)).is_err());
+}

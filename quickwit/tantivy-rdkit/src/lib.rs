@@ -19,6 +19,9 @@ use tantivy::query::{EnableScoring, Explanation, Query, Scorer, Weight};
 use tantivy::schema::{FieldType, Schema};
 use tantivy::{DocId, DocSet, Score, SegmentReader, TERMINATED, TantivyError, Term};
 
+mod graph;
+pub use graph::{GraphPredicate, GraphQuery, GraphRanking, GraphVerifier, MoleculeMatcher};
+
 mod schema;
 pub use schema::MoleculeFields;
 

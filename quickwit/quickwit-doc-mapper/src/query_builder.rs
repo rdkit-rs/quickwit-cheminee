@@ -39,6 +39,15 @@ struct QueryFastFields {
 impl<'a> QueryAstVisitor<'a> for QueryFastFields {
     type Err = Infallible;
 
+    fn visit_graph(
+        &mut self,
+        query: &'a quickwit_query::query_ast::GraphQueryAst,
+    ) -> Result<(), Infallible> {
+        self.range_query_field_names
+            .insert(query.prepared_field.clone());
+        self.visit(&query.candidates)
+    }
+
     fn visit_tanimoto(
         &mut self,
         query: &'a quickwit_query::query_ast::TanimotoQueryAst,

@@ -9328,6 +9328,7 @@ dependencies = [
  "tantivy",
  "tantivy-fst",
  "tantivy-rdkit",
+ "tantivy-rdkit-mapper",
  "thiserror 2.0.18",
  "time",
  "tracing",

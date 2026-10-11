@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+mod graph;
 mod native;
-
-use rdkit::ROMol;
+mod preparation;
+pub use graph::NativeGraphVerifier;
+pub use preparation::{CHEMINEE_PREPARATION_ID, PRESERVE_TAUTOMER_PREPARATION_ID};
 use tantivy::TantivyDocument;
 use tantivy_rdkit::{FingerprintFormat, FingerprintSpec, MoleculeFields, PackedFingerprint};
 
@@ -40,7 +42,15 @@ pub fn fingerprint_spec() -> FingerprintSpec {
 }
 
 pub fn validate_spec(spec: &FingerprintSpec) -> Result<(), MappingError> {
-    if spec != &fingerprint_spec() {
+    if spec.format != FingerprintFormat::MorganR3Bits2048Lsb0V1
+        || spec.rdkit_version != RDKIT_VERSION
+        || ![
+            PREPARATION_ID,
+            CHEMINEE_PREPARATION_ID,
+            PRESERVE_TAUTOMER_PREPARATION_ID,
+        ]
+        .contains(&spec.preparation_id.as_str())
+    {
         return Err(MappingError::Contract(format!(
             "expected {:?}, received {spec:?}",
             fingerprint_spec()
@@ -64,8 +74,7 @@ pub struct PreparedMolecule {
 impl PreparedMolecule {
     pub fn from_smiles(smiles: &str, spec: &FingerprintSpec) -> Result<Self, MappingError> {
         validate_spec(spec)?;
-        let molecule = ROMol::from_smiles(smiles)
-            .map_err(|error| MappingError::InvalidSmiles(error.to_string()))?;
+        let molecule = preparation::prepare(smiles, spec)?;
         let native_fingerprint = molecule
             .try_morgan_fingerprint()
             .map_err(|error| MappingError::Preparation(error.to_string()))?;
@@ -88,5 +97,11 @@ impl PreparedMolecule {
     pub fn add_to_document(&self, document: &mut TantivyDocument, fields: MoleculeFields) {
         document.add_bytes(fields.fingerprint, self.fingerprint.as_bytes());
         document.add_text(fields.prepared_smiles, &self.smiles);
+    }
+}
+
+impl From<cxx::Exception> for MappingError {
+    fn from(error: cxx::Exception) -> Self {
+        Self::Preparation(error.to_string())
     }
 }

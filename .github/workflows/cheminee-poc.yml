@@ -1,4 +1,4 @@
-name: Cheminee worker similarity POC
+name: Cheminee distributed predicates
 
 on:
   workflow_dispatch:
@@ -70,6 +70,10 @@ jobs:
         run: |
           /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/run.py --binary /tmp/quickwit-scoring --work-dir /tmp/cheminee-poc-results
           /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/run.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --raw-smiles --work-dir /tmp/cheminee-native-results
+      - name: Run exhaustive distributed graph and client parity
+        run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --work-dir /tmp/cheminee-graph-results
+      - name: Verify fingerprint-only workers reject graph search
+        run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --expect-native-unavailable --work-dir /tmp/cheminee-no-native-results
       - name: Lint chemistry integration
         run: cargo clippy --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
       - uses: actions/upload-artifact@v4
@@ -86,6 +90,14 @@ jobs:
             /tmp/cheminee-native-results/*.log
             /tmp/cheminee-native-results/index.json
             /tmp/cheminee-native-results/ingested.ndjson
+            /tmp/cheminee-no-native-results/results.json
+            /tmp/cheminee-no-native-results/*.log
+            /tmp/cheminee-graph-results/results.json
+            /tmp/cheminee-graph-results/openapi.json
+            /tmp/cheminee-graph-results/*.log
+            /tmp/cheminee-graph-results/*-metrics.txt
+            /tmp/cheminee-graph-results/*-mapping.json
+            /tmp/cheminee-graph-results/molecules.ndjson
             /tmp/*-linkage.txt
             /tmp/native-dynamic.txt
             /tmp/scoring-dependencies.txt

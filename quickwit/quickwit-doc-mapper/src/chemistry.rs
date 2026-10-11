@@ -117,5 +117,32 @@ fn prepare_smiles(_smiles: &str, _spec: &FingerprintSpec) -> Result<(String, Str
     Err("SMILES mapping requires a Quickwit build with the native-chemistry feature".into())
 }
 
+pub(crate) fn validate_graph_contract(
+    query: &quickwit_query::query_ast::QueryAst,
+    mapping: Option<&ChemistryMapping>,
+) -> Result<(), quickwit_query::InvalidQuery> {
+    use quickwit_query::query_ast::{GraphQueryAst, QueryAstVisitor};
+    struct Validator<'a>(Option<&'a ChemistryMapping>);
+    impl<'a> QueryAstVisitor<'a> for Validator<'_> {
+        type Err = quickwit_query::InvalidQuery;
+        fn visit_graph(&mut self, query: &'a GraphQueryAst) -> Result<(), Self::Err> {
+            let mapping = self.0.ok_or_else(|| {
+                Self::Err::InvalidChemistry(
+                    "graph search requires a native chemistry mapping".into(),
+                )
+            })?;
+            if mapping.spec != query.spec || mapping.prepared_smiles_field != query.prepared_field {
+                return Err(Self::Err::InvalidChemistry(
+                    "graph query contract or prepared field differs from index mapping; reindex \
+                     for normalization changes"
+                        .into(),
+                ));
+            }
+            self.visit(&query.candidates)
+        }
+    }
+    Validator(mapping).visit(query)
+}
+
 #[cfg(test)]
 mod tests;
