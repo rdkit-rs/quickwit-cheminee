@@ -11,6 +11,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+rayon = { workspace = true }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
 bytes = { workspace = true }
@@ -66,6 +67,7 @@ harness = false
 quickwit-codegen = { workspace = true }
 
 [features]
+descriptor-v1 = ["quickwit-doc-mapper/descriptor-v1"]
 failpoints = ["fail/failpoints"]
 no-failpoints = []
 testsuite = ["mockall"]

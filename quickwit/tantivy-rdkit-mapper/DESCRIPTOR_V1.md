@@ -4,7 +4,9 @@ Build Quickwit with `--features descriptor-v1`. This includes `native-chemistry`
 the existing fingerprint-only and graph builds remain available without TensorFlow.
 Enable `chemistry.descriptor_v1: true` in the index mapping and supply only raw
 SMILES, `record_id`, and metadata. Both ingester validation and actor mapping use
-the same preparation implementation. No preparation service or exporter is used.
+the same preparation implementation. Full-chemistry batch validation uses the existing
+CPU pool in parallel and preserves input order in its rejection report. No preparation
+service or exporter is used.
 
 The mapping requires the existing Cheminee canonical preparation contract, the
 43 descriptor fields with their original signed-integer/f64 types,

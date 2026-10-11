@@ -57,6 +57,7 @@ jobs:
           cargo test --locked -p quickwit-serve --features native-chemistry ensure_schemas_resolve --lib
       - name: Test complete in-process preparation
         run: |
+          cargo test --locked -p quickwit-ingest --features descriptor-v1 --lib
           cargo test --locked -p tantivy-rdkit-mapper --features descriptor-v1 --lib
           cargo test --locked -p quickwit-doc-mapper --features descriptor-v1 chemistry --lib
       - name: Build and inspect pure scoring worker

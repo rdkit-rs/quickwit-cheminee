@@ -354,8 +354,7 @@
         "stored": true,
         "expand_dots": true,
         "tokenizer": "default",
-        "record": "position",
-        "fieldnorms": true
+        "record": "position"
       },
       {
         "name": "other_descriptors",
@@ -364,8 +363,7 @@
         "stored": false,
         "expand_dots": true,
         "tokenizer": "default",
-        "record": "position",
-        "fieldnorms": true
+        "record": "position"
       }
     ],
     "chemistry": {

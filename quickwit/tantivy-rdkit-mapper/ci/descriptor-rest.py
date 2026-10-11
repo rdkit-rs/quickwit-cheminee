@@ -20,6 +20,7 @@ import os
 import subprocess
 import time
 import urllib.request
+import urllib.error
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--binary", type=Path, required=True)
@@ -38,8 +39,11 @@ config_path.write_text(json.dumps(config))
 def request(path, body=None):
     encoded = json.dumps(body).encode() if isinstance(body, dict) else body
     req = urllib.request.Request(base+path, data=encoded, headers={"Content-Type":"application/json"})
-    with urllib.request.urlopen(req, timeout=120) as response:
-        return json.load(response)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as error:
+        raise RuntimeError(f"{path}: HTTP {error.code}: {error.read().decode()}") from error
 log = (args.work_dir / "service.log").open("w")
 process = subprocess.Popen([str(args.binary.resolve()), "run", "--config", str(config_path)], stdout=log, stderr=subprocess.STDOUT, env=dict(os.environ, QW_DISABLE_TELEMETRY="1"))
 try:
@@ -81,7 +85,8 @@ try:
         assert response["num_hits"] == 1, (record_id, response)
         query_checks += 1
     forged = json.dumps({"record_id":100, "input_smiles":"CCO", "NumHeavyAtoms":99}).encode()
-    rejected = request("/api/v1/moses/ingest?commit=force&detailed_response=true", forged)
+    # Rejected-only input has no publication to wait for. Validate acknowledgement directly.
+    rejected = request("/api/v1/moses/ingest?commit=auto&detailed_response=true", forged)
     assert rejected["num_ingested_docs"] == 0 and rejected["num_rejected_docs"] == 1, rejected
     (args.work_dir / "results.json").write_text(json.dumps({"accepted":accepted,"rejected_forgery":rejected,"golden_documents":len(raw),"descriptor_and_cluster_queries":query_checks,"status":"passed"},indent=2))
 finally:
