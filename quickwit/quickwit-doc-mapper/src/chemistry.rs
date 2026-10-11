@@ -24,6 +24,9 @@ use crate::{
 #[serde(deny_unknown_fields)]
 pub struct ChemistryMapping {
     pub spec: FingerprintSpec,
+    /// Generate the complete Cheminee descriptor_v1 contract in process.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub descriptor_v1: bool,
     pub smiles_field: String,
     pub prepared_smiles_field: String,
 }
@@ -31,6 +34,9 @@ pub struct ChemistryMapping {
 impl ChemistryMapping {
     pub(crate) fn validate_mapping(&self, mappings: &[FieldMappingEntry]) -> anyhow::Result<()> {
         self.spec.validate()?;
+        if self.descriptor_v1 {
+            validate_descriptor_mapping(self, mappings)?;
+        }
         let fingerprint_name = self.spec.field_name();
         ensure!(
             self.smiles_field != self.prepared_smiles_field,
@@ -98,11 +104,113 @@ impl ChemistryMapping {
             .get(&self.smiles_field)
             .and_then(serde_json::Value::as_str)
             .ok_or_else(|| invalid("a single SMILES string is required".into()))?;
+        if self.descriptor_v1 {
+            let outputs = prepare_descriptors(smiles, &self.spec).map_err(invalid)?;
+            for (name, value) in outputs {
+                let output = if name == "smiles" {
+                    self.prepared_smiles_field.clone()
+                } else {
+                    name
+                };
+                if document.contains_key(&output) {
+                    return Err(invalid(format!(
+                        "derived field `{output}` must not be supplied"
+                    )));
+                }
+                document.insert(output, value);
+            }
+            return Ok(document);
+        }
         let (fingerprint, prepared) = prepare_smiles(smiles, &self.spec).map_err(invalid)?;
         document.insert(self.spec.field_name(), fingerprint.into());
         document.insert(self.prepared_smiles_field.clone(), prepared.into());
         Ok(document)
     }
+}
+
+fn validate_descriptor_mapping(
+    chemistry: &ChemistryMapping,
+    mappings: &[FieldMappingEntry],
+) -> anyhow::Result<()> {
+    ensure!(
+        chemistry.spec.preparation_id == "cheminee-fragment-tautomer-neutralize-v1",
+        "descriptor_v1 requires Cheminee canonical preparation"
+    );
+    for name in tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS {
+        let field = mappings
+            .iter()
+            .find(|field| field.name == name)
+            .ok_or_else(|| anyhow::anyhow!("descriptor_v1 requires field `{name}`"))?;
+        let valid = if name.starts_with("Num") || name.starts_with("lipinski") {
+            matches!(
+                &field.mapping_type,
+                FieldMappingType::I64(_, Cardinality::SingleValued)
+            )
+        } else {
+            matches!(
+                &field.mapping_type,
+                FieldMappingType::F64(_, Cardinality::SingleValued)
+            )
+        };
+        ensure!(
+            valid,
+            "descriptor_v1 field `{name}` has the wrong numeric type"
+        );
+    }
+    ensure!(mappings.iter().any(|field| field.name == "pattern_fingerprint"
+        && matches!(&field.mapping_type, FieldMappingType::Bytes(options, Cardinality::SingleValued)
+            if options.input_format == BinaryFormat::Base64)),
+        "descriptor_v1 requires a base64 pattern_fingerprint bytes field");
+    ensure!(
+        mappings
+            .iter()
+            .any(|field| field.name == "other_descriptors"
+                && matches!(
+                    &field.mapping_type,
+                    FieldMappingType::Json(_, Cardinality::SingleValued)
+                )),
+        "descriptor_v1 requires other_descriptors JSON"
+    );
+    Ok(())
+}
+
+#[cfg(not(feature = "descriptor-v1"))]
+fn prepare_descriptors(_: &str, _: &FingerprintSpec) -> Result<JsonObject, String> {
+    Err("descriptor_v1 requires a Quickwit build with the descriptor-v1 feature".into())
+}
+
+#[cfg(feature = "descriptor-v1")]
+fn prepare_descriptors(smiles: &str, spec: &FingerprintSpec) -> Result<JsonObject, String> {
+    use base64::Engine;
+    use tantivy_rdkit_mapper::descriptor::{KNOWN_DESCRIPTORS, prepare_cached};
+    let prepared = prepare_cached(smiles, spec).map_err(|error| error.to_string())?;
+    let mut output = JsonObject::new();
+    output.insert("smiles".into(), prepared.smiles.clone().into());
+    output.insert(spec.field_name(), prepared.fingerprint.to_hex().into());
+    output.insert(
+        "pattern_fingerprint".into(),
+        base64::engine::general_purpose::STANDARD
+            .encode(&prepared.pattern)
+            .into(),
+    );
+    output.insert(
+        "other_descriptors".into(),
+        serde_json::json!({
+            "scaffolds": prepared.scaffolds, "similarity_cluster": prepared.cluster
+        }),
+    );
+    for name in KNOWN_DESCRIPTORS {
+        let value = prepared.descriptors[name];
+        output.insert(
+            name.into(),
+            if name.starts_with("Num") || name.starts_with("lipinski") {
+                serde_json::Value::from(value as i64)
+            } else {
+                serde_json::Value::from(value)
+            },
+        );
+    }
+    Ok(output)
 }
 
 #[cfg(feature = "native-chemistry")]

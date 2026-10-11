@@ -156,3 +156,69 @@ fn graph_contract_checks_mapping_and_field_inside_boolean_filters() {
     other_mapping.spec.preparation_id = "other".into();
     assert!(super::validate_graph_contract(&valid, Some(&other_mapping)).is_err());
 }
+
+#[cfg(feature = "descriptor-v1")]
+fn descriptor_config() -> serde_json::Value {
+    let mut value = config();
+    value["chemistry"]["descriptor_v1"] = true.into();
+    value["chemistry"]["spec"]["preparation_id"] =
+        tantivy_rdkit_mapper::CHEMINEE_PREPARATION_ID.into();
+    let full_spec: FingerprintSpec =
+        serde_json::from_value(value["chemistry"]["spec"].clone()).unwrap();
+    value["field_mappings"][3]["name"] = full_spec.field_name().into();
+    let mappings = value["field_mappings"].as_array_mut().unwrap();
+    for name in tantivy_rdkit_mapper::descriptor::KNOWN_DESCRIPTORS {
+        mappings.push(json!({"name":name,"type":if name.starts_with("Num") || name.starts_with("lipinski") {"i64"} else {"f64"}}));
+    }
+    mappings.push(json!({"name":"pattern_fingerprint","type":"bytes","input_format":"base64"}));
+    mappings.push(json!({"name":"other_descriptors","type":"json"}));
+    value
+}
+
+#[cfg(feature = "descriptor-v1")]
+#[test]
+fn descriptor_mapping_prepares_validates_and_rejects_forged_outputs() {
+    let mapper = serde_json::from_value::<DocMapperBuilder>(descriptor_config())
+        .unwrap()
+        .try_build()
+        .unwrap();
+    let input = json!({"record_id":1,"smiles":"CCO"});
+    let (_, doc) = mapper
+        .doc_from_json_obj(input.as_object().unwrap().clone(), 0)
+        .unwrap();
+    let schema = mapper.schema();
+    assert_eq!(
+        doc.get_first(schema.get_field("NumHeavyAtoms").unwrap())
+            .unwrap()
+            .as_i64(),
+        Some(3)
+    );
+    assert!(
+        doc.get_first(schema.get_field("other_descriptors").unwrap())
+            .is_some()
+    );
+    for name in ["NumHeavyAtoms", "other_descriptors", "pattern_fingerprint"] {
+        let mut forged = input.clone();
+        forged[name] = json!(0);
+        assert!(
+            mapper
+                .doc_from_json_obj(forged.as_object().unwrap().clone(), 0)
+                .is_err()
+        );
+        let bytes = serde_json::to_vec(&forged).unwrap();
+        let borrowed: serde_json_borrow::Value = serde_json::from_slice(&bytes).unwrap();
+        assert!(
+            mapper
+                .validate_json_obj(borrowed.as_object().unwrap())
+                .is_err()
+        );
+    }
+    let mut missing = descriptor_config();
+    missing["field_mappings"].as_array_mut().unwrap().pop();
+    assert!(
+        serde_json::from_value::<DocMapperBuilder>(missing)
+            .unwrap()
+            .try_build()
+            .is_err()
+    );
+}

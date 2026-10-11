@@ -24,6 +24,19 @@ pub const CHEMINEE_PREPARATION_ID: &str = "cheminee-fragment-tautomer-neutralize
 pub const PRESERVE_TAUTOMER_PREPARATION_ID: &str = "cheminee-fragment-neutralize-v1";
 
 pub(crate) fn prepare(smiles: &str, spec: &FingerprintSpec) -> Result<ROMol, MappingError> {
+    let normalized = prepare_original(smiles, spec)?;
+    if spec.preparation_id == PREPARATION_ID {
+        return Ok(normalized);
+    }
+    ROMol::from_smiles(&normalized.try_as_smiles()?)
+        .map_err(|error| MappingError::Preparation(error.to_string()))
+}
+
+// Cheminee computes descriptors and fingerprints before the validating SMILES round trip.
+pub(crate) fn prepare_original(
+    smiles: &str,
+    spec: &FingerprintSpec,
+) -> Result<ROMol, MappingError> {
     if smiles.trim().is_empty() || smiles.chars().any(char::is_whitespace) || smiles.contains('|') {
         return Err(MappingError::InvalidSmiles(
             "expected a nonempty plain SMILES without names or CXSMILES extensions".into(),
@@ -69,6 +82,5 @@ pub(crate) fn prepare(smiles: &str, spec: &FingerprintSpec) -> Result<ROMol, Map
         atom.update_property_cache(true)?;
         try_set_hybridization(&mut normalized)?;
     }
-    ROMol::from_smiles(&normalized.try_as_smiles()?)
-        .map_err(|error| MappingError::Preparation(error.to_string()))
+    Ok(normalized)
 }

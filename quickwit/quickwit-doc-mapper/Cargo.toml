@@ -47,6 +47,7 @@ quickwit-common = { workspace = true, features = ["testsuite"] }
 quickwit-query = { workspace = true }
 
 [features]
+descriptor-v1 = ["native-chemistry", "tantivy-rdkit-mapper/descriptor-v1"]
 native-chemistry = ["dep:tantivy-rdkit-mapper", "quickwit-query/native-chemistry"]
 metrics = ["dep:arrow"]
 testsuite = []

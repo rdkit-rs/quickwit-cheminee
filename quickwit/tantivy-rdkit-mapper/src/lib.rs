@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#[cfg(feature = "descriptor-v1")]
+mod cluster;
+#[cfg(feature = "descriptor-v1")]
+pub mod descriptor;
+#[cfg(all(test, feature = "descriptor-v1"))]
+mod descriptor_tests;
 mod graph;
 mod native;
 mod preparation;
