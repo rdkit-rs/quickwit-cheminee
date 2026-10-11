@@ -436,6 +436,14 @@ impl DocMapper {
         self.doc_mapping_uid
     }
 
+    /// Whether ingestion can parallelize independent full-chemistry validation work.
+    pub fn has_descriptor_v1_preparation(&self) -> bool {
+        match &self.chemistry {
+            Some(chemistry) => chemistry.descriptor_v1,
+            None => false,
+        }
+    }
+
     /// Validates a JSON object according to the doc mapper.
     pub fn validate_json_obj(&self, json_obj: &BorrowedJsonMap) -> Result<(), DocParsingError> {
         if let Some(chemistry) = &self.chemistry {
@@ -662,6 +670,7 @@ impl DocMapper {
         with_validation: bool,
         cache_context: Option<(Arc<dyn quickwit_query::query_ast::PredicateCache>, String)>,
     ) -> Result<(Box<dyn Query>, WarmupInfo), QueryParserError> {
+        crate::chemistry::validate_graph_contract(&query_ast, self.chemistry.as_ref())?;
         build_query(
             query_ast,
             &BuildTantivyAstContext {

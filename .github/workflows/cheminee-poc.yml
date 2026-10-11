@@ -1,4 +1,4 @@
-name: Cheminee worker similarity POC
+name: Cheminee distributed predicates
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - "quickwit/tantivy-rdkit/**"
       - "quickwit/tantivy-rdkit-mapper/**"
       - "quickwit/quickwit-indexing/**"
+      - "quickwit/quickwit-ingest/**"
       - "quickwit/quickwit-cli/**"
       - "quickwit/quickwit-query/**"
       - "quickwit/quickwit-doc-mapper/**"
@@ -29,6 +30,9 @@ jobs:
       CARGO_BUILD_JOBS: 4
       CARGO_PROFILE_DEV_DEBUG: 0
       CARGO_INCREMENTAL: 0
+      PKG_CONFIG_PATH: /opt/cheminee-tensorflow/lib/pkgconfig
+      LD_LIBRARY_PATH: /opt/cheminee-tensorflow/lib
+      QW_CHEMINEE_MODEL_ASSETS: /opt/cheminee-model/assets
     defaults:
       run:
         working-directory: quickwit
@@ -39,15 +43,23 @@ jobs:
           apt-get update
           apt-get install -y protobuf-compiler clang lld cmake libssl-dev pkg-config git curl ca-certificates build-essential python3 python3-venv
           bash tantivy-rdkit-mapper/ci/install-rdkit.sh
+          python3 tantivy-rdkit-mapper/ci/install-tensorflow.py /opt/cheminee-tensorflow
+          bash tantivy-rdkit-mapper/ci/install-descriptor-model.sh
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: "1.96"
       - name: Test query and API integration
         run: |
+          cargo test --locked -p quickwit-ingest --lib
           cargo test --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-query --lib --tests
           cargo test --locked -p quickwit-doc-mapper --features native-chemistry chemistry --lib
           cargo test --locked -p quickwit-serve --features native-chemistry cheminee_api --lib
           cargo test --locked -p quickwit-serve --features native-chemistry ensure_schemas_resolve --lib
+      - name: Test complete in-process preparation
+        run: |
+          cargo test --locked -p quickwit-ingest --features descriptor-v1 --lib
+          cargo test --locked -p tantivy-rdkit-mapper --features descriptor-v1 --lib
+          cargo test --locked -p quickwit-doc-mapper --features descriptor-v1 chemistry --lib
       - name: Build and inspect pure scoring worker
         run: |
           cargo tree --locked -p quickwit-search -e normal > /tmp/scoring-dependencies.txt
@@ -58,10 +70,14 @@ jobs:
           if grep RDKit /tmp/scoring-linkage.txt; then exit 1; fi
       - name: Build and inspect native indexing and root query binary
         run: |
-          cargo build --locked -p quickwit-cli --features native-chemistry --bin quickwit
+          cargo build --locked -p quickwit-cli --features descriptor-v1 --bin quickwit
           ldd target/debug/quickwit > /tmp/native-linkage.txt
           grep libRDKitGraphMol.so.2026.09 /tmp/native-linkage.txt
           readelf -d target/debug/quickwit > /tmp/native-dynamic.txt
+      - name: Verify full raw-SMILES preparation through REST
+        run: |
+          python3 tantivy-rdkit-mapper/ci/descriptor-rest.py --binary target/debug/quickwit --work-dir /tmp/cheminee-descriptor-results
+          python3 tantivy-rdkit-mapper/ci/descriptor-rest.py --binary target/debug/quickwit --work-dir /tmp/cheminee-descriptor-flat-results --layout flat
       - name: Install public-data and generated-client tooling
         run: |
           python3 -m venv /tmp/cheminee-poc-python
@@ -70,13 +86,19 @@ jobs:
         run: |
           /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/run.py --binary /tmp/quickwit-scoring --work-dir /tmp/cheminee-poc-results
           /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/run.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --raw-smiles --work-dir /tmp/cheminee-native-results
+      - name: Run exhaustive distributed graph and client parity
+        run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --work-dir /tmp/cheminee-graph-results
+      - name: Verify fingerprint-only workers reject graph search
+        run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --expect-native-unavailable --work-dir /tmp/cheminee-no-native-results
       - name: Lint chemistry integration
-        run: cargo clippy --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
+        run: cargo clippy --locked -p quickwit-ingest -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cheminee-poc-evidence
           path: |
+            /tmp/cheminee-descriptor-results/**
+            /tmp/cheminee-descriptor-flat-results/**
             /tmp/cheminee-poc-results/results.json
             /tmp/cheminee-poc-results/openapi.json
             /tmp/cheminee-poc-results/*.log
@@ -86,6 +108,14 @@ jobs:
             /tmp/cheminee-native-results/*.log
             /tmp/cheminee-native-results/index.json
             /tmp/cheminee-native-results/ingested.ndjson
+            /tmp/cheminee-no-native-results/results.json
+            /tmp/cheminee-no-native-results/*.log
+            /tmp/cheminee-graph-results/results.json
+            /tmp/cheminee-graph-results/openapi.json
+            /tmp/cheminee-graph-results/*.log
+            /tmp/cheminee-graph-results/*-metrics.txt
+            /tmp/cheminee-graph-results/*-mapping.json
+            /tmp/cheminee-graph-results/molecules.ndjson
             /tmp/*-linkage.txt
             /tmp/native-dynamic.txt
             /tmp/scoring-dependencies.txt

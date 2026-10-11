@@ -1,0 +1,213 @@
+// Copyright 2021-Present Datadog, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+use std::sync::Arc;
+
+use serde::{Deserialize, Serialize};
+use tantivy::columnar::StrColumn;
+use tantivy::query::{EnableScoring, Explanation, Query, Scorer, Weight};
+use tantivy::schema::{FieldType, Schema};
+use tantivy::{DocId, DocSet, Score, SegmentReader, TERMINATED, Term};
+
+use crate::{FingerprintSpec, MoleculeFields, invalid};
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+#[serde(rename_all = "snake_case")]
+pub enum GraphPredicate {
+    Identity,
+    Substructure,
+    Superstructure,
+}
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+#[serde(rename_all = "snake_case")]
+pub enum GraphRanking {
+    #[default]
+    BestMatch,
+    FewestExtraHeavyAtoms,
+    GreatestQueryCoverage,
+    StableId,
+}
+
+pub trait MoleculeMatcher {
+    fn score(&mut self, prepared_smiles: &str) -> tantivy::Result<Option<f32>>;
+}
+
+pub trait GraphVerifier: std::fmt::Debug + Send + Sync {
+    fn matcher(&self) -> tantivy::Result<Box<dyn MoleculeMatcher>>;
+}
+
+#[derive(Debug)]
+pub struct GraphQuery {
+    candidates: Box<dyn Query>,
+    prepared_field: String,
+    verifier: Arc<dyn GraphVerifier>,
+}
+
+impl Clone for GraphQuery {
+    fn clone(&self) -> Self {
+        Self {
+            candidates: self.candidates.box_clone(),
+            prepared_field: self.prepared_field.clone(),
+            verifier: self.verifier.clone(),
+        }
+    }
+}
+
+impl GraphQuery {
+    pub fn new(
+        candidates: Box<dyn Query>,
+        schema: &Schema,
+        spec: &FingerprintSpec,
+        prepared_field: String,
+        verifier: Arc<dyn GraphVerifier>,
+    ) -> tantivy::Result<Self> {
+        let fields = MoleculeFields::from_schema(schema, spec, &prepared_field)?;
+        if !schema.get_field_entry(fields.prepared_smiles).is_fast() {
+            return Err(invalid(
+                "graph search requires a raw fast prepared SMILES field; reindex with fast=true",
+            ));
+        }
+        if let FieldType::Str(options) = schema.get_field_entry(fields.prepared_smiles).field_type()
+            && matches!(options.get_fast_field_tokenizer_name(), Some(name) if name != "raw")
+        {
+            return Err(invalid(
+                "prepared SMILES fast field must use the raw normalizer",
+            ));
+        }
+        Ok(Self {
+            candidates,
+            prepared_field,
+            verifier,
+        })
+    }
+}
+
+impl Query for GraphQuery {
+    fn weight(&self, enable_scoring: EnableScoring<'_>) -> tantivy::Result<Box<dyn Weight>> {
+        Ok(Box::new(GraphWeight {
+            candidates: self.candidates.weight(EnableScoring::Disabled {
+                schema: enable_scoring.schema(),
+                searcher_opt: enable_scoring.searcher(),
+            })?,
+            prepared_field: self.prepared_field.clone(),
+            verifier: self.verifier.clone(),
+        }))
+    }
+
+    fn query_terms<'a>(&'a self, visitor: &mut dyn FnMut(&'a Term, bool)) {
+        self.candidates.query_terms(visitor);
+    }
+}
+
+struct GraphWeight {
+    candidates: Box<dyn Weight>,
+    prepared_field: String,
+    verifier: Arc<dyn GraphVerifier>,
+}
+
+impl Weight for GraphWeight {
+    fn scorer(&self, reader: &SegmentReader, boost: Score) -> tantivy::Result<Box<dyn Scorer>> {
+        let column = reader
+            .fast_fields()
+            .str(&self.prepared_field)?
+            .ok_or_else(|| invalid("missing prepared SMILES fast field"))?;
+        let mut matcher = self.verifier.matcher()?;
+        let mut scores = Vec::with_capacity(column.num_terms());
+        let mut smiles = String::new();
+        for ordinal in 0..column.num_terms() {
+            smiles.clear();
+            if !column.ord_to_str(ordinal as u64, &mut smiles)? {
+                return Err(invalid("missing prepared molecule dictionary value"));
+            }
+            let score = matcher.score(&smiles)?;
+            if matches!(score, Some(score) if !score.is_finite() || score < 0.0) {
+                return Err(invalid("invalid graph verification score"));
+            }
+            scores.push(score);
+        }
+        for doc in 0..reader.max_doc() {
+            let mut ordinals = column.term_ords(doc);
+            if ordinals.next().is_none() || ordinals.next().is_some() {
+                return Err(invalid(
+                    "each document must have exactly one prepared molecule",
+                ));
+            }
+        }
+        let mut scorer = GraphScorer {
+            candidates: self.candidates.scorer(reader, 1.0)?,
+            column,
+            scores,
+            boost,
+        };
+        scorer.skip_rejected();
+        Ok(Box::new(scorer))
+    }
+
+    fn explain(&self, reader: &SegmentReader, doc: DocId) -> tantivy::Result<Explanation> {
+        let mut scorer = self.scorer(reader, 1.0)?;
+        if scorer.seek(doc) != doc {
+            return Err(invalid("document does not match graph query"));
+        }
+        Ok(Explanation::new(
+            "Verified molecular graph ranking",
+            scorer.score(),
+        ))
+    }
+}
+
+struct GraphScorer {
+    candidates: Box<dyn Scorer>,
+    column: StrColumn,
+    scores: Vec<Option<f32>>,
+    boost: Score,
+}
+
+impl GraphScorer {
+    fn raw_score(&self) -> Option<f32> {
+        self.scores[self.column.term_ords(self.candidates.doc()).next().unwrap() as usize]
+    }
+
+    fn skip_rejected(&mut self) -> DocId {
+        while self.candidates.doc() != TERMINATED && self.raw_score().is_none() {
+            self.candidates.advance();
+        }
+        self.candidates.doc()
+    }
+}
+
+impl DocSet for GraphScorer {
+    fn advance(&mut self) -> DocId {
+        self.candidates.advance();
+        self.skip_rejected()
+    }
+    fn seek(&mut self, target: DocId) -> DocId {
+        self.candidates.seek(target);
+        self.skip_rejected()
+    }
+    fn doc(&self) -> DocId {
+        self.candidates.doc()
+    }
+    fn size_hint(&self) -> u32 {
+        self.candidates.size_hint()
+    }
+}
+
+impl Scorer for GraphScorer {
+    fn score(&mut self) -> Score {
+        self.raw_score().unwrap() * self.boost
+    }
+}

@@ -17,8 +17,8 @@ use crate::query_ast::cache_node::CacheState;
 use crate::query_ast::field_presence::FieldPresenceQuery;
 use crate::query_ast::user_input_query::UserInputQuery;
 use crate::query_ast::{
-    BoolQuery, CacheNode, FullTextQuery, PhrasePrefixQuery, QueryAst, RangeQuery, RegexQuery,
-    TanimotoQueryAst, TermQuery, TermSetQuery, WildcardQuery,
+    BoolQuery, CacheNode, FullTextQuery, GraphQueryAst, PhrasePrefixQuery, QueryAst, RangeQuery,
+    RegexQuery, TanimotoQueryAst, TermQuery, TermSetQuery, WildcardQuery,
 };
 
 /// Simple trait to implement a Visitor over the QueryAst.
@@ -27,6 +27,7 @@ pub trait QueryAstVisitor<'a> {
 
     fn visit(&mut self, query_ast: &'a QueryAst) -> Result<(), Self::Err> {
         match query_ast {
+            QueryAst::Graph(query) => self.visit_graph(query),
             QueryAst::Tanimoto(query) => self.visit_tanimoto(query),
             QueryAst::Bool(bool_query) => self.visit_bool(bool_query),
             QueryAst::Term(term_query) => self.visit_term(term_query),
@@ -45,6 +46,10 @@ pub trait QueryAstVisitor<'a> {
             QueryAst::Regex(regex) => self.visit_regex(regex),
             QueryAst::Cache(cache_node) => self.visit_cache_node(cache_node),
         }
+    }
+
+    fn visit_graph(&mut self, query: &'a GraphQueryAst) -> Result<(), Self::Err> {
+        self.visit(&query.candidates)
     }
 
     fn visit_tanimoto(&mut self, query: &'a TanimotoQueryAst) -> Result<(), Self::Err> {
@@ -139,6 +144,13 @@ pub trait QueryAstTransformer {
 
     fn transform(&mut self, query_ast: QueryAst) -> Result<Option<QueryAst>, Self::Err> {
         match query_ast {
+            QueryAst::Graph(mut query) => {
+                let Some(candidates) = self.transform(*query.candidates)? else {
+                    return Ok(None);
+                };
+                query.candidates = Box::new(candidates);
+                Ok(Some(QueryAst::Graph(query)))
+            }
             QueryAst::Tanimoto(mut query) => {
                 let Some(candidates) = self.transform(*query.candidates)? else {
                     return Ok(None);

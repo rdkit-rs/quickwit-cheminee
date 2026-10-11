@@ -1,0 +1,90 @@
+{
+  "version": "0.8",
+  "index_id": "moses",
+  "doc_mapping": {
+    "mode": "strict",
+    "index_field_presence": false,
+    "field_mappings": [
+      {
+        "name": "record_id",
+        "type": "u64",
+        "stored": true,
+        "indexed": true,
+        "fast": true
+      },
+      {
+        "name": "input_smiles",
+        "type": "text",
+        "stored": false,
+        "indexed": false
+      },
+      {
+        "name": "smiles",
+        "type": "text",
+        "stored": true,
+        "indexed": true,
+        "fast": true,
+        "tokenizer": "raw",
+        "record": "basic",
+        "fieldnorms": true
+      },
+      {
+        "name": "pattern_fingerprint",
+        "type": "bytes",
+        "stored": true,
+        "indexed": false,
+        "fast": false,
+        "input_format": "base64",
+        "output_format": "base64"
+      },
+      {
+        "name": "morgan_5be8b9ad4f8bbdce84f376944d49b996d976e6676f07fd6ee416c0357903141e",
+        "type": "bytes",
+        "stored": true,
+        "indexed": false,
+        "fast": true,
+        "input_format": "hex",
+        "output_format": "base64"
+      },
+      {
+        "name": "extra_data",
+        "type": "json",
+        "indexed": true,
+        "stored": true,
+        "expand_dots": true,
+        "tokenizer": "default",
+        "record": "position"
+      },
+      {
+        "name": "other_descriptors",
+        "type": "json",
+        "indexed": true,
+        "stored": false,
+        "expand_dots": true,
+        "tokenizer": "default",
+        "record": "position"
+      },
+      {
+        "name": "descriptors",
+        "type": "json",
+        "indexed": true,
+        "stored": true,
+        "fast": true
+      }
+    ],
+    "chemistry": {
+      "descriptor_v1": true,
+      "smiles_field": "input_smiles",
+      "prepared_smiles_field": "smiles",
+      "spec": {
+        "format": "morgan-r3-2048-lsb0-v1",
+        "rdkit_version": "2026.09.1",
+        "preparation_id": "cheminee-fragment-tautomer-neutralize-v1"
+      },
+      "descriptor_layout": "nested"
+    }
+  },
+  "indexing_settings": {
+    "commit_timeout_secs": 30
+  }
+}

@@ -1,0 +1,8 @@
+{"smiles":"CCO","extra_data":{"record_id":1}}
+{"smiles":"c1ccccc1","extra_data":{"record_id":2}}
+{"smiles":"CC(=O)[O-].[Na+]","extra_data":{"record_id":3}}
+{"smiles":"C[C@H](O)C(=O)O","extra_data":{"record_id":4}}
+{"smiles":"C1=CC=CN=C1","extra_data":{"record_id":5}}
+{"smiles":"[NH4+].[Cl-]","extra_data":{"record_id":6}}
+{"smiles":"C[N+](C)(C)C","extra_data":{"record_id":7}}
+{"smiles":"O=C1NC=CC=C1","extra_data":{"record_id":8}}

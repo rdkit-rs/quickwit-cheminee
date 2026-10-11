@@ -13,6 +13,7 @@
 // limitations under the License.
 
 mod smiles;
+pub mod v1;
 use std::sync::Arc;
 
 use quickwit_config::validate_index_id_pattern;
@@ -178,43 +179,49 @@ async fn search(
         let response = service
             .root_search(request.into_search_request(index_id)?)
             .await?;
-        if !response.failed_splits.is_empty() || !response.errors.is_empty() {
-            return Err(SearchError::Unavailable(format!(
-                "incomplete chemistry search: {:?} {:?}",
-                response.failed_splits, response.errors
-            )));
-        }
-        let mut hits = Vec::with_capacity(response.hits.len());
-        for hit in response.hits {
-            let partial = hit
-                .partial_hit
-                .ok_or_else(|| SearchError::Internal("missing chemistry score".into()))?;
-            let score = match partial.sort_value.and_then(|value| value.sort_value) {
-                Some(SortValue::F64(value)) => value as f32,
-                _ => return Err(SearchError::Internal("invalid chemistry score type".into())),
-            };
-            let document: serde_json::Value = serde_json::from_str(&hit.json)
-                .map_err(|error| SearchError::Internal(error.to_string()))?;
-            let record_id = document
-                .get("record_id")
-                .and_then(serde_json::Value::as_u64)
-                .ok_or_else(|| SearchError::Internal("record_id must be a stored u64".into()))?
-                .to_string();
-            hits.push(SimilarityHit {
-                record_id,
-                score,
-                document,
-            });
-        }
-        Ok(SimilarityResponse {
-            num_hits: response.num_hits,
-            hits,
-            searched_splits: response.num_successful_splits,
-            elapsed_time_micros: response.elapsed_time_micros,
-        })
+        chemistry_response(response)
     }
     .await;
     into_rest_api_response(result, BodyFormat::default())
+}
+
+fn chemistry_response(
+    response: quickwit_proto::search::SearchResponse,
+) -> Result<SimilarityResponse, SearchError> {
+    if !response.failed_splits.is_empty() || !response.errors.is_empty() {
+        return Err(SearchError::Unavailable(format!(
+            "incomplete chemistry search: {:?} {:?}",
+            response.failed_splits, response.errors
+        )));
+    }
+    let mut hits = Vec::with_capacity(response.hits.len());
+    for hit in response.hits {
+        let partial = hit
+            .partial_hit
+            .ok_or_else(|| SearchError::Internal("missing chemistry score".into()))?;
+        let score = match partial.sort_value.and_then(|value| value.sort_value) {
+            Some(SortValue::F64(value)) => value as f32,
+            _ => return Err(SearchError::Internal("invalid chemistry score type".into())),
+        };
+        let document: serde_json::Value = serde_json::from_str(&hit.json)
+            .map_err(|error| SearchError::Internal(error.to_string()))?;
+        let record_id = document
+            .get("record_id")
+            .and_then(serde_json::Value::as_u64)
+            .ok_or_else(|| SearchError::Internal("record_id must be a stored u64".into()))?
+            .to_string();
+        hits.push(SimilarityHit {
+            record_id,
+            score,
+            document,
+        });
+    }
+    Ok(SimilarityResponse {
+        num_hits: response.num_hits,
+        hits,
+        searched_splits: response.num_successful_splits,
+        elapsed_time_micros: response.elapsed_time_micros,
+    })
 }
 
 pub fn openapi_handler() -> impl Filter<Extract = (impl warp::Reply,), Error = Rejection> + Clone {

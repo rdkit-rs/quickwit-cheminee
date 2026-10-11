@@ -11,7 +11,18 @@ tantivy-rdkit.workspace = true
 tantivy.workspace = true
 thiserror.workspace = true
 cxx.workspace = true
+serde_json = { workspace = true, optional = true }
+base64 = { workspace = true, optional = true }
+sha2 = { workspace = true, optional = true }
+tensorflow = { version = "0.21", optional = true }
 
 [build-dependencies]
 cxx-build.workspace = true
 pkg-config.workspace = true
+
+[features]
+descriptor-v1 = ["dep:serde_json", "dep:base64", "dep:sha2", "dep:tensorflow"]
+
+[[example]]
+name = "descriptor_audit"
+required-features = ["descriptor-v1"]

@@ -76,12 +76,11 @@ const MIN_RESET_SHARDS_INTERVAL: Duration = if cfg!(any(test, feature = "testsui
     Duration::from_secs(60)
 };
 
-/// Duration after which persist requests time out with
-/// [`quickwit_proto::ingest::IngestV2Error::Timeout`].
+/// Shared time budget for a router persist phase, including safe retries.
 pub(super) const PERSIST_REQUEST_TIMEOUT: Duration = if cfg!(any(test, feature = "testsuite")) {
-    Duration::from_millis(500)
+    Duration::from_millis(2500)
 } else {
-    Duration::from_secs(6)
+    Duration::from_secs(30)
 };
 
 const DEFAULT_BATCH_NUM_BYTES: usize = 1024 * 1024; // 1 MiB
