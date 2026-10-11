@@ -222,3 +222,109 @@ fn descriptor_mapping_prepares_validates_and_rejects_forged_outputs() {
             .is_err()
     );
 }
+
+#[cfg(feature = "descriptor-v1")]
+fn nested_descriptor_config() -> serde_json::Value {
+    let mut config = descriptor_config();
+    config["chemistry"]["descriptor_layout"] = json!("nested");
+    let mappings = config["field_mappings"].as_array_mut().unwrap();
+    mappings.retain(|field| {
+        !tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS.contains(&field["name"].as_str().unwrap())
+    });
+    mappings.push(json!({"name":"descriptors","type":"json","fast":true}));
+    config
+}
+
+#[cfg(feature = "descriptor-v1")]
+#[test]
+fn nested_descriptor_mapping_requires_searchable_stored_fast_json() {
+    let config = nested_descriptor_config();
+    let mapper = serde_json::from_value::<DocMapperBuilder>(config.clone())
+        .unwrap()
+        .try_build()
+        .unwrap();
+    let serialized = serde_json::to_value(&mapper).unwrap();
+    assert_eq!(serialized["chemistry"]["descriptor_layout"], "nested");
+    assert!(mapper.schema().get_field("descriptors").is_ok());
+    assert!(mapper.schema().get_field("NumAtoms").is_err());
+    for option in ["fast", "indexed", "stored"] {
+        let mut bad = config.clone();
+        bad["field_mappings"]
+            .as_array_mut()
+            .unwrap()
+            .last_mut()
+            .unwrap()[option] = json!(false);
+        assert!(
+            serde_json::from_value::<DocMapperBuilder>(bad)
+                .unwrap()
+                .try_build()
+                .is_err()
+        );
+    }
+    let mut duplicate = config.clone();
+    duplicate["field_mappings"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"name":"NumAtoms","type":"i64"}));
+    assert!(
+        serde_json::from_value::<DocMapperBuilder>(duplicate)
+            .unwrap()
+            .try_build()
+            .is_err()
+    );
+    let mut disabled = config;
+    disabled["chemistry"]["descriptor_v1"] = json!(false);
+    assert!(
+        serde_json::from_value::<DocMapperBuilder>(disabled)
+            .unwrap()
+            .try_build()
+            .is_err()
+    );
+}
+
+#[cfg(feature = "descriptor-v1")]
+#[test]
+fn nested_descriptor_outputs_match_flat_and_reject_forgery_in_dynamic_mode() {
+    let mut config = nested_descriptor_config();
+    config["mode"] = json!("dynamic");
+    let nested: crate::ChemistryMapping =
+        serde_json::from_value(config["chemistry"].clone()).unwrap();
+    let flat: crate::ChemistryMapping =
+        serde_json::from_value(descriptor_config()["chemistry"].clone()).unwrap();
+    let input = json!({"record_id":1,"smiles":"CCO"});
+    let actual = nested.prepare(input.as_object().unwrap().clone()).unwrap();
+    let expected = flat.prepare(input.as_object().unwrap().clone()).unwrap();
+    assert_eq!(actual["descriptors"].as_object().unwrap().len(), 43);
+    for name in tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS {
+        assert_eq!(actual["descriptors"][name], expected[name]);
+        assert!(!actual.contains_key(name));
+    }
+    assert!(actual["descriptors"]["NumHeavyAtoms"].is_i64());
+    assert!(actual["descriptors"]["exactmw"].is_f64());
+    let mapper = serde_json::from_value::<DocMapperBuilder>(config)
+        .unwrap()
+        .try_build()
+        .unwrap();
+    for (field, value) in [
+        ("descriptors", json!({"NumAtoms":99})),
+        ("descriptors", json!(null)),
+        ("descriptors", json!([])),
+        ("NumAtoms", json!(99)),
+        ("exactmw", json!(0.0)),
+    ] {
+        let mut forged = input.clone();
+        forged[field] = value;
+        assert!(
+            mapper
+                .doc_from_json_obj(forged.as_object().unwrap().clone(), 0)
+                .is_err()
+        );
+        let bytes = serde_json::to_vec(&forged).unwrap();
+        let borrowed: serde_json_borrow::Value = serde_json::from_slice(&bytes).unwrap();
+        assert!(
+            mapper
+                .validate_json_obj(borrowed.as_object().unwrap())
+                .is_err()
+        );
+    }
+}

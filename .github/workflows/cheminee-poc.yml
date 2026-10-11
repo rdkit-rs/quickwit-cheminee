@@ -75,7 +75,9 @@ jobs:
           grep libRDKitGraphMol.so.2026.09 /tmp/native-linkage.txt
           readelf -d target/debug/quickwit > /tmp/native-dynamic.txt
       - name: Verify full raw-SMILES preparation through REST
-        run: python3 tantivy-rdkit-mapper/ci/descriptor-rest.py --binary target/debug/quickwit --work-dir /tmp/cheminee-descriptor-results
+        run: |
+          python3 tantivy-rdkit-mapper/ci/descriptor-rest.py --binary target/debug/quickwit --work-dir /tmp/cheminee-descriptor-results
+          python3 tantivy-rdkit-mapper/ci/descriptor-rest.py --binary target/debug/quickwit --work-dir /tmp/cheminee-descriptor-flat-results --layout flat
       - name: Install public-data and generated-client tooling
         run: |
           python3 -m venv /tmp/cheminee-poc-python
@@ -96,6 +98,7 @@ jobs:
           name: cheminee-poc-evidence
           path: |
             /tmp/cheminee-descriptor-results/**
+            /tmp/cheminee-descriptor-flat-results/**
             /tmp/cheminee-poc-results/results.json
             /tmp/cheminee-poc-results/openapi.json
             /tmp/cheminee-poc-results/*.log

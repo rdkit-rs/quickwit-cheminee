@@ -17,8 +17,24 @@ use serde::{Deserialize, Serialize};
 use tantivy_rdkit::FingerprintSpec;
 
 use crate::{
-    BinaryFormat, Cardinality, DocParsingError, FieldMappingEntry, FieldMappingType, JsonObject,
+    BinaryFormat, Cardinality, DocParsingError, FastFieldOptions, FieldMappingEntry,
+    FieldMappingType, JsonObject,
 };
+
+/// Storage layout for the numeric descriptor contract. Existing indexes remain flat.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize, Deserialize, utoipa::ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum DescriptorLayout {
+    #[default]
+    Flat,
+    Nested,
+}
+
+impl DescriptorLayout {
+    fn is_flat(&self) -> bool {
+        *self == Self::Flat
+    }
+}
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(deny_unknown_fields)]
@@ -27,6 +43,9 @@ pub struct ChemistryMapping {
     /// Generate the complete Cheminee descriptor_v1 contract in process.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub descriptor_v1: bool,
+    /// Nested stores all 43 numeric properties in one indexed, fast JSON object.
+    #[serde(default, skip_serializing_if = "DescriptorLayout::is_flat")]
+    pub descriptor_layout: DescriptorLayout,
     pub smiles_field: String,
     pub prepared_smiles_field: String,
 }
@@ -34,6 +53,10 @@ pub struct ChemistryMapping {
 impl ChemistryMapping {
     pub(crate) fn validate_mapping(&self, mappings: &[FieldMappingEntry]) -> anyhow::Result<()> {
         self.spec.validate()?;
+        ensure!(
+            self.descriptor_v1 || self.descriptor_layout == DescriptorLayout::Flat,
+            "nested descriptors require descriptor_v1"
+        );
         if self.descriptor_v1 {
             validate_descriptor_mapping(self, mappings)?;
         }
@@ -105,7 +128,28 @@ impl ChemistryMapping {
             .and_then(serde_json::Value::as_str)
             .ok_or_else(|| invalid("a single SMILES string is required".into()))?;
         if self.descriptor_v1 {
-            let outputs = prepare_descriptors(smiles, &self.spec).map_err(invalid)?;
+            if self.descriptor_layout == DescriptorLayout::Nested {
+                for name in std::iter::once("descriptors")
+                    .chain(tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS)
+                {
+                    if document.contains_key(name) {
+                        return Err(invalid(format!(
+                            "derived field `{name}` must not be supplied"
+                        )));
+                    }
+                }
+            }
+            let mut outputs = prepare_descriptors(smiles, &self.spec).map_err(invalid)?;
+            if self.descriptor_layout == DescriptorLayout::Nested {
+                let mut descriptors = JsonObject::new();
+                for name in tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS {
+                    let value = outputs.remove(name).ok_or_else(|| {
+                        invalid(format!("prepared descriptor `{name}` is missing"))
+                    })?;
+                    descriptors.insert(name.into(), value);
+                }
+                outputs.insert("descriptors".into(), descriptors.into());
+            }
             for (name, value) in outputs {
                 let output = if name == "smiles" {
                     self.prepared_smiles_field.clone()
@@ -136,26 +180,45 @@ fn validate_descriptor_mapping(
         chemistry.spec.preparation_id == "cheminee-fragment-tautomer-neutralize-v1",
         "descriptor_v1 requires Cheminee canonical preparation"
     );
-    for name in tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS {
-        let field = mappings
-            .iter()
-            .find(|field| field.name == name)
-            .ok_or_else(|| anyhow::anyhow!("descriptor_v1 requires field `{name}`"))?;
-        let valid = if name.starts_with("Num") || name.starts_with("lipinski") {
-            matches!(
-                &field.mapping_type,
-                FieldMappingType::I64(_, Cardinality::SingleValued)
-            )
-        } else {
-            matches!(
-                &field.mapping_type,
-                FieldMappingType::F64(_, Cardinality::SingleValued)
-            )
-        };
+    if chemistry.descriptor_layout == DescriptorLayout::Nested {
         ensure!(
-            valid,
-            "descriptor_v1 field `{name}` has the wrong numeric type"
+            mappings.iter().any(|field| field.name == "descriptors"
+                && matches!(&field.mapping_type,
+                FieldMappingType::Json(options, Cardinality::SingleValued)
+                    if options.indexing_options.is_some()
+                        && !matches!(options.fast, FastFieldOptions::Disabled)
+                        && options.stored)),
+            "nested descriptor_v1 requires one stored, indexed, fast descriptors JSON field"
         );
+        ensure!(
+            !mappings
+                .iter()
+                .any(|field| tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS
+                    .contains(&field.name.as_str())),
+            "nested descriptor_v1 must not also map top-level numeric descriptors"
+        );
+    } else {
+        for name in tantivy_rdkit::descriptor_v1::KNOWN_DESCRIPTORS {
+            let field = mappings
+                .iter()
+                .find(|field| field.name == name)
+                .ok_or_else(|| anyhow::anyhow!("descriptor_v1 requires field `{name}`"))?;
+            let valid = if name.starts_with("Num") || name.starts_with("lipinski") {
+                matches!(
+                    &field.mapping_type,
+                    FieldMappingType::I64(_, Cardinality::SingleValued)
+                )
+            } else {
+                matches!(
+                    &field.mapping_type,
+                    FieldMappingType::F64(_, Cardinality::SingleValued)
+                )
+            };
+            ensure!(
+                valid,
+                "descriptor_v1 field `{name}` has the wrong numeric type"
+            );
+        }
     }
     ensure!(mappings.iter().any(|field| field.name == "pattern_fingerprint"
         && matches!(&field.mapping_type, FieldMappingType::Bytes(options, Cardinality::SingleValued)

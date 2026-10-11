@@ -9,7 +9,7 @@ CPU pool in parallel and preserves input order in its rejection report. No prepa
 service or exporter is used.
 
 The mapping requires the existing Cheminee canonical preparation contract, the
-43 descriptor fields with their original signed-integer/f64 types,
+43 numeric descriptors with their original integer/f64 types (nested or flat),
 `pattern_fingerprint` (base64 bytes), `other_descriptors` (JSON), and the existing
 prepared SMILES and contract-hashed Morgan fields. Caller-supplied derived fields
 are rejected. Missing, nonfinite, invalid, or incompatible chemistry fails the
@@ -52,3 +52,42 @@ exactly-once mechanism. The existing timeout/replay correction is unchanged.
 `descriptor_audit` is an offline correctness tool, not an ingestion exporter.
 Its outputs are never used as benchmark ingestion inputs. Test the deployed REST
 path as well as the chemistry/mapper units before claiming the feature works.
+
+## Nested numeric descriptors
+
+For new indexes, set `chemistry.descriptor_layout: nested` and map one top-level
+`descriptors` field as `type: json`, `indexed: true`, `stored: true`, `fast: true`.
+Do not also declare the 43 top-level numeric descriptor fields. The example in
+`tests/fixtures/descriptor_v1.index.json` uses this layout. Integers remain integers,
+continuous properties remain f64, and every molecule still receives all 43 values.
+Fingerprint, scaffold, learned-cluster and preparation behavior is unchanged.
+Caller-supplied `descriptors` or legacy numeric descriptor fields are rejected,
+including in dynamic mappings.
+
+Use property paths in Quickwit queries and in chemistry endpoints' `extra_query`:
+
+```text
+descriptors.NumAtoms:10
+descriptors.NumAtoms:>10 AND descriptors.NumAtoms:<20
+descriptors.NumAtoms:>=10 AND descriptors.NumAtoms:<=20
+descriptors.NumAtoms:[10 TO 20]
+descriptors.NumAtoms:{10 TO 20}
+descriptors.exactmw:[136.2 TO 10000]
+descriptors.NumAtoms:[* TO 13] AND NOT descriptors.NumAmideBonds:0
+```
+
+The colon before a comparison operator is required. Square bounds are inclusive;
+curly bounds are exclusive. `*` makes a bound unbounded. Numeric JSON properties
+must be fast fields for range queries. Sorting accepts the same property paths,
+for example `sort_field: "descriptors.exactmw"` on the Cheminee basic endpoint.
+Numeric equality is numeric: an integer-valued float literal can match an integer
+property. These queries use Quickwit's query AST, not Tantivy's bare QueryParser.
+
+For compatibility, an omitted `descriptor_layout` retains the existing `flat`
+layout and existing query paths. Its fixture is `descriptor_v1.flat.index.json`.
+Changing layout requires a new index and reingestion from raw inputs; old index
+segments are not rewritten. Clients querying the new index must add the
+`descriptors.` prefix to numeric property names. No query aliases silently change
+existing behavior. The historical 100k measurements used the flat layout and do
+not establish nested-layout performance; the nested layout also enables fast
+columns for all 43 descriptors, unlike the historical schema.

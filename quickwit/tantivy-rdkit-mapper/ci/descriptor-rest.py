@@ -15,20 +15,24 @@
 """Exercise complete preparation through HTTP against pinned Cheminee golden outputs."""
 import argparse
 import json
+import math
 from pathlib import Path
 import os
 import subprocess
 import time
 import urllib.request
 import urllib.error
+from descriptor_queries import check_nested_queries
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--binary", type=Path, required=True)
 parser.add_argument("--work-dir", type=Path, required=True)
+parser.add_argument("--layout", choices=["nested", "flat"], default="nested")
 args = parser.parse_args()
 args.work_dir.mkdir(parents=True, exist_ok=False)
 fixtures = Path(__file__).resolve().parent.parent / "tests/fixtures"
-index = json.loads((fixtures / "descriptor_v1.index.json").read_text())
+index = json.loads((fixtures / ("descriptor_v1.index.json" if args.layout == "nested" else "descriptor_v1.flat.index.json")).read_text())
+prefix = "descriptors." if args.layout == "nested" else ""
 raw = [json.loads(line) for line in (fixtures / "descriptor_v1.raw.ndjson").read_text().splitlines()]
 expected = [{key: value[0] for key, value in json.loads(line).items()} for line in (fixtures / "descriptor_v1.cheminee.ndjson").read_text().splitlines()]
 base = "http://127.0.0.1:17880"
@@ -64,6 +68,7 @@ try:
     assert accepted["num_ingested_docs"] == len(raw) and accepted["num_rejected_docs"] == 1, accepted
     found = request("/api/v1/moses/search", {"query":"*", "max_hits":20})
     assert found["num_hits"] == len(raw), found
+    (args.work_dir / "observed.json").write_text(json.dumps(found, indent=2))
     observed = {hit["record_id"]:hit for hit in found["hits"]}
     fingerprint = index["doc_mapping"]["chemistry"]["spec"]
     fingerprint_name = next(field["name"] for field in index["doc_mapping"]["field_mappings"] if field["name"].startswith("morgan_"))
@@ -77,18 +82,31 @@ try:
         for field, value in row.items():
             if field in ["smiles", "pattern_fingerprint", "morgan_fingerprint", "extra_data", "other_descriptors"]:
                 continue
-            response = request("/api/v1/moses/search", {"query":f"record_id:{record_id} AND {field}:{value}", "max_hits":0})
+            if args.layout == "nested":
+                stored = actual["descriptors"][field]
+                # JSON transport can change the last binary digit. Require exact
+                # integers and at most one ULP for floats, plus exact term matches below.
+                assert abs(stored - value) <= (math.ulp(value) if isinstance(value, float) else 0), (record_id, field, stored, value)
+                assert type(actual["descriptors"][field]) is type(value), (record_id, field)
+                assert field not in actual, (record_id, field)
+            response = request("/api/v1/moses/search", {"query":f"record_id:{record_id} AND {prefix}{field}:{value}", "max_hits":0})
             assert response["num_hits"] == 1, (record_id, field, response)
             query_checks += 1
         cluster = row["other_descriptors"]["similarity_cluster"]
         response = request("/api/v1/moses/search", {"query":f"record_id:{record_id} AND other_descriptors.similarity_cluster:{cluster}", "max_hits":0})
         assert response["num_hits"] == 1, (record_id, response)
         query_checks += 1
+    nested_queries = check_nested_queries(request, expected, fingerprint) if args.layout == "nested" else []
     forged = json.dumps({"record_id":100, "input_smiles":"CCO", "NumHeavyAtoms":99}).encode()
     # Rejected-only input has no publication to wait for. Validate acknowledgement directly.
     rejected = request("/api/v1/moses/ingest?commit=auto&detailed_response=true", forged)
     assert rejected["num_ingested_docs"] == 0 and rejected["num_rejected_docs"] == 1, rejected
-    (args.work_dir / "results.json").write_text(json.dumps({"accepted":accepted,"rejected_forgery":rejected,"golden_documents":len(raw),"descriptor_and_cluster_queries":query_checks,"status":"passed"},indent=2))
+    if args.layout == "nested":
+        for value in [{"NumAtoms":99}, None, []]:
+            body = json.dumps({"record_id":101,"input_smiles":"CCO","descriptors":value}).encode()
+            result = request("/api/v1/moses/ingest?commit=auto&detailed_response=true", body)
+            assert result["num_ingested_docs"] == 0 and result["num_rejected_docs"] == 1, result
+    (args.work_dir / "results.json").write_text(json.dumps({"accepted":accepted,"rejected_forgery":rejected,"golden_documents":len(raw),"descriptor_and_cluster_queries":query_checks,"layout":args.layout,"nested_queries":nested_queries,"status":"passed"},indent=2))
 finally:
     process.terminate()
     try:
