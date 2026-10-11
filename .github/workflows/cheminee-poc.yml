@@ -7,6 +7,7 @@ on:
       - "quickwit/tantivy-rdkit/**"
       - "quickwit/tantivy-rdkit-mapper/**"
       - "quickwit/quickwit-indexing/**"
+      - "quickwit/quickwit-ingest/**"
       - "quickwit/quickwit-cli/**"
       - "quickwit/quickwit-query/**"
       - "quickwit/quickwit-doc-mapper/**"
@@ -44,6 +45,7 @@ jobs:
           toolchain: "1.96"
       - name: Test query and API integration
         run: |
+          cargo test --locked -p quickwit-ingest --lib
           cargo test --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-query --lib --tests
           cargo test --locked -p quickwit-doc-mapper --features native-chemistry chemistry --lib
           cargo test --locked -p quickwit-serve --features native-chemistry cheminee_api --lib
@@ -75,7 +77,7 @@ jobs:
       - name: Verify fingerprint-only workers reject graph search
         run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --expect-native-unavailable --work-dir /tmp/cheminee-no-native-results
       - name: Lint chemistry integration
-        run: cargo clippy --locked -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
+        run: cargo clippy --locked -p quickwit-ingest -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
       - uses: actions/upload-artifact@v4
         if: always()
         with:
