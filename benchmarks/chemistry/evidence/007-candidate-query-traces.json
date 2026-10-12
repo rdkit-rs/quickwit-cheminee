@@ -1,0 +1,7 @@
+{
+  "file": "007-candidate-query-traces.zip",
+  "bytes": 255430,
+  "sha256": "08b2ca1b27a2b72a62aac00e75a1941a993dcc8fdd7db4b267bf33b4d1c25715",
+  "sanitized_members": 35,
+  "definition": "Sanitized query counter traces with unchanged numeric counters/timestamps. Omits process IDs, addresses, paths, service logs, request bodies and returned documents. Exact query definitions remain in the metrics JSON; ordered ID/score audits and raw-source hashes bind accepted responses. Combined candidate/batched-decode change; query-specific100k measurements, result caches disabled."
+}

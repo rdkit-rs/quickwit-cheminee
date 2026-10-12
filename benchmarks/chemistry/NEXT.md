@@ -13,8 +13,10 @@ inconclusive outcomes. Existing code and historical evidence remain identifiable
    measures query costs before optimization: candidate selection, dictionary decode,
    distance work, eager dictionary-wide RDKit verification, collection, hydration
    and shared runtime. Distinguish result-cache hits from warm execution and
-   restarted processes from cold storage. Then evaluate candidate-first exact
-   scoring with query-local memoization in fallible setup. Decode and RDKit
+   restarted processes from cold storage. The [experiment007combined optimization](experiments/007-candidate-first-exact.md)
+   completes candidate-first exact scoring with query-local memoization in fallible
+   setup, matched repetitions, and bounded held-out C4 probes. Source publication
+   remains pending. Decode and RDKit
    errors remain errors. Measure materialized candidates, unfiltered regressions,
    exact counts, threshold boundaries and stable tie order; never truncate work
    silently. A dedicated chemistry pool or model batching remains a separate
