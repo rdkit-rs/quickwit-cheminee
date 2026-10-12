@@ -1,0 +1,7 @@
+{
+  "file": "005-counter-traces.zip",
+  "sha256": "e1b82bd848d67692e56fcd68cdd6637a4eb7bac46d522f24b1c7ce02c2882445",
+  "bytes": 882679,
+  "sanitized_members": 166,
+  "definition": "Sanitized counter traces. Numeric counters/timestamps are unchanged. Process IDs, memory addresses, local paths, commands, service logs and molecule payloads are omitted. Original-source SHA256 binds each derivative to retained local evidence. Full readback documents are not included."
+}
