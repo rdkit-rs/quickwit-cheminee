@@ -9,7 +9,8 @@ inconclusive outcomes. Existing code and historical evidence remain identifiable
    controls and repetitions, passed stored/query audits, instrumented overhead
    comparison, and observed merge/deletion lifecycle. Changing `QW_NUM_CPUS`
    changes multiple pools; it does not isolate chemistry worker count.
-2. Measure query costs before optimizing: candidate selection, dictionary decode,
+2. The [experiment 006 eager baseline](experiments/006-eager-query-costs.md) now
+   measures query costs before optimization: candidate selection, dictionary decode,
    distance work, eager dictionary-wide RDKit verification, collection, hydration
    and shared runtime. Distinguish result-cache hits from warm execution and
    restarted processes from cold storage. Then evaluate candidate-first exact

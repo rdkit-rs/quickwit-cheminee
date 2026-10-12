@@ -1,0 +1,7 @@
+{
+  "file": "006-eager-query-traces.zip",
+  "bytes": 232192,
+  "sha256": "8b909cf60ba6c615065f22d01f19cd7fab48c023a3a4288d6f2b8ec978cfcb5f",
+  "sanitized_members": 9,
+  "definition": "Sanitized query counter traces with unchanged numeric counters/timestamps. Omits process IDs, addresses, paths, service logs, request bodies and returned documents. Exact query definitions remain in the metrics JSON; ordered ID/score audits and raw-source hashes bind accepted responses. Baseline only; no candidate-first measurements."
+}
