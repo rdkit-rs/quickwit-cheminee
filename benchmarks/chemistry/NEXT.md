@@ -21,7 +21,10 @@ inconclusive outcomes. Existing code and historical evidence remain identifiable
    exact counts, threshold boundaries and stable tie order; never truncate work
    silently. A dedicated chemistry pool or model batching remains a separate
    indexing proposal with its own compatibility and concurrency evidence.
-3. Run a narrow USearch feasibility gate before freezing the vector format:
+3. The [experiment008standalone USearch gate](experiments/008-usearch-feasibility.md)
+   passes the bounded external-payload/topology fixture. Production integration,
+   ARM64 runtime and remote lifecycle remain unverified. Before freezing the
+   vector format, carry its requirements into the adapter:
    externally owned canonical payload, graph-only serialization, destruction of
    builders, fresh-process reopen, shuffled insertion order, concurrent scratch
    leases, deletion/filter masks and mismatched-component rejection. Member keys

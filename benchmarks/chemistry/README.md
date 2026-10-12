@@ -19,6 +19,8 @@ that cite the affected experiment. Repetitions belong to their experiment.
 
 | [007: candidate-first exact](experiments/007-candidate-first-exact.md) | Batched dictionary decode and candidate-only exact scoring | Query-specific100k, caches disabled: query1/all6.20x, empty12.43x faster. Correctness and bounded C4 probes passed; application source remains local. |
 
+| [008: USearch feasibility](experiments/008-usearch-feasibility.md) | Separate external payload/topology, shuffled DocIds and scratch ownership | Standalone10k gate passed; no production format, Quickwit ANN or general recall claim. |
+
 Experiment 005 uses the same flat-schema revision as 003. Do not compare its
 settings against unmeasured nested-schema timings or attribute schema changes
 to tuning.
