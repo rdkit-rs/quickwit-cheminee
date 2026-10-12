@@ -60,6 +60,13 @@ score and ascending stable record_id. Root/leaf search fetches stored documents
 for returned hits. The API returns those hydrated documents, including stored
 fingerprints, so response sizes also differ from Cheminee's projection.
 
+The graph-query path has the same eager ordering: `GraphWeight::scorer` decodes
+and RDKit-verifies every distinct prepared-SMILES dictionary value before
+constructing its candidate scorer. Metadata or descriptor candidate filters do not
+avoid that initial verification work. A future cost study must separate this
+setup from candidate traversal and returned-hit hydration. Candidate-first
+query-local memoization is a proposed optimization, not a measured result.
+
 Native similarity does not use learned-cluster routing, even though ingestion
 still computes cluster assignments for descriptor compatibility. Query caches
 can accelerate repeated identical requests. Ordinary bytes fast fields in the
@@ -72,6 +79,7 @@ document; it does not by itself guarantee contiguous raw vector rows.
 - [Cheminee schema](https://github.com/rdkit-rs/cheminee/blob/f8d31a604203392f4dfba7d9a84120100b8426b5/src/schema/mod.rs#L13)
 - [Cheminee routing and scoring](https://github.com/rdkit-rs/cheminee/blob/f8d31a604203392f4dfba7d9a84120100b8426b5/src/search/similarity_search.rs#L69)
 - [Quickwit scorer](https://github.com/rdkit-rs/quickwit-cheminee/blob/7d9a4f17a09cfb68b88f7d81cfa0aa2570ac677b/quickwit/tantivy-rdkit/src/lib.rs#L205)
+- [Quickwit eager graph verification](https://github.com/rdkit-rs/quickwit-cheminee/blob/7d9a4f17a09cfb68b88f7d81cfa0aa2570ac677b/quickwit/tantivy-rdkit/src/graph.rs#L128)
 - [Quickwit request and response integration](https://github.com/rdkit-rs/quickwit-cheminee/blob/7d9a4f17a09cfb68b88f7d81cfa0aa2570ac677b/quickwit/quickwit-serve/src/cheminee_api.rs#L97)
 - [Exact dependency pin](https://github.com/rdkit-rs/quickwit-cheminee/blob/7d9a4f17a09cfb68b88f7d81cfa0aa2570ac677b/quickwit/Cargo.lock#L11992): Tantivy 0.26.0, `057458bf14d6973c9c97594c1d99580b6af4c49d`; Cheminee uses Tantivy 0.22.0.
 

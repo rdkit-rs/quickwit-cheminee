@@ -1,0 +1,19 @@
+{
+  "rows": 10000,
+  "dimensions_bits": 2048,
+  "bytes_per_row": 256,
+  "payload_bytes": 2560000,
+  "payload_sha256": "9e86a7574ed726a756816c70bb2fc801ba042c70f4b427d64b29d6e1503db82a",
+  "source_prefix_ndjson_sha256": "a3bde57c9d46a00c82ce0a00de5f58f6b5f995be11af396a14088d3d3360cd3c",
+  "definition": "Record IDs 1 through 10,000, ascending, from the retained native oracle; no deduplication. Base64-decode each morgan_fingerprint to exactly 256 bytes. Concatenate unchanged bytes with no header, separator, ID, padding or trailing newline. Row 0 is record_id 1; bit j = (byte[j//8] >> (j%8)) & 1.",
+  "fingerprint_profile": {
+    "format": "morgan-r3-2048-lsb0-v1",
+    "rdkit_version": "2026.09.1",
+    "preparation_id": "cheminee-fragment-tautomer-neutralize-v1"
+  },
+  "source_full_ndjson_sha256_from_prior_verified_parity": "a6f7a3debee62623161497a41eb90534efe4b0f6649dfff0d87911817abaf919",
+  "raw_100k_sha256": "9a63bf25bc02ba3c965bb050cd74ba1a059bc362b8fb210b8febb6a326ce2e5e",
+  "operation": "Byte-only prefix hash between engines; no new chemistry or performance run.",
+  "lucene_reference_sha256": "9e86a7574ed726a756816c70bb2fc801ba042c70f4b427d64b29d6e1503db82a",
+  "lucene_byte_identity_match": true
+}

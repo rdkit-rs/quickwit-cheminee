@@ -22,7 +22,15 @@ a=p.parse_args()
 assert a.engine=='quickwit'
 assert a.batch>0 and a.concurrency>0
 lock=(ROOT/'engine.lock').open('w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+# Capacity guard is outside every measured interval. Preserve matched run size.
+space=os.statvfs(ROOT);free_bytes=space.f_bavail*space.f_frsize
+reserve_bytes=2*1024**3;peak_additional_bytes=512*1024**2
+preflight={'tag':a.tag,'time_unix_seconds':time.time(),'available_bytes':free_bytes,'reserve_bytes':reserve_bytes,'estimated_peak_additional_bytes':peak_additional_bytes,'basis':'Completed 100k runs retain <=230 MiB; raw/compressed audit coexistence adds about100 MiB. Budget512 MiB per new run, keep2 GiB reserve.'}
+with (pathlib.Path(os.environ['STUDY_OUTPUT'])/'disk-preflights.jsonl').open('a') as out:out.write(json.dumps(preflight)+'\n')
+if a.size>100000:raise RuntimeError('A larger corpus requires a separate measured capacity preflight')
+if free_bytes<reserve_bytes+peak_additional_bytes:raise RuntimeError(f'Disk preflight stopped before launch: {free_bytes} bytes available, {reserve_bytes+peak_additional_bytes} required; preserve all prior evidence')
 run=ROOT/'runs'/a.tag;run.mkdir(parents=True,exist_ok=False)
+(run/'disk-preflight.json').write_text(json.dumps(preflight,indent=2))
 variant='instrumented' if a.instrumented else 'control'
 binary=ROOT/'bin'/f'{a.engine}-{variant}'
 if not binary.is_file():raise RuntimeError(f'missing {binary}')

@@ -1,0 +1,17 @@
+{
+  "0": "shared_runtime_input_and_unclassified_including_some_cleanup",
+  "1": "input_rest_routing",
+  "2": "chemistry_normalization_and_preparation_overhead",
+  "3": "numeric_descriptors",
+  "4": "fingerprints",
+  "5": "scaffold_matching",
+  "6": "learned_cluster_and_tensorflow_workers",
+  "7": "ingest_validation_envelope_and_wal",
+  "8": "schema_and_document_mapping_including_validation_mapping",
+  "9": "indexing_writer_commit_and_attached_workers",
+  "10": "serialization_and_packaging",
+  "11": "upload_and_publication",
+  "12": "background_merging_instrumented_scopes",
+  "13": "active_query_execution",
+  "31": "instrumentation"
+}

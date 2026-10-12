@@ -56,3 +56,39 @@ phase totals; samples are once per second. JSON counters are actual process CPU,
 not requested thread counts. It preserves short/long lifecycle distinctions and
 shared process memory. It does not infer owned allocations or assign unmeasured
 substeps from RSS. Validate every audit and status before using its headline.
+
+## Capacity and evidence export
+
+The final harness adds a pre-launch disk check outside timed intervals. It budgets
+512 MiB of additional space for each 100k run, including the temporary coexistence
+of raw and compressed audits, and preserves a 2 GiB filesystem reserve. The budget
+comes from measured retained runs of at most approximately 230 MiB plus about
+100 MiB of audit overlap. Larger samples require a new capacity estimate. A failed
+check stops before launching an engine; it does not shrink or overwrite the run.
+Builds require a separate preflight. Preserve source data and original results.
+
+After the complete sequential experiment and audits finish:
+
+```sh
+export EVIDENCE_OUTPUT=/absolute/path/to/sanitized-evidence
+mkdir -p "$EVIDENCE_OUTPUT"
+python3 summarize.py
+python3 enrich.py
+python3 public_metrics.py
+python3 public_traces.py
+```
+
+`enrich.py` reads resource and stage counters, request boundaries, split/footer
+metadata and file inventories. It retains same-window CPU reconciliation, actual
+lifecycle transitions and internal segment counts. Run it where the retained
+index files are readable. `public_metrics.py` validates reconciliation and rejects
+accidental local paths or private identifiers. `public_traces.py` exports a
+whitelist of counter fields, request counts and split transitions; it omits process
+IDs, memory addresses, local paths, service logs and molecule payloads. Its archive
+manifest identifies excluded attempts and links every member's hash to its retained
+original source hash. The archive is reopened and checked after creation.
+
+These exports require all twelve planned full runs. They do not turn correctness
+probe latencies into a query-performance study. `stage-names.json` describes the
+original measurement overlay; publishing that map does not supply the separately
+built overlay binary or claim stage-owned memory measurements.

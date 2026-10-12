@@ -2,6 +2,7 @@
 
 This ledger separates measured experiments by code, schema and timing boundary.
 It is a workload-specific engineering record, not a general product ranking.
+Milestones are tracked in [issue 5](https://github.com/rdkit-rs/quickwit-cheminee/issues/5).
 Reports are append-only once reviewed: corrections should be new dated addenda
 that cite the affected experiment. Repetitions belong to their experiment.
 
@@ -13,10 +14,11 @@ that cite the affected experiment. Repetitions belong to their experiment.
 | [002: historical batching](experiments/002-historical-batching.md) | Batch size, concurrency and Cheminee Rayon width | Quickwit auto/B200/C1 improved service latency; full preparation remained external. |
 | [003: native preparation](experiments/003-native-preparation.md) | Full in-process descriptor preparation and reuse | 15% less CPU and 79% less peak RSS than matched Cheminee, but 48% longer searchable latency. Flat schema. |
 | [004: nested descriptors](experiments/004-nested-descriptors.md) | Explicit nested fast JSON descriptor layout | Correctness and CI passed; no nested-schema performance measurement. |
+| [005: runtime configuration](experiments/005-runtime-tuning.md) | CPU hint, batching and commit timeout; two controls per setting | Selected setting 22.7% faster to searchable, with 9.1% more CPU and higher RSS; full 43-minute lifecycle observed. Flat schema. |
 
-A configuration-only study is in progress at the same flat-schema revision as
-003. Its results will be appended as experiment 005. Do not compare its settings
-against nested-schema timings or attribute schema changes to tuning.
+Experiment 005 uses the same flat-schema revision as 003. Do not compare its
+settings against unmeasured nested-schema timings or attribute schema changes
+to tuning.
 
 ## Reading the evidence
 
@@ -26,10 +28,13 @@ against nested-schema timings or attribute schema changes to tuning.
 - [Experiment template](TEMPLATE.md)
 - [Proposed next experiments](NEXT.md)
 - [Native baseline metrics](evidence/003-native-metrics.json)
+- [Runtime tuning metrics](evidence/005-tuning-metrics.json)
+- [Sanitized timing and CPU traces](evidence/005-counter-traces.zip)
 
 Public source comments and CI links are cited in each report. Small sanitized
-metric files preserve values and boundaries. Large raw traces and historical
-harness bundles are not attached here; their absence limits independent replay.
+metric files preserve values and boundaries. Experiment 005 includes sanitized raw counter traces. Complete original logs,
+readback payloads, instrumentation binaries and historical harness bundles remain
+outside this ledger; their absence limits independent replay.
 No private artifact links are required to read this ledger.
 
 Quickwit chemistry is one executable with in-process mapping and search. It
