@@ -1,0 +1,383 @@
+{
+  "version": "0.8",
+  "index_id": "moses",
+  "doc_mapping": {
+    "mode": "strict",
+    "index_field_presence": false,
+    "field_mappings": [
+      {
+        "name": "record_id",
+        "type": "u64",
+        "stored": true,
+        "indexed": true,
+        "fast": true
+      },
+      {
+        "name": "input_smiles",
+        "type": "text",
+        "stored": false,
+        "indexed": false
+      },
+      {
+        "name": "smiles",
+        "type": "text",
+        "stored": true,
+        "indexed": true,
+        "fast": true,
+        "tokenizer": "raw",
+        "record": "basic",
+        "fieldnorms": true
+      },
+      {
+        "name": "CrippenClogP",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "CrippenMR",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "FractionCSP3",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAliphaticHeterocycles",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAliphaticRings",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAmideBonds",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAromaticHeterocycles",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAromaticRings",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAtomStereoCenters",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumAtoms",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumBridgeheadAtoms",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumHBA",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumHBD",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumHeavyAtoms",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumHeteroatoms",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumHeterocycles",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumRings",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumRotatableBonds",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumSaturatedHeterocycles",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumSaturatedRings",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumSpiroAtoms",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "NumUnspecifiedAtomStereoCenters",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "Phi",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "amw",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi0n",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi0v",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi1n",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi1v",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi2n",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi2v",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi3n",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi3v",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi4n",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "chi4v",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "exactmw",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": true
+      },
+      {
+        "name": "hallKierAlpha",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "kappa1",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "kappa2",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "kappa3",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "labuteASA",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "lipinskiHBA",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "lipinskiHBD",
+        "type": "i64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "tpsa",
+        "type": "f64",
+        "indexed": true,
+        "stored": false,
+        "fast": false
+      },
+      {
+        "name": "pattern_fingerprint",
+        "type": "bytes",
+        "stored": true,
+        "indexed": false,
+        "fast": false,
+        "input_format": "base64",
+        "output_format": "base64"
+      },
+      {
+        "name": "morgan_5be8b9ad4f8bbdce84f376944d49b996d976e6676f07fd6ee416c0357903141e",
+        "type": "bytes",
+        "stored": true,
+        "indexed": false,
+        "fast": true,
+        "input_format": "hex",
+        "output_format": "base64"
+      },
+      {
+        "name": "extra_data",
+        "type": "json",
+        "indexed": true,
+        "stored": true,
+        "expand_dots": true,
+        "tokenizer": "default",
+        "record": "position"
+      },
+      {
+        "name": "other_descriptors",
+        "type": "json",
+        "indexed": true,
+        "stored": false,
+        "expand_dots": true,
+        "tokenizer": "default",
+        "record": "position"
+      }
+    ],
+    "chemistry": {
+      "descriptor_v1": true,
+      "smiles_field": "input_smiles",
+      "prepared_smiles_field": "smiles",
+      "spec": {
+        "format": "morgan-r3-2048-lsb0-v1",
+        "rdkit_version": "2026.09.1",
+        "preparation_id": "cheminee-fragment-tautomer-neutralize-v1"
+      }
+    }
+  },
+  "indexing_settings": {
+    "commit_timeout_secs": 30
+  }
+}
