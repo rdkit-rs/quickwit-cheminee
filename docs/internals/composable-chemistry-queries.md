@@ -194,5 +194,18 @@ Python bit oracle over indexed bytes. This does not replace an independent
 normalization oracle or a large-data benchmark. Workspace prerequisites and actual
 run results are recorded separately in the handoff evidence.
 
+The follow-up harness also uses four matches per split, ties spanning both leaves,
+and `from=2,size=4` for graph and similarity ordering. Per-leaf request counters are
+checked around those queries specifically. A separate ordinary bytes-field index
+admits a malformed fingerprint so that one split fails during leaf verification
+beside a healthy split. Strict ES-compatible search returns HTTP 500; explicit
+`allow_partial_search_results=true` and the default return healthy hits with one
+failed shard. The partial response's total counts successful splits only (even
+though its existing relation is `eq`); it is not an exhaustive chemistry total.
+The segment-level tests exercise missing, multivalued, and malformed values for
+graph, Tanimoto, and containment, both outside explicit candidates and retained
+behind deletions, plus absent columns with empty candidates. The graph execution
+tests use a deterministic fallible verifier; the HTTP graph checks use RDKit.
+
 New containment ASTs require updated workers; old workers reject the new variant.
 Mixed-version rolling upgrades are not validated by this change.

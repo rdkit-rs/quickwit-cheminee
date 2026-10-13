@@ -80,16 +80,36 @@ def start(name, offset, services):
         env=dict(os.environ, QW_DISABLE_TELEMETRY='1', RUST_LOG='info')))
 
 
-def search(query, size=20):
-    result = request('/api/v1/_elastic/composable/_search?allow_partial_search_results=false',
-        {'query': query, 'size': size, 'track_total_hits': True,
-         'sort': [{'_score': 'desc'}, {'record_id': 'asc'}]})
-    assert result['_shards']['failed'] == 0, result
+def search_body(query, size=20, offset=0):
+    return {'query': query, 'size': size, 'from': offset, 'track_total_hits': True,
+            'sort': [{'_score': 'desc'}, {'record_id': 'asc'}]}
+
+
+def hits_and_total(result):
     # This fork's ES converter omits _score; requested sort values carry the score.
     for hit in result['hits']['hits']:
         assert len(hit['sort']) == 2 and hit['sort'][1] == hit['_source']['record_id'], hit
     return ([(hit['_source']['record_id'], hit['sort'][0]) for hit in result['hits']['hits']],
             result['hits']['total']['value'])
+
+
+def search(query, size=20, index='composable', offset=0):
+    result = request(f'/api/v1/_elastic/{index}/_search?allow_partial_search_results=false',
+                     search_body(query, size, offset))
+    assert result['_shards']['failed'] == 0, result
+    return hits_and_total(result)
+
+
+def leaf_counters():
+    counters = {}
+    for name, offset in [('leaf-a', 10), ('leaf-b', 20)]:
+        with urllib.request.urlopen(f'http://127.0.0.1:{args.port_base + offset}/metrics') as response:
+            metrics = response.read().decode()
+        (work / (name + '-metrics.txt')).write_text(metrics)
+        counters[name] = sum(float(line.split()[-1]) for line in metrics.splitlines()
+            if line.startswith('quickwit_search_leaf_search_requests_total{')
+            and 'kind="server"' in line and 'status="success"' in line)
+    return counters
 
 
 def clause(name, operand):
@@ -197,13 +217,62 @@ try:
     for query in [{'tanimoto': dict(similarity, minimum=2)}, {'tanimoto': dict(similarity, ann=True)},
                   {'molecular_graph': dict(graph, prepared_smiles='not-smiles')}]:
         request('/api/v1/_elastic/composable/_search', {'query': query}, expected=400)
-    for name, offset in [('leaf-a', 10), ('leaf-b', 20)]:
-        with urllib.request.urlopen(f'http://127.0.0.1:{args.port_base + offset}/metrics') as response:
-            metrics = response.read().decode()
-        (work / (name + '-metrics.txt')).write_text(metrics)
-        counters = [float(line.split()[-1]) for line in metrics.splitlines()
-                    if line.startswith('quickwit_search_leaf_search_requests_total{') and 'kind="server"' in line]
-        assert sum(counters) > 0, (name, 'no leaf search requests observed')
+
+    # Four matches in each split, with the top-score ties interleaved across splits.
+    # Both leaves must handle these queries, not merely earlier startup searches.
+    topk_mapping = json.loads(json.dumps(mapping))
+    topk_mapping['index_id'] = 'composable-topk'
+    request('/api/v1/indexes', topk_mapping)
+    for batch_number, record_ids in enumerate([[12, 8, 4], [11, 7, 3], [10, 6, 2], [9, 5, 1]]):
+        batch = [{'record_id': record_id, 'smiles': 'CC', 'family': 'tie'} for record_id in record_ids]
+        batch.append({'record_id': 101 + batch_number, 'smiles': 'CCC', 'family': 'lower'})
+        ingested = request('/api/v1/composable-topk/ingest?commit=force',
+            '\n'.join(json.dumps(doc) for doc in batch).encode(), raw=True)
+        assert ingested['num_rejected_docs'] == 0, ingested
+    splits = request('/api/v1/indexes/composable-topk/splits?split_states=Published')
+    (work / 'topk-splits.json').write_text(json.dumps(splits, indent=2))
+    assert len(splits['splits']) == 4, splits
+    assert all(split['num_docs'] == 4 for split in splits['splits']), splits
+    for query in [{'molecular_graph': graph}, {'tanimoto': dict(similarity, minimum=0)}]:
+        before = leaf_counters()
+        complete = search(query, index='composable-topk')
+        page = search(query, size=4, offset=2, index='composable-topk')
+        after = leaf_counters()
+        assert complete[1] == page[1] == 16, (complete, page)
+        assert page[0] == complete[0][2:6] == [(record_id, 1.0) for record_id in [3, 4, 5, 6]]
+        assert all(after[name] > before[name] for name in before), (before, after)
+        checks.append({'distributed_topk': query, 'from': 2, 'size': 4, 'result': page,
+                       'leaf_requests_before': before, 'leaf_requests_after': after})
+
+    # Native chemistry ingestion prevents invalid derived data. A normal bytes
+    # mapping allows a one-byte fingerprint through ingestion, so failure happens
+    # inside the leaf verifier, beside a separately committed healthy split.
+    failure_mapping = json.loads(json.dumps(mapping))
+    failure_mapping['index_id'] = 'composable-leaf-failure'
+    failure_mapping['doc_mapping'].pop('chemistry')
+    request('/api/v1/indexes', failure_mapping)
+    for batch in [[{'record_id': record_id, fingerprint_field: query_fp.hex()} for record_id in [1, 2]],
+                  [{'record_id': 3, fingerprint_field: '01'}]]:
+        ingested = request('/api/v1/composable-leaf-failure/ingest?commit=force',
+            '\n'.join(json.dumps(doc) for doc in batch).encode(), raw=True)
+        assert ingested['num_rejected_docs'] == 0, ingested
+    splits = request('/api/v1/indexes/composable-leaf-failure/splits?split_states=Published')
+    (work / 'failure-splits.json').write_text(json.dumps(splits, indent=2))
+    assert sorted(split['num_docs'] for split in splits['splits']) == [1, 2], splits
+    failure_url = '/api/v1/_elastic/composable-leaf-failure/_search'
+    for query in [{'tanimoto': similarity}, {'fingerprint_contains': {
+            'spec': spec, 'fingerprint_hex': query_fp.hex(), 'direction': 'document_contains_query'}}]:
+        body = search_body(query)
+        strict = request(failure_url + '?allow_partial_search_results=false', body, expected=500)
+        assert 'indexed fingerprint must contain exactly 256 bytes' in json.dumps(strict), strict
+        partial = request(failure_url + '?allow_partial_search_results=true', body)
+        default = request(failure_url, body)
+        assert partial['_shards']['failed'] == 1 and partial['_shards']['successful'] == 1, partial
+        assert partial['_shards']['total'] == 2, partial
+        assert hits_and_total(partial) == hits_and_total(default) == ([(1, 1.0), (2, 1.0)], 2)
+        assert default['_shards'] == partial['_shards'], default
+        checks.append({'leaf_verification_failure': query, 'strict': strict, 'partial': partial})
+    assert all(count > 0 for count in leaf_counters().values())
     (work / 'results.json').write_text(json.dumps({'checks': checks,
         'cluster': request('/api/v1/cluster'), 'status': 'passed'}, indent=2))
     print(json.dumps({'status': 'passed', 'parity_cases': len(checks)}))

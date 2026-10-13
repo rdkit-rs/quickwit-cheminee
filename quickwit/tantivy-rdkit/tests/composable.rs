@@ -16,7 +16,8 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use tantivy::collector::{Count, TopDocs};
-use tantivy::query::{AllQuery, BooleanQuery, Occur, Query, TermQuery};
+use tantivy::merge_policy::NoMergePolicy;
+use tantivy::query::{AllQuery, BooleanQuery, EmptyQuery, Occur, Query, TermQuery};
 use tantivy::schema::{FAST, INDEXED, IndexRecordOption, STORED, Schema};
 use tantivy::{DocSet, Index, TERMINATED, TantivyDocument, Term, doc};
 use tantivy_rdkit::{
@@ -216,5 +217,174 @@ fn explicit_score_and_id_order_survives_per_split_top_k() -> tantivy::Result<()>
     assert_eq!(global_count, 6);
     assert_eq!(left_hits, global_hits);
     assert_eq!(global_hits, vec![(1.0, Reverse(1)), (1.0, Reverse(2))]);
+    Ok(())
+}
+
+#[derive(Clone, Copy, Debug)]
+enum Operator {
+    Graph,
+    Tanimoto,
+    Containment,
+}
+const OPERATORS: [Operator; 3] = [Operator::Graph, Operator::Tanimoto, Operator::Containment];
+impl Operator {
+    fn query(self, schema: &Schema, candidates: Box<dyn Query>) -> tantivy::Result<Box<dyn Query>> {
+        Ok(match self {
+            Self::Graph => Box::new(GraphQuery::new(
+                candidates,
+                schema,
+                &spec(),
+                "prepared_smiles".into(),
+                Arc::new(Verifier(Arc::new(AtomicUsize::new(0)))),
+            )?),
+            Self::Tanimoto => Box::new(TanimotoQuery::new(
+                candidates,
+                schema,
+                &spec(),
+                PackedFingerprint::from_bytes(&bytes(1))?,
+                0.0,
+            )?),
+            Self::Containment => Box::new(TanimotoQuery::containment(
+                candidates,
+                schema,
+                &spec(),
+                PackedFingerprint::from_bytes(&bytes(1))?,
+                ContainmentDirection::DocumentContainsQuery,
+            )?),
+        })
+    }
+}
+
+// Keep invalid values in the same segment as a healthy candidate. Disabling merges
+// and asserting max_doc after deletion prevents a vacuous deleted-value test.
+fn error_domain_index(kind: &str, delete_invalid: bool) -> tantivy::Result<Index> {
+    let mut builder = Schema::builder();
+    let fp = builder.add_bytes_field(&spec().field_name(), FAST);
+    let mol = builder.add_text_field("prepared_smiles", FAST | STORED);
+    let group = builder.add_u64_field("group", INDEXED);
+    let index = Index::create_in_ram(builder.build());
+    let mut writer = index.writer_with_num_threads::<TantivyDocument>(1, 15_000_000)?;
+    writer.set_merge_policy(Box::new(NoMergePolicy));
+    writer.add_document(doc!(fp=>bytes(1), mol=>"accepted", group=>1u64))?;
+    let invalid = match kind {
+        "missing" => doc!(group=>2u64),
+        "multivalued" => {
+            doc!(fp=>bytes(1), fp=>bytes(3), mol=>"accepted", mol=>"rejected", group=>2u64)
+        }
+        "malformed" => doc!(fp=>vec![1u8], mol=>"excluded", group=>2u64),
+        _ => panic!("unknown fixture"),
+    };
+    writer.add_document(invalid)?;
+    writer.commit()?;
+    if delete_invalid {
+        writer.delete_term(Term::from_field_u64(group, 2));
+        writer.commit()?;
+    }
+    Ok(index)
+}
+
+#[test]
+fn graph_and_fingerprint_errors_are_scoped_to_explicit_candidates() -> tantivy::Result<()> {
+    for kind in ["missing", "multivalued", "malformed"] {
+        let index = error_domain_index(kind, false)?;
+        let schema = index.schema();
+        let group = schema.get_field("group")?;
+        let reader = index.reader()?;
+        let searcher = reader.searcher();
+        assert_eq!(searcher.segment_readers().len(), 1);
+        for operator in OPERATORS {
+            let candidates = Box::new(TermQuery::new(
+                Term::from_field_u64(group, 1),
+                IndexRecordOption::Basic,
+            ));
+            let selective = operator.query(&schema, candidates)?;
+            assert_eq!(
+                searcher.search(&*selective, &Count)?,
+                1,
+                "{operator:?} {kind}"
+            );
+            let broad = operator.query(&schema, Box::new(AllQuery))?;
+            let error = searcher
+                .search(&*broad, &Count)
+                .expect_err("live invalid value must fail");
+            let expected = if kind == "malformed" {
+                match operator {
+                    Operator::Graph => "excluded molecule was verified",
+                    _ => "256 bytes",
+                }
+            } else {
+                "exactly one"
+            };
+            assert!(
+                error.to_string().contains(expected),
+                "{operator:?} {kind}: {error}"
+            );
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn graph_and_fingerprint_ignore_deleted_invalid_values() -> tantivy::Result<()> {
+    for kind in ["missing", "multivalued", "malformed"] {
+        let index = error_domain_index(kind, true)?;
+        let reader = index.reader()?;
+        let searcher = reader.searcher();
+        assert_eq!(searcher.segment_readers().len(), 1);
+        assert_eq!(searcher.segment_reader(0).max_doc(), 2);
+        assert_eq!(searcher.segment_reader(0).num_docs(), 1);
+        for operator in OPERATORS {
+            let query = operator.query(&index.schema(), Box::new(AllQuery))?;
+            assert_eq!(searcher.search(&*query, &Count)?, 1, "{operator:?} {kind}");
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn graph_and_fingerprint_empty_candidates_require_segment_columns() -> tantivy::Result<()> {
+    let mut builder = Schema::builder();
+    builder.add_bytes_field(&spec().field_name(), FAST);
+    builder.add_text_field("prepared_smiles", FAST | STORED);
+    let query_schema = builder.build();
+    // A schema-declared but unpopulated fast field has an empty column. Use an
+    // older segment schema to exercise an actually absent column, as can happen
+    // when a field is introduced after a split was written.
+    let mut builder = Schema::builder();
+    let group = builder.add_u64_field("group", INDEXED);
+    let index = Index::create_in_ram(builder.build());
+    let mut writer = index.writer_with_num_threads::<TantivyDocument>(1, 15_000_000)?;
+    writer.add_document(doc!(group=>1u64))?;
+    writer.commit()?;
+    let reader = index.reader()?;
+    let searcher = reader.searcher();
+    assert!(
+        searcher
+            .segment_reader(0)
+            .fast_fields()
+            .bytes(&spec().field_name())?
+            .is_none()
+    );
+    assert!(
+        searcher
+            .segment_reader(0)
+            .fast_fields()
+            .str("prepared_smiles")?
+            .is_none()
+    );
+    for operator in OPERATORS {
+        let query = operator.query(&query_schema, Box::new(EmptyQuery))?;
+        let error = searcher
+            .search(&*query, &Count)
+            .expect_err("missing segment column must fail");
+        let expected = match operator {
+            Operator::Graph => "missing prepared SMILES fast field",
+            _ => "missing fingerprint fast field",
+        };
+        assert!(
+            error.to_string().contains(expected),
+            "{operator:?}: {error}"
+        );
+    }
     Ok(())
 }
