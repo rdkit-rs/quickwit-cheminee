@@ -39,6 +39,14 @@ struct QueryFastFields {
 impl<'a> QueryAstVisitor<'a> for QueryFastFields {
     type Err = Infallible;
 
+    fn visit_fingerprint_contains(
+        &mut self,
+        query: &'a quickwit_query::query_ast::FingerprintContainsQueryAst,
+    ) -> Result<(), Infallible> {
+        self.range_query_field_names.insert(query.spec.field_name());
+        self.visit(&query.candidates)
+    }
+
     fn visit_graph(
         &mut self,
         query: &'a quickwit_query::query_ast::GraphQueryAst,
@@ -1031,6 +1039,47 @@ mod chemistry_tests {
                 .any(|field| field.name == field_name)
         );
         assert!(warmup.terms_grouped_by_field.contains_key(&family));
+    }
+
+    #[test]
+    fn containment_warms_fingerprints_and_preserves_candidate_postings() {
+        let QueryAst::Tanimoto(original) = ast() else {
+            panic!()
+        };
+        let field_name = original.spec.field_name();
+        let query =
+            QueryAst::FingerprintContains(quickwit_query::query_ast::FingerprintContainsQueryAst {
+                candidates: original.candidates,
+                spec: original.spec,
+                fingerprint_hex: original.fingerprint_hex,
+                direction: tantivy_rdkit::ContainmentDirection::DocumentContainsQuery,
+            });
+        let mut builder = Schema::builder();
+        builder.add_bytes_field(&field_name, FAST);
+        let family = builder.add_text_field("family", STRING);
+        let schema = builder.build();
+        let (_, warmup) = build_query(
+            query.clone(),
+            &BuildTantivyAstContext::for_test(&schema),
+            None,
+        )
+        .unwrap();
+        assert!(
+            warmup
+                .fast_fields
+                .iter()
+                .any(|field| field.name == field_name)
+        );
+        assert!(warmup.terms_grouped_by_field.contains_key(&family));
+        let empty_schema = Schema::builder().build();
+        assert!(
+            build_query(
+                query,
+                &BuildTantivyAstContext::for_test(&empty_schema).without_validation(),
+                None
+            )
+            .is_err()
+        );
     }
 
     #[test]

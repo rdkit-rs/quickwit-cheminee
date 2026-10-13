@@ -21,6 +21,7 @@ use crate::{InvalidQuery, NotNaNf32};
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TanimotoQueryAst {
+    #[serde(default = "super::chemistry_match_all")]
     pub candidates: Box<QueryAst>,
     pub spec: FingerprintSpec,
     pub fingerprint_hex: String,

@@ -12,19 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use tantivy::columnar::BytesColumn;
 use tantivy::query::{EnableScoring, Explanation, Query, Scorer, Weight};
 use tantivy::schema::{FieldType, Schema};
 use tantivy::{DocId, DocSet, Score, SegmentReader, TERMINATED, TantivyError, Term};
 
+mod candidate_scores;
 pub mod descriptor_v1;
+use candidate_scores::CandidateScores;
 mod graph;
 pub use graph::{GraphPredicate, GraphQuery, GraphRanking, GraphVerifier, MoleculeMatcher};
 
 mod schema;
 pub use schema::MoleculeFields;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ContainmentDirection {
+    DocumentContainsQuery,
+    QueryContainsDocument,
+}
 
 pub const FINGERPRINT_BYTES: usize = 256;
 
@@ -113,6 +123,27 @@ impl PackedFingerprint {
         hex::encode(self.0)
     }
 
+    /// Tests bit containment with no molecular-graph interpretation.
+    pub fn contains_bits(
+        &self,
+        other: &[u8],
+        direction: ContainmentDirection,
+    ) -> tantivy::Result<bool> {
+        if other.len() != FINGERPRINT_BYTES {
+            return Err(invalid(
+                "indexed fingerprint must contain exactly 256 bytes",
+            ));
+        }
+        Ok(self
+            .0
+            .iter()
+            .zip(other)
+            .all(|(query, document)| match direction {
+                ContainmentDirection::DocumentContainsQuery => query & document == *query,
+                ContainmentDirection::QueryContainsDocument => query & document == *document,
+            }))
+    }
+
     pub fn tanimoto(&self, other: &[u8]) -> tantivy::Result<f32> {
         if other.len() != FINGERPRINT_BYTES {
             return Err(invalid(
@@ -129,26 +160,31 @@ impl PackedFingerprint {
     }
 }
 
+/// Backward-compatible name for the original similarity operator.
+pub type TanimotoQuery = FingerprintQuery;
+
 #[derive(Debug)]
-pub struct TanimotoQuery {
+pub struct FingerprintQuery {
     candidates: Box<dyn Query>,
     field_name: String,
     fingerprint: PackedFingerprint,
     minimum: f32,
+    containment: Option<ContainmentDirection>,
 }
 
-impl Clone for TanimotoQuery {
+impl Clone for FingerprintQuery {
     fn clone(&self) -> Self {
         Self {
             candidates: self.candidates.box_clone(),
             field_name: self.field_name.clone(),
             fingerprint: self.fingerprint.clone(),
             minimum: self.minimum,
+            containment: self.containment,
         }
     }
 }
 
-impl TanimotoQuery {
+impl FingerprintQuery {
     pub fn new(
         candidates: Box<dyn Query>,
         schema: &Schema,
@@ -175,13 +211,27 @@ impl TanimotoQuery {
             field_name,
             fingerprint,
             minimum,
+            containment: None,
         })
+    }
+
+    /// Exact bit containment only. Morgan containment is not a sound molecular graph screen.
+    pub fn containment(
+        candidates: Box<dyn Query>,
+        schema: &Schema,
+        spec: &FingerprintSpec,
+        fingerprint: PackedFingerprint,
+        direction: ContainmentDirection,
+    ) -> tantivy::Result<Self> {
+        let mut query = Self::new(candidates, schema, spec, fingerprint, 0.0)?;
+        query.containment = Some(direction);
+        Ok(query)
     }
 }
 
-impl Query for TanimotoQuery {
+impl Query for FingerprintQuery {
     fn weight(&self, enable_scoring: EnableScoring<'_>) -> tantivy::Result<Box<dyn Weight>> {
-        Ok(Box::new(TanimotoWeight {
+        Ok(Box::new(FingerprintWeight {
             candidates: self.candidates.weight(EnableScoring::Disabled {
                 schema: enable_scoring.schema(),
                 searcher_opt: enable_scoring.searcher(),
@@ -189,6 +239,7 @@ impl Query for TanimotoQuery {
             field_name: self.field_name.clone(),
             fingerprint: self.fingerprint.clone(),
             minimum: self.minimum,
+            containment: self.containment,
         }))
     }
 
@@ -197,43 +248,61 @@ impl Query for TanimotoQuery {
     }
 }
 
-struct TanimotoWeight {
+struct FingerprintWeight {
     candidates: Box<dyn Weight>,
     field_name: String,
     fingerprint: PackedFingerprint,
     minimum: f32,
+    containment: Option<ContainmentDirection>,
 }
 
-impl Weight for TanimotoWeight {
+impl Weight for FingerprintWeight {
     fn scorer(&self, reader: &SegmentReader, boost: Score) -> tantivy::Result<Box<dyn Scorer>> {
         let column = reader
             .fast_fields()
             .bytes(&self.field_name)?
             .ok_or_else(|| invalid("missing fingerprint fast field"))?;
-        let mut scores = Vec::with_capacity(column.num_terms());
+        let mut candidates = self.candidates.scorer(reader, 1.0)?;
+        let mut cache = HashMap::new();
+        let mut scores = Vec::new();
         let mut bytes = Vec::new();
-        for ordinal in 0..column.num_terms() {
-            bytes.clear();
-            if !column.ord_to_bytes(ordinal as u64, &mut bytes)? {
-                return Err(invalid("missing fingerprint dictionary value"));
+        while candidates.doc() != TERMINATED {
+            let doc = candidates.doc();
+            if reader.is_deleted(doc) {
+                candidates.advance();
+                continue;
             }
-            scores.push(self.fingerprint.tanimoto(&bytes)?);
-        }
-        for doc in 0..reader.max_doc() {
             let mut ordinals = column.term_ords(doc);
-            if ordinals.next().is_none() || ordinals.next().is_some() {
-                return Err(invalid("each document must have exactly one fingerprint"));
+            let ordinal = ordinals
+                .next()
+                .ok_or_else(|| invalid("each candidate must have exactly one fingerprint"))?;
+            if ordinals.next().is_some() {
+                return Err(invalid("each candidate must have exactly one fingerprint"));
             }
+            let score = if let Some(score) = cache.get(&ordinal) {
+                *score
+            } else {
+                bytes.clear();
+                if !column.ord_to_bytes(ordinal, &mut bytes)? {
+                    return Err(invalid("missing fingerprint dictionary value"));
+                }
+                let score = if let Some(direction) = self.containment {
+                    self.fingerprint
+                        .contains_bits(&bytes, direction)?
+                        .then_some(1.0)
+                } else {
+                    let tanimoto = self.fingerprint.tanimoto(&bytes)?;
+                    (tanimoto >= self.minimum).then_some(tanimoto)
+                };
+                cache.insert(ordinal, score);
+                score
+            };
+            if let Some(score) = score {
+                scores.push((doc, score));
+            }
+            candidates.advance();
         }
-        let mut scorer = TanimotoScorer {
-            candidates: self.candidates.scorer(reader, 1.0)?,
-            column,
-            scores,
-            minimum: self.minimum,
-            boost,
-        };
-        scorer.skip_rejected();
-        Ok(Box::new(scorer))
+        Ok(Box::new(CandidateScores::new(scores, boost)))
     }
 
     fn explain(&self, reader: &SegmentReader, doc: DocId) -> tantivy::Result<Explanation> {
@@ -242,52 +311,12 @@ impl Weight for TanimotoWeight {
             return Err(invalid("document does not match chemistry query"));
         }
         Ok(Explanation::new(
-            "Morgan fingerprint Tanimoto",
+            if self.containment.is_some() {
+                "Fingerprint bit containment"
+            } else {
+                "Morgan fingerprint Tanimoto"
+            },
             scorer.score(),
         ))
-    }
-}
-
-struct TanimotoScorer {
-    candidates: Box<dyn Scorer>,
-    column: BytesColumn,
-    scores: Vec<f32>,
-    minimum: f32,
-    boost: Score,
-}
-
-impl TanimotoScorer {
-    fn raw_score(&self) -> f32 {
-        self.scores[self.column.term_ords(self.candidates.doc()).next().unwrap() as usize]
-    }
-
-    fn skip_rejected(&mut self) -> DocId {
-        while self.candidates.doc() != TERMINATED && self.raw_score() < self.minimum {
-            self.candidates.advance();
-        }
-        self.candidates.doc()
-    }
-}
-
-impl DocSet for TanimotoScorer {
-    fn advance(&mut self) -> DocId {
-        self.candidates.advance();
-        self.skip_rejected()
-    }
-    fn seek(&mut self, target: DocId) -> DocId {
-        self.candidates.seek(target);
-        self.skip_rejected()
-    }
-    fn doc(&self) -> DocId {
-        self.candidates.doc()
-    }
-    fn size_hint(&self) -> u32 {
-        self.candidates.size_hint()
-    }
-}
-
-impl Scorer for TanimotoScorer {
-    fn score(&mut self) -> Score {
-        self.raw_score() * self.boost
     }
 }

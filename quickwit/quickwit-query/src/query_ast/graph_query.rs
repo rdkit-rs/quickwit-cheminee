@@ -21,6 +21,7 @@ use crate::InvalidQuery;
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct GraphQueryAst {
+    #[serde(default = "super::chemistry_match_all")]
     pub candidates: Box<QueryAst>,
     pub spec: FingerprintSpec,
     pub prepared_field: String,
