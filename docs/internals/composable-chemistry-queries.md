@@ -127,6 +127,8 @@ text/JSON examples, with deliberately synthetic bit vectors for hand-checkable s
   behavior; the new operators do not override it. Existing Cheminee endpoints
   already append the stable ID sort. A generic request without this sort has no
   chemistry-specific stable tie guarantee. Duplicate IDs likewise lack that guarantee.
+  This fork's ES-compatible response omits the separate `_score` member; with this
+  explicit sort, the score is returned as `sort[0]` and the stable ID as `sort[1]`.
 * Existing Quickwit per-leaf collection and root merge use the same requested sort
   tuple. Thus per-split top-k is sufficient for global top-k. No new distributed
   coordinator, hidden reranker, or changed merge protocol is introduced.

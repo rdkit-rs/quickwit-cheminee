@@ -85,7 +85,10 @@ def search(query, size=20):
         {'query': query, 'size': size, 'track_total_hits': True,
          'sort': [{'_score': 'desc'}, {'record_id': 'asc'}]})
     assert result['_shards']['failed'] == 0, result
-    return ([(hit['_source']['record_id'], hit['_score']) for hit in result['hits']['hits']],
+    # This fork's ES converter omits _score; requested sort values carry the score.
+    for hit in result['hits']['hits']:
+        assert len(hit['sort']) == 2 and hit['sort'][1] == hit['_source']['record_id'], hit
+    return ([(hit['_source']['record_id'], hit['sort'][0]) for hit in result['hits']['hits']],
             result['hits']['total']['value'])
 
 
