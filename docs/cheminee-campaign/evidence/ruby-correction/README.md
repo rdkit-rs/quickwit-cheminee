@@ -1,3 +1,5 @@
+Current update: [verified local JSON3.1.0 acceptance](../json31-local/README.md) now resolves the runtime blocker described below. Earlier results remain historically attributed.
+
 # Corrected Ruby worker attribution
 
 The original worker seed 704 result (20 tests/392 assertions) used JSON 2.7.2 despite

@@ -361,3 +361,9 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     proof (20/392, seed10109), verify matching local interpreter/library hashes,
     and harden wire acceptance with actual JSON version and loaded-file provenance.
     Compatible extension bytes remain missing locally; no ABI aliases or installs.
+
+36. Verify the small worker JSON artifact and restore it into an isolated gem root.
+    ActualJSON3.1.0 local wire20/392, journal16/86 and native smoke now pass without
+    builds/containers/aliases. Fix the guard's real-run false positive on Faraday
+    middleware with relative load-path identification and a regression test. Keep
+    full-workspace admission blocked by the measured4.32GiB headroom shortfall.

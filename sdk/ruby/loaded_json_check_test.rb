@@ -19,7 +19,8 @@ class LoadedJsonCheckTest < Minitest::Test
     FileUtils.remove_entry(@directory)
   end
   def check(version: '3.1.0', features: @features)
-    LoadedJsonCheck.verify!(spec: @spec, version: version, features: features)
+    LoadedJsonCheck.verify!(spec: @spec, version: version, features: features,
+      load_paths: [File.join(@spec.full_gem_path, 'lib'), @spec.extension_dir, @directory, @spec.full_gem_path + '-other/lib'])
   end
   def test_matching_code_roots
     assert check
@@ -57,6 +58,12 @@ class LoadedJsonCheckTest < Minitest::Test
     shadow = @spec.full_gem_path + '-other/lib/json.rb'
     FileUtils.mkdir_p(File.dirname(shadow)); File.write(shadow, '')
     assert_raises(RuntimeError) { check(features: [shadow] + @features.drop(1)) }
+  end
+
+  def test_faraday_json_middleware_is_not_json_implementation
+    middleware = File.join(@directory, 'faraday/request/json.rb')
+    FileUtils.mkdir_p(File.dirname(middleware)); File.write(middleware, '')
+    assert check(features: @features + [middleware])
   end
 
 end

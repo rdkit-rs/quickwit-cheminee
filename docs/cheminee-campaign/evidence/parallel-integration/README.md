@@ -1,3 +1,5 @@
+Current update: [verified local JSON3.1.0 acceptance](../json31-local/README.md) now resolves the runtime blocker described below. Earlier results remain historically attributed.
+
 # Parallel integration checkpoint
 
 Ruby worker commit `f6e64991dec0c3690b4c6b2324bca084330b28f1` required exact

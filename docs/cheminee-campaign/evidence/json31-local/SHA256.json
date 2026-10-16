@@ -1,0 +1,13 @@
+{
+  "README.md": "f2c094e580718923744daf44b9d07ac2cf5766676f29d7b2d66b1987e80a631f",
+  "elf-dependencies.log": "e4a144a8ee99633963b8df7eb0c6b6c46d56ecd6e3459c2a6a9abbb05aa6b7c3",
+  "independent-guard.log": "ccbb4c70dd4e8f62ab50f1a6e38f3e3411f0bd01dff3f45084860f32db944b6a",
+  "independent-review.md": "49eea3ca07d91b316c74729ab3062d10ea170a05fd28a31196af5020c741e01d",
+  "independent-wire.log": "9b3e558d3387336a50e1dcc43c4412c5d9eb4f0bc4bab8e488902f9951268061",
+  "json31-verified-manifest.json": "c209b07a7be6137cef2cb2747f2f8995ca7cda4ec2f5bbe771f5c5353f24e32e",
+  "pinned-catalog-final.log": "a81434029b10375a267697901e198065cff5105c497181c59c15075557910cd7",
+  "pinned-guard-final.log": "daba156a553c11b86360476a4ec3aef5b988e3a4a6f400766e8b802b114cbb40",
+  "pinned-native-final.log": "34025d1ddf0ca8c464eae09bb1ee249c5e1b900e6886b605b5d2bf2d4b6c95e7",
+  "pinned-wire-final.log": "5fc39b1763ec9afa15e3f548091b82272e17190c28150e13d8d65720c5979924",
+  "run-pinned-ruby.sh": "07041f3f9f52473b4de22ad72f566833863f8bbc2520da85a0cda3c12aa83e6d"
+}
