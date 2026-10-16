@@ -1,0 +1,25 @@
+version: 0.8
+cluster_id: cheminee-local
+node_id: local
+listen_address: 0.0.0.0
+rest:
+  listen_port: 7280
+data_dir: /var/lib/cheminee
+metastore_uri: file:///var/lib/cheminee/indexes
+default_index_root_uri: file:///var/lib/cheminee/indexes
+indexer:
+  enable_otlp_endpoint: false
+  split_store_max_num_bytes: 256MiB
+  merge_concurrency: 1
+searcher:
+  aggregation_memory_limit: 32MiB
+  fast_field_cache_capacity: 32MiB
+  split_footer_cache_capacity: 16MiB
+  partial_request_cache_capacity: 8MiB
+  predicate_cache_capacity: 8MiB
+  warmup_memory_budget: 128MiB
+  warmup_single_split_initial_allocation: 8MiB
+  max_num_concurrent_split_searches: 2
+ingest_api:
+  max_queue_memory_usage: 64MiB
+  max_queue_disk_usage: 512MiB
