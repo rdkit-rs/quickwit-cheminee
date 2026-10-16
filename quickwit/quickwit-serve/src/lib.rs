@@ -36,6 +36,7 @@ mod metrics;
 mod metrics_api;
 mod node_info_handler;
 mod openapi;
+pub use openapi::build_docs as build_openapi;
 mod otlp_api;
 mod rate_modulator;
 mod rest;

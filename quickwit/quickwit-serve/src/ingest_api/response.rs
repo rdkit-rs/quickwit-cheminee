@@ -38,7 +38,7 @@ pub struct RestIngestResponse {
     /// Number of docs rejected because of parsing errors
     #[serde(skip_serializing_if = "Option::is_none")]
     pub num_rejected_docs: Option<u64>, // TODO(#5604) remove Option
-    /// Detailed description of parsing errors (available if the path param
+    /// Detailed description of parsing errors (available if the query param
     /// `detailed_response` is set to `true`)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_failures: Option<Vec<RestParseFailure>>,

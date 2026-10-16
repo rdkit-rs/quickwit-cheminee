@@ -42,6 +42,9 @@ pub struct IngestApi;
     quickwit_ingest::FetchResponse,
     quickwit_ingest::IngestResponse,
     quickwit_ingest::CommitType,
+    RestIngestResponse,
+    super::response::RestParseFailure,
+    quickwit_proto::ingest::ParseFailureReason,
 )))]
 pub struct IngestApiSchemas;
 
@@ -132,13 +135,22 @@ fn ingest_handler(
     post,
     tag = "Ingest",
     path = "/{index_id}/ingest",
-    request_body(content = String, description = "Documents to ingest in NDJSON format and limited to 10MB", content_type = "application/json"),
+    request_body(content = String, description = "Raw newline-delimited JSON documents, not a JSON-encoded string. Limited by the configured ingestion body size.", content_type = "application/x-ndjson"),
     responses(
-        (status = 200, description = "Successfully ingested documents.", body = RestIngestResponse)
+        (status = 200, description = "Batch response. Individual documents may be rejected; inspect num_ingested_docs and num_rejected_docs. Missing counts mean acceptance is unknown, not zero. Acknowledgement does not imply search visibility with commit=auto.", body = RestIngestResponse),
+        (status = 400, description = "Invalid request or unsupported options."),
+        (status = 404, description = "Index not found."),
+        (status = 411, description = "Content-Length is required."),
+        (status = 413, description = "Request exceeds configured body limit."),
+        (status = 415, description = "Unsupported Content-Encoding."),
+        (status = 429, description = "Ingestion capacity exhausted."),
+        (status = 500, description = "Internal ingestion failure, including some timeout or missing-source failures; outcome may be uncertain."),
+        (status = 503, description = "Ingestion unavailable or timed out; a late append may still occur. Do not blindly retry.")
     ),
     params(
         ("index_id" = String, Path, description = "The index ID to add docs to."),
         ("commit" = Option<CommitType>, Query, description = "Force or wait for commit at the end of the indexing operation."),
+        ("detailed_response" = Option<bool>, Query, description = "Include per-document parse failures. Requires ingest v2; details contain original documents and must not be routinely logged."),
     )
 )]
 /// Ingest documents

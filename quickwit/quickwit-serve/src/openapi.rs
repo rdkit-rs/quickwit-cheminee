@@ -183,6 +183,26 @@ mod openapi_schema_tests {
         resolve_openapi_schemas(&docs).expect("All schemas should be resolved.");
     }
 
+    #[test]
+    fn ingest_contract_preserves_raw_ndjson_and_rejection_details() {
+        let docs = serde_json::to_value(build_docs()).unwrap();
+        let ingest = &docs["paths"]["/api/v1/{index_id}/ingest"]["post"];
+        let content = ingest["requestBody"]["content"].as_object().unwrap();
+        assert!(content.contains_key("application/x-ndjson"));
+        assert!(!content.contains_key("application/json"));
+        assert!(
+            ingest["parameters"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|p| { p["name"] == "detailed_response" && p["in"] == "query" })
+        );
+        let response = &docs["components"]["schemas"]["RestIngestResponse"];
+        for name in ["num_ingested_docs", "num_rejected_docs", "parse_failures"] {
+            assert!(response["properties"].get(name).is_some(), "{name}");
+        }
+    }
+
     fn resolve_openapi_schemas(openapi: &utoipa::openapi::OpenApi) -> anyhow::Result<()> {
         let schemas_lookup = if let Some(components) = &openapi.components {
             resolve_component_schemas(components)?
