@@ -75,6 +75,49 @@ impl BuildTantivyAst for BoolQuery {
             let filter_leaf = filter.build_tantivy_ast_call(context)?;
             boolean_query.filter.push(filter_leaf);
         }
+        // Validate every input above, but do not construct segment scorers for a
+        // proven-impossible query: stored corruption cannot affect its result.
+        if let Some(minimum) = self.minimum_should_match {
+            if minimum > self.should.len() {
+                return Ok(TantivyQueryAst::match_none());
+            }
+        }
         Ok(TantivyQueryAst::Bool(boolean_query))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn impossible_minimum_validates_inputs_before_becoming_empty() {
+        let schema = tantivy::schema::Schema::builder().build();
+        let context = BuildTantivyAstContext::for_test(&schema);
+        let invalid_chemistry: QueryAst = serde_json::from_value(serde_json::json!({
+            "type": "tanimoto",
+            "spec": {"format": "morgan-r3-2048-lsb0-v1", "rdkit_version": "2026.09.1",
+                     "preparation_id": "sanitize-only-v1"},
+            "fingerprint_hex": "zz", "minimum": 0.5
+        }))
+        .unwrap();
+        let invalid = BoolQuery {
+            should: vec![invalid_chemistry],
+            minimum_should_match: Some(2),
+            ..Default::default()
+        };
+        assert!(matches!(
+            invalid.build_tantivy_ast_call(&context),
+            Err(InvalidQuery::InvalidChemistry(_))
+        ));
+        let valid = BoolQuery {
+            should: vec![QueryAst::MatchAll],
+            minimum_should_match: Some(2),
+            ..Default::default()
+        };
+        assert_eq!(
+            valid.build_tantivy_ast_call(&context).unwrap(),
+            TantivyQueryAst::match_none()
+        );
     }
 }

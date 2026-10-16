@@ -1201,6 +1201,29 @@ impl RemoveTimestampRange<'_> {
 impl QueryAstTransformer for RemoveTimestampRange<'_> {
     type Err = std::convert::Infallible;
 
+    // Candidate ranges constrain verification itself. Moving them outside the
+    // operator would inspect excluded data and could turn a valid query into an error.
+    fn transform_fingerprint_contains(
+        &mut self,
+        query: quickwit_query::query_ast::FingerprintContainsQueryAst,
+    ) -> Result<Option<QueryAst>, Self::Err> {
+        Ok(Some(QueryAst::FingerprintContains(query)))
+    }
+
+    fn transform_graph(
+        &mut self,
+        query: quickwit_query::query_ast::GraphQueryAst,
+    ) -> Result<Option<QueryAst>, Self::Err> {
+        Ok(Some(QueryAst::Graph(query)))
+    }
+
+    fn transform_tanimoto(
+        &mut self,
+        query: quickwit_query::query_ast::TanimotoQueryAst,
+    ) -> Result<Option<QueryAst>, Self::Err> {
+        Ok(Some(QueryAst::Tanimoto(query)))
+    }
+
     fn transform_bool(&mut self, mut bool_query: BoolQuery) -> Result<Option<QueryAst>, Self::Err> {
         // we only want to visit sub-queries which are strict (positive) requirements
         bool_query.must = bool_query
@@ -2493,6 +2516,47 @@ mod tests {
         };
         remove_redundant_timestamp_range(&mut search_request, &split, &timestamp_field);
         assert_ast_eq(&search_request, &QueryAst::MatchAll);
+    }
+
+    #[test]
+    fn timestamp_rewrite_preserves_chemistry_candidate_domains() {
+        let spec = serde_json::json!({"format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1", "preparation_id": "sanitize-only-v1"});
+        let candidates = serde_json::json!({"type": "range", "field": "timestamp",
+            "lower_bound": {"Included": 1700001000},
+            "upper_bound": {"Included": 1700002000}});
+        for mut operand in [
+            serde_json::json!({"type": "tanimoto", "fingerprint_hex": "00", "minimum": 0.5}),
+            serde_json::json!({"type": "fingerprint_contains", "fingerprint_hex": "00",
+                "direction": "document_contains_query"}),
+            serde_json::json!({"type": "graph", "prepared_field": "prepared_smiles",
+                "prepared_smiles": "CC", "predicate": "substructure", "ranking": "best_match",
+                "use_chirality": false, "include_identity": true}),
+        ] {
+            operand["spec"] = spec.clone();
+            operand["candidates"] = candidates.clone();
+            let ast: QueryAst = serde_json::from_value(operand).unwrap();
+            for ast in [
+                ast.clone(),
+                BoolQuery {
+                    must: vec![ast],
+                    ..Default::default()
+                }
+                .into(),
+            ] {
+                let mut request = SearchRequest {
+                    query_ast: serde_json::to_string(&ast).unwrap(),
+                    ..Default::default()
+                };
+                let split = SplitIdAndFooterOffsets {
+                    timestamp_start: Some(1700000000),
+                    timestamp_end: Some(1700003000),
+                    ..Default::default()
+                };
+                remove_redundant_timestamp_range(&mut request, &split, "timestamp");
+                assert_ast_eq(&request, &ast);
+            }
+        }
     }
 
     // regression test for #4935

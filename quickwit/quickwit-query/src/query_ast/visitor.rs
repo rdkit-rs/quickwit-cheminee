@@ -153,27 +153,9 @@ pub trait QueryAstTransformer {
 
     fn transform(&mut self, query_ast: QueryAst) -> Result<Option<QueryAst>, Self::Err> {
         match query_ast {
-            QueryAst::FingerprintContains(mut query) => {
-                let Some(candidates) = self.transform(*query.candidates)? else {
-                    return Ok(None);
-                };
-                query.candidates = Box::new(candidates);
-                Ok(Some(QueryAst::FingerprintContains(query)))
-            }
-            QueryAst::Graph(mut query) => {
-                let Some(candidates) = self.transform(*query.candidates)? else {
-                    return Ok(None);
-                };
-                query.candidates = Box::new(candidates);
-                Ok(Some(QueryAst::Graph(query)))
-            }
-            QueryAst::Tanimoto(mut query) => {
-                let Some(candidates) = self.transform(*query.candidates)? else {
-                    return Ok(None);
-                };
-                query.candidates = Box::new(candidates);
-                Ok(Some(QueryAst::Tanimoto(query)))
-            }
+            QueryAst::FingerprintContains(query) => self.transform_fingerprint_contains(query),
+            QueryAst::Graph(query) => self.transform_graph(query),
+            QueryAst::Tanimoto(query) => self.transform_tanimoto(query),
             QueryAst::Bool(bool_query) => self.transform_bool(bool_query),
             QueryAst::Term(term_query) => self.transform_term(term_query),
             QueryAst::TermSet(term_set_query) => self.transform_term_set(term_set_query),
@@ -191,6 +173,36 @@ pub trait QueryAstTransformer {
             QueryAst::Regex(regex) => self.transform_regex(regex),
             QueryAst::Cache(cache_node) => self.transform_cache_node(cache_node),
         }
+    }
+
+    fn transform_fingerprint_contains(
+        &mut self,
+        mut query: FingerprintContainsQueryAst,
+    ) -> Result<Option<QueryAst>, Self::Err> {
+        let Some(candidates) = self.transform(*query.candidates)? else {
+            return Ok(None);
+        };
+        query.candidates = Box::new(candidates);
+        Ok(Some(QueryAst::FingerprintContains(query)))
+    }
+
+    fn transform_graph(&mut self, mut query: GraphQueryAst) -> Result<Option<QueryAst>, Self::Err> {
+        let Some(candidates) = self.transform(*query.candidates)? else {
+            return Ok(None);
+        };
+        query.candidates = Box::new(candidates);
+        Ok(Some(QueryAst::Graph(query)))
+    }
+
+    fn transform_tanimoto(
+        &mut self,
+        mut query: TanimotoQueryAst,
+    ) -> Result<Option<QueryAst>, Self::Err> {
+        let Some(candidates) = self.transform(*query.candidates)? else {
+            return Ok(None);
+        };
+        query.candidates = Box::new(candidates);
+        Ok(Some(QueryAst::Tanimoto(query)))
     }
 
     fn transform_bool(&mut self, mut bool_query: BoolQuery) -> Result<Option<QueryAst>, Self::Err> {
