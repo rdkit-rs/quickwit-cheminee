@@ -41,8 +41,9 @@ field is selected, then appends the stable ID tie. Basic hits are stored documen
 return limit. Split failures return an error instead of partial results. There
 is no arbitrary candidate shortlist before graph verification. The reusable
 Tantivy `GraphQuery` asks a native verifier to evaluate each distinct prepared
-SMILES in a segment before its scorer exposes any documents to collectors.
-Metadata filtering remains in the candidate query. This initial exact path does
+SMILES among live candidate documents in a segment before its scorer exposes
+matches to collectors. Metadata filtering remains in the explicit candidate query;
+adjacent Boolean filters are not automatically pushed into it. This initial exact path does
 not use fingerprint, descriptor, or scaffold screening. Morgan containment is
 never a graph predicate. A future screen must prove that it cannot discard a
 valid match; RDKit Pattern fingerprints are the relevant family for graph screens.
@@ -96,11 +97,14 @@ are dropped there. Shared queries contain only immutable strings, enums, and
 contracts; there is no shared mutable RDKit molecule or new unsafe code.
 
 Exact graph evaluation costs one parse and graph check per distinct prepared
-molecule per searched segment, plus document iteration. Scores occupy memory
-proportional to that dictionary. The current implementation also verifies entries
-outside a selective metadata filter, including dictionary entries retained after
-deletions. It favors correctness over selective-screen performance; large-scale
-latency and memory benchmarking remain future work.
+molecule among live candidates per searched segment, plus candidate iteration.
+The verification cache occupies memory proportional to encountered distinct values;
+accepted document IDs and scores are also materialized before the infallible
+scorer is returned. Broad queries can use more memory than the previous dictionary
+score table. Entries outside explicit candidates and deleted documents are not
+verified. Large-scale latency and memory benchmarking remain future work. See
+[composable operators](../../docs/internals/composable-chemistry-queries.md) for
+text/JSON syntax, scoring contexts, and the sibling-filter limitation.
 
 ## Reproduction
 

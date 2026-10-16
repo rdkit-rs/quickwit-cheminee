@@ -29,6 +29,7 @@ use crate::query_ast::{
 use crate::{BooleanOperand, InvalidQuery, JsonLiteral};
 
 const DEFAULT_PHRASE_QUERY_MAX_EXPANSION: u32 = 50;
+const MAX_CHEMISTRY_OPERAND_BYTES: usize = 64 * 1024;
 
 /// A query expressed in the tantivy query grammar DSL.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
@@ -100,6 +101,22 @@ fn convert_user_input_ast_to_query_ast(
     default_search_fields: &[String],
     lenient: bool,
 ) -> anyhow::Result<QueryAst> {
+    if let UserInputAst::Leaf(leaf) = &user_input_ast {
+        let reserved = match leaf.as_ref() {
+            UserInputLeaf::Range { field, .. }
+            | UserInputLeaf::Set { field, .. }
+            | UserInputLeaf::Regex { field, .. } => field.as_deref(),
+            UserInputLeaf::Exists { field } => Some(field.as_str()),
+            _ => None,
+        };
+        anyhow::ensure!(
+            !matches!(
+                reserved,
+                Some("_tanimoto" | "_fingerprint_contains" | "_molecular_graph")
+            ),
+            "chemistry operators require quoted JSON operands"
+        );
+    }
     match user_input_ast {
         UserInputAst::Clause(clause) => {
             let mut bool_query = query_ast::BoolQuery::default();
@@ -247,6 +264,31 @@ fn convert_user_input_literal(
         delimiter,
         slop,
     } = user_input_literal;
+    if let Some(operator) = field_name.as_deref().filter(|name| {
+        matches!(
+            *name,
+            "_tanimoto" | "_fingerprint_contains" | "_molecular_graph"
+        )
+    }) {
+        anyhow::ensure!(
+            delimiter != Delimiter::None && !prefix && slop == 0,
+            "chemistry operators require quoted JSON without phrase modifiers"
+        );
+        anyhow::ensure!(
+            phrase.len() <= MAX_CHEMISTRY_OPERAND_BYTES,
+            "chemistry operand exceeds 64 KiB"
+        );
+        let chemistry_ast = match operator {
+            "_tanimoto" => QueryAst::Tanimoto(serde_json::from_str(&phrase)?),
+            "_fingerprint_contains" => {
+                QueryAst::FingerprintContains(serde_json::from_str(&phrase)?)
+            }
+            "_molecular_graph" => QueryAst::Graph(serde_json::from_str(&phrase)?),
+            _ => unreachable!(),
+        };
+        // Embedded candidates may themselves contain user input, just like the JSON path.
+        return chemistry_ast.parse_user_query(default_search_fields);
+    }
     let field_names: Vec<String> = if let Some(field_name) = field_name {
         vec![field_name]
     } else {

@@ -21,6 +21,8 @@ use tantivy::schema::Schema as TantivySchema;
 
 use crate::tokenizers::TokenizerManager;
 
+mod fingerprint_contains_query;
+pub use fingerprint_contains_query::FingerprintContainsQueryAst;
 mod graph_query;
 pub use graph_query::GraphQueryAst;
 mod tanimoto_query;
@@ -61,6 +63,7 @@ use crate::{BooleanOperand, InvalidQuery, NotNaNf32};
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
 pub enum QueryAst {
+    FingerprintContains(FingerprintContainsQueryAst),
     Graph(GraphQueryAst),
     Tanimoto(TanimotoQueryAst),
     Bool(BoolQuery),
@@ -88,6 +91,11 @@ impl QueryAst {
         default_search_fields: &[String],
     ) -> anyhow::Result<QueryAst> {
         match self {
+            QueryAst::FingerprintContains(mut query) => {
+                query.candidates =
+                    Box::new(query.candidates.parse_user_query(default_search_fields)?);
+                Ok(QueryAst::FingerprintContains(query))
+            }
             QueryAst::Graph(mut query) => {
                 query.candidates =
                     Box::new(query.candidates.parse_user_query(default_search_fields)?);
@@ -256,6 +264,7 @@ impl BuildTantivyAst for QueryAst {
         context: &BuildTantivyAstContext,
     ) -> Result<TantivyQueryAst, InvalidQuery> {
         match self {
+            QueryAst::FingerprintContains(query) => query.build_tantivy_ast_call(context),
             QueryAst::Graph(query) => query.build_tantivy_ast_call(context),
             QueryAst::Tanimoto(query) => query.build_tantivy_ast_call(context),
             QueryAst::Bool(bool_query) => bool_query.build_tantivy_ast_call(context),
@@ -367,6 +376,10 @@ pub fn query_ast_from_user_text(user_text: &str, default_fields: Option<Vec<Stri
         lenient: false,
     }
     .into()
+}
+
+fn chemistry_match_all() -> Box<QueryAst> {
+    Box::new(QueryAst::MatchAll)
 }
 
 #[cfg(test)]
