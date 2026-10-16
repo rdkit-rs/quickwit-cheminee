@@ -216,6 +216,27 @@ mod openapi_schema_tests {
         assert!(fast[1]["properties"]["normalizer"].get("$ref").is_some());
     }
 
+    #[test]
+    fn composable_search_schema_exposes_the_real_json_route() {
+        let docs = serde_json::to_value(build_docs()).unwrap();
+        let operation = &docs["paths"]["/api/v1/_elastic/{index}/_search"]["post"];
+        assert_eq!(
+            operation["requestBody"]["content"]["application/json"]["schema"]["type"],
+            "object"
+        );
+        assert_eq!(
+            operation["responses"]["200"]["content"]["application/json"]["schema"]["type"],
+            "object"
+        );
+        assert!(
+            operation["parameters"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|p| p["name"] == "allow_partial_search_results")
+        );
+    }
+
     fn resolve_openapi_schemas(openapi: &utoipa::openapi::OpenApi) -> anyhow::Result<()> {
         let schemas_lookup = if let Some(components) = &openapi.components {
             resolve_component_schemas(components)?
