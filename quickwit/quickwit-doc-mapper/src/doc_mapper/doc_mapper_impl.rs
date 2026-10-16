@@ -1952,7 +1952,7 @@ mod tests {
 
     #[test]
     fn test_concatenate_multiple_field() {
-        test_doc_from_json_test_aux(
+        let mapper: DocMapper = serde_json::from_str(
             r#"{
                 "field_mappings": [
                     {
@@ -1971,10 +1971,26 @@ mod tests {
                 ],
                 "mode": "strict"
             }"#,
-            "concat",
-            r#"{"some_text": "this is a text", "other_text": "this is a text too"}"#,
-            vec!["this is a text".into(), "this is a text too".into()],
-        );
+        )
+        .unwrap();
+        let field = mapper.schema().get_field("concat").unwrap();
+        // Cross-field concatenation promises all values, not JSON member order.
+        // Keep the separate array test ordered: within-field order is distinct.
+        for document in [
+            r#"{"some_text":"this is a text","other_text":"this is a text too"}"#,
+            r#"{"other_text":"this is a text too","some_text":"this is a text"}"#,
+        ] {
+            let (_, doc) = mapper.doc_from_json_str(document).unwrap();
+            let mut values: Vec<String> = doc
+                .get_all(field)
+                .map(|value| match OwnedValue::from(value) {
+                    OwnedValue::Str(text) => text,
+                    other => panic!("expected concatenated string, got {other:?}"),
+                })
+                .collect();
+            values.sort();
+            assert_eq!(values, ["this is a text", "this is a text too"]);
+        }
     }
 
     #[test]
