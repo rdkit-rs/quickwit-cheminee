@@ -285,6 +285,9 @@ impl IngestRouter {
         while let Some((persist_summary, persist_result)) = persist_futures.next().await {
             match persist_result {
                 Ok(persist_response) => {
+                    if !workbench.reconcile_persist_response(&persist_summary, &persist_response) {
+                        continue;
+                    }
                     let leader_id = NodeId::from_str(&persist_response.leader_id);
 
                     for persist_success in persist_response.successes {
@@ -1443,33 +1446,12 @@ mod tests {
         }
 
         let mut mock_ingester_0 = MockIngesterService::new();
-        // First attempt: returns NoShardsAvailable (transient, doesn't mark leader unavailable).
-        // The response still reports capacity_score=6 and 1 open shard so the node stays routable.
-        let index_uid_clone = index_uid.clone();
-        mock_ingester_0
-            .expect_persist()
-            .once()
-            .returning(move |request| {
-                Ok(PersistResponse {
-                    leader_id: request.leader_id,
-                    successes: Vec::new(),
-                    failures: vec![PersistFailure {
-                        subrequest_id: 0,
-                        index_uid: Some(index_uid_clone.clone()),
-                        source_id: "test-source".to_string(),
-                        reason: PersistFailureReason::NoShardsAvailable as i32,
-                    }],
-                    routing_update: Some(RoutingUpdate {
-                        capacity_score: 6,
-                        source_shard_updates: vec![SourceShardUpdate {
-                            index_uid: Some(index_uid_clone.clone()),
-                            source_id: "test-source".to_string(),
-                            open_shard_count: 1,
-                        }],
-                        ..Default::default()
-                    }),
-                })
-            });
+        // Proven pre-dispatch circuit-breaker rejection may be retried.
+        mock_ingester_0.expect_persist().once().returning(|_| {
+            Err(IngestV2Error::TooManyRequests(
+                RateLimitingCause::CircuitBreaker,
+            ))
+        });
         // Second attempt: succeeds.
         mock_ingester_0
             .expect_persist()
@@ -1577,7 +1559,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_router_returns_rate_limited_failure() {
+    async fn test_router_remote_no_shards_has_unknown_outcome() {
         let self_node_id = NodeId::from_str("test-router");
         let control_plane = ControlPlaneServiceClient::from_mock(MockControlPlaneService::new());
         let ingester_pool = IngesterPool::default();
@@ -1666,7 +1648,7 @@ mod tests {
         assert_eq!(ingest_response.failures.len(), 1);
         assert_eq!(
             ingest_response.failures[0].reason(),
-            IngestFailureReason::NoShardsAvailable
+            IngestFailureReason::Internal
         );
     }
 

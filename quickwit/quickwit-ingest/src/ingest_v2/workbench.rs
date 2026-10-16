@@ -19,7 +19,9 @@ use quickwit_common::rate_limited_error;
 use quickwit_proto::control_plane::{
     GetOrCreateOpenShardsFailure, GetOrCreateOpenShardsFailureReason,
 };
-use quickwit_proto::ingest::ingester::{PersistFailure, PersistFailureReason, PersistSuccess};
+use quickwit_proto::ingest::ingester::{
+    PersistFailure, PersistFailureReason, PersistResponse, PersistSuccess,
+};
 use quickwit_proto::ingest::router::{
     IngestFailure, IngestFailureReason, IngestResponseV2, IngestSubrequest, IngestSuccess,
 };
@@ -220,6 +222,50 @@ impl IngestWorkbench {
         }
     }
 
+    /// Reconcile before recording any success: omitted or contradictory acknowledgements
+    /// do not establish that an append failed. Never replay their submitted documents.
+    pub fn reconcile_persist_response(
+        &mut self,
+        summary: &PersistRequestSummary,
+        response: &PersistResponse,
+    ) -> bool {
+        let expected: HashSet<_> = summary.subrequest_ids.iter().copied().collect();
+        let mut seen = HashSet::new();
+        let coherent = response.leader_id == summary.leader_id.as_str()
+            && response
+                .successes
+                .iter()
+                .map(|value| value.subrequest_id)
+                .chain(response.failures.iter().map(|value| value.subrequest_id))
+                .all(|id| expected.contains(&id) && seen.insert(id));
+        if !coherent {
+            for id in &summary.subrequest_ids {
+                self.record_internal_error(*id);
+            }
+            rate_limited_error!(
+                limit_per_min = 6,
+                outcome_unknown = true,
+                leader_id = %summary.leader_id,
+                returned_leader_id = %response.leader_id,
+                submitted_count = summary.subrequest_ids.len(),
+                subrequest_ids = ?summary.subrequest_ids.iter().take(8).collect::<Vec<_>>(),
+                "invalid persist acknowledgement accounting"
+            );
+            return false;
+        }
+        for id in expected.difference(&seen) {
+            self.record_internal_error(*id);
+            rate_limited_error!(
+                limit_per_min = 6,
+                outcome_unknown = true,
+                leader_id = %summary.leader_id,
+                subrequest_id = id,
+                "missing persist acknowledgement"
+            );
+        }
+        true
+    }
+
     pub fn record_persist_failure(&mut self, persist_failure: &PersistFailure) {
         let failure = SubworkbenchFailure::Persist(persist_failure.reason());
         self.record_failure(persist_failure.subrequest_id, failure);
@@ -342,9 +388,8 @@ impl SubworkbenchFailure {
             Self::SourceNotFound => IngestFailureReason::SourceNotFound,
             Self::Internal => IngestFailureReason::Internal,
             Self::NoShardsAvailable => IngestFailureReason::NoShardsAvailable,
-            // In our last attempt, we did not manage to reach the ingester.
-            // We can consider that as a no shards available.
-            Self::Unavailable => IngestFailureReason::NoShardsAvailable,
+            // Transport failure does not prove that the append did not execute.
+            Self::Unavailable => IngestFailureReason::Internal,
             Self::RateLimited(rate_limiting_cause) => match rate_limiting_cause {
                 RateLimitingCause::RouterLoadShedding => IngestFailureReason::RouterLoadShedding,
                 RateLimitingCause::LoadShedding => IngestFailureReason::RouterLoadShedding,
@@ -353,6 +398,11 @@ impl SubworkbenchFailure {
                 RateLimitingCause::ShardRateLimiting => IngestFailureReason::ShardRateLimited,
                 RateLimitingCause::Unknown => IngestFailureReason::Unspecified,
             },
+            Self::Persist(
+                PersistFailureReason::NodeUnavailable
+                | PersistFailureReason::Unspecified
+                | PersistFailureReason::NoShardsAvailable,
+            ) => IngestFailureReason::Internal,
             Self::Persist(persist_failure_reason) => (*persist_failure_reason).into(),
         }
     }
@@ -385,16 +435,16 @@ impl IngestSubworkbench {
     /// - the source does not exist.
     fn last_failure_is_transient(&self) -> bool {
         match self.last_failure_opt {
-            Some(SubworkbenchFailure::IndexNotFound) => false,
-            Some(SubworkbenchFailure::SourceNotFound) => false,
-            Some(SubworkbenchFailure::Internal) => true,
-            Some(SubworkbenchFailure::NoShardsAvailable) => true,
-            // The append may have succeeded even though its acknowledgement was lost.
-            Some(SubworkbenchFailure::Persist(PersistFailureReason::Timeout)) => false,
-            Some(SubworkbenchFailure::Persist(_)) => true,
-            Some(SubworkbenchFailure::Unavailable) => true,
-            Some(SubworkbenchFailure::RateLimited(_)) => true,
-            None => true,
+            None | Some(SubworkbenchFailure::NoShardsAvailable) => true,
+            Some(SubworkbenchFailure::Persist(PersistFailureReason::WalFull)) => true,
+            Some(SubworkbenchFailure::RateLimited(
+                RateLimitingCause::CircuitBreaker
+                | RateLimitingCause::LoadShedding
+                | RateLimitingCause::RouterLoadShedding,
+            )) => true,
+            // Remote NoShardsAvailable can include replica append I/O failures in
+            // existing peers. Conservatively terminate until phase is explicit.
+            _ => false,
         }
     }
 }
@@ -410,6 +460,101 @@ mod tests {
     use super::*;
 
     #[test]
+    fn missing_ack_overrides_previous_retryable_rejection() {
+        let mut workbench = IngestWorkbench::new(
+            (0..2)
+                .map(|subrequest_id| IngestSubrequest {
+                    subrequest_id,
+                    ..Default::default()
+                })
+                .collect(),
+            5,
+        );
+        workbench.record_persist_failure(&PersistFailure {
+            subrequest_id: 1,
+            reason: PersistFailureReason::WalFull as i32,
+            ..Default::default()
+        });
+        let summary = PersistRequestSummary {
+            leader_id: NodeId::from_str("leader"),
+            subrequest_ids: vec![0, 1],
+        };
+        let response = PersistResponse {
+            leader_id: "leader".into(),
+            successes: vec![PersistSuccess {
+                subrequest_id: 0,
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        assert!(workbench.reconcile_persist_response(&summary, &response));
+        workbench.record_persist_success(response.successes[0].clone());
+        assert_eq!(workbench.num_successes, 1);
+        assert!(workbench.subworkbenches[&0].persist_success_opt.is_some());
+        assert!(!workbench.subworkbenches[&1].is_pending());
+        assert!(matches!(
+            workbench.subworkbenches[&1].last_failure_opt,
+            Some(SubworkbenchFailure::Internal)
+        ));
+    }
+
+    #[test]
+    fn contradictory_acknowledgements_never_mutate_success_accounting() {
+        for case in ["duplicate", "conflict", "foreign", "wrong_leader"] {
+            let mut workbench = IngestWorkbench::new(
+                (0..3)
+                    .map(|subrequest_id| IngestSubrequest {
+                        subrequest_id,
+                        ..Default::default()
+                    })
+                    .collect(),
+                5,
+            );
+            // A success from an independent RPC is retained.
+            workbench.record_persist_success(PersistSuccess {
+                subrequest_id: 2,
+                ..Default::default()
+            });
+            let summary = PersistRequestSummary {
+                leader_id: NodeId::from_str("leader"),
+                subrequest_ids: vec![0, 1],
+            };
+            let mut response = PersistResponse {
+                leader_id: "leader".into(),
+                successes: vec![PersistSuccess {
+                    subrequest_id: 0,
+                    ..Default::default()
+                }],
+                ..Default::default()
+            };
+            match case {
+                "duplicate" => response.successes.push(response.successes[0].clone()),
+                "conflict" => response.failures.push(PersistFailure {
+                    subrequest_id: 0,
+                    reason: PersistFailureReason::WalFull as i32,
+                    ..Default::default()
+                }),
+                "foreign" => response.successes[0].subrequest_id = 99,
+                "wrong_leader" => response.leader_id = "other".into(),
+                _ => unreachable!(),
+            }
+            assert!(
+                !workbench.reconcile_persist_response(&summary, &response),
+                "{case}"
+            );
+            assert_eq!(workbench.num_successes, 1, "{case}");
+            assert!(workbench.subworkbenches[&2].persist_success_opt.is_some());
+            for id in [0, 1] {
+                assert!(!workbench.subworkbenches[&id].is_pending(), "{case}");
+                assert!(
+                    workbench.subworkbenches[&id].persist_success_opt.is_none(),
+                    "{case}"
+                );
+            }
+        }
+    }
+
+    #[test]
     fn test_ingest_subworkbench() {
         let subrequest = IngestSubrequest {
             ..Default::default()
@@ -419,12 +564,12 @@ mod tests {
         assert!(subworkbench.last_failure_is_transient());
 
         subworkbench.last_failure_opt = Some(SubworkbenchFailure::Unavailable);
-        assert!(subworkbench.is_pending());
-        assert!(subworkbench.last_failure_is_transient());
+        assert!(!subworkbench.is_pending());
+        assert!(!subworkbench.last_failure_is_transient());
 
         subworkbench.last_failure_opt = Some(SubworkbenchFailure::Internal);
-        assert!(subworkbench.is_pending());
-        assert!(subworkbench.last_failure_is_transient());
+        assert!(!subworkbench.is_pending());
+        assert!(!subworkbench.last_failure_is_transient());
 
         subworkbench.last_failure_opt = Some(SubworkbenchFailure::NoShardsAvailable);
         assert!(subworkbench.is_pending());
@@ -440,8 +585,8 @@ mod tests {
         subworkbench.last_failure_opt = Some(SubworkbenchFailure::Persist(
             PersistFailureReason::NoShardsAvailable,
         ));
-        assert!(subworkbench.is_pending());
-        assert!(subworkbench.last_failure_is_transient());
+        assert!(!subworkbench.is_pending());
+        assert!(!subworkbench.last_failure_is_transient());
 
         let persist_success = PersistSuccess {
             ..Default::default()
@@ -502,6 +647,7 @@ mod tests {
 
         let persist_failure = PersistFailure {
             subrequest_id: 1,
+            reason: PersistFailureReason::WalFull as i32,
             ..Default::default()
         };
         workbench.record_persist_failure(&persist_failure);
