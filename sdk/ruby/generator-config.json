@@ -1,0 +1,11 @@
+{
+  "gemName": "quickwit-cheminee",
+  "moduleName": "QuickwitCheminee",
+  "gemAuthor": "Xavier Lange",
+  "gemAuthorEmail": "xrlange@gmail.com",
+  "gemLicense": "Apache-2.0",
+  "gemHomepage": "https://github.com/rdkit-rs/quickwit-cheminee",
+  "gemRequiredRubyVersion": ">= 3.0",
+  "hideGenerationTimestamp": true,
+  "library": "faraday"
+}

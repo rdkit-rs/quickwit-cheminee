@@ -1,0 +1,21 @@
+{
+  "combined_schema_sha256": "a36827ce8e1bbc870d3cadd2a74cbbc248d7ef3db2c761ace01fc2f652b85b72",
+  "gem_version": "0.9.1.pre.pr3",
+  "generator_config_sha256": "5591e87fac669353edd85cfd5632f52183b21aa6c26e6422ea580df66841b681",
+  "generator_sha256": "113c25df5a781d5a1fc2b883f12fe8f263db285ab12e15854d5b15306e1bf7fc",
+  "generator_version": "7.11.0",
+  "operation_count": 10,
+  "projection_script_sha256": "192dd6b29d5fe746966409e1d06c0d3f5e719a258f87ee2e298d2642616b5ad2",
+  "publication_authorized": false,
+  "ruby_dependency_lock_sha256": "4035816851193bca135641aac9a97aef5cc410a7606da0c9f3b19d822c121159",
+  "sdk_schema_sha256": "c40d9579c6498c681741dc8c07cacc856441efac290d80466d9b10c3997ec2c4",
+  "server_revision": "a3c9789a179ae611a31da03a9f7fa833dc416fd0",
+  "server_version": "0.9.1",
+  "template_sha256": {
+    "README.mustache": "c67693bdc10af3eaa9319b42eb3345c923d3048ffc881df155a57c0b3795de83",
+    "base_object.mustache": "ac9d01d2c4eeaed7fed355f9f2c52b07298f9113267bca790f94199a47ac92bf",
+    "gemspec.mustache": "c403de99258f20cc03f47b8096e885ffa2d5cfad91d36e53911acb7aec6f40b0",
+    "partial_model_generic.mustache": "656d8c6c40b61bdc1f158bcf38caadbf0078af2c5f38b76957c4f010ddc02eae",
+    "partial_oneof_module.mustache": "d385e6c632372e9dd36a2514d84594fcd7563972bc48a86c0941a1c8bc275b16"
+  }
+}

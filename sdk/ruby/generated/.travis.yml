@@ -1,0 +1,11 @@
+language: ruby
+cache: bundler
+rvm:
+  - 2.7
+  - 3.0
+  - 3.1
+script:
+  - bundle install --path vendor/bundle
+  - bundle exec rspec
+  - gem build quickwit-cheminee.gemspec
+  - gem install ./quickwit-cheminee-0.9.1.pre.pr3.gem

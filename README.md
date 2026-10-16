@@ -3,7 +3,9 @@
 The Ruby/importer campaign is **blocked on recovery of unpublished chemistry work**.
 The local preparation branch is based on public PR3, not the unpublished DSL tip.
 See the [decision log, contract audit and release checklist](docs/cheminee-campaign/README.md).
-No new gem, Compose resource envelope, HA guarantee or performance result is claimed.
+A [generated PR3 Ruby candidate](sdk/ruby/README.md) now passes installed HTTP tests
+and a live non-native importer smoke. DSL/native integration, Compose resource
+measurements, HA guarantees and new performance results remain unvalidated.
 
 ## Why this beats the pants off stinking old cheminee
 
@@ -25,7 +27,7 @@ cache was retained, and RSS omits much filesystem cache. See the report for rang
 connection-overlap flags and scope. Original corpus/index bundles have not been
 recovered in this session; the report was recovered from Library checkpoint v23.
 
-Supplier-refresh correctness, Ruby wire behavior, low-memory coexistence with
+Supplier-refresh correctness, native Ruby/server integration, low-memory coexistence with
 Elasticsearch, HA/durability, stable generation-aware pagination and scale beyond
 100k remain unproven. The existing chemistry routes offer bounded result sets,
 not exhaustive cursor traversal. No arbitrary Elasticsearch/Searchkick compatibility

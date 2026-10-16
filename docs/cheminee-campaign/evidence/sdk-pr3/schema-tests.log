@@ -1,0 +1,8 @@
+
+running 3 tests
+test openapi::openapi_schema_tests::ensure_schemas_resolve ... ok
+test openapi::openapi_schema_tests::ingest_contract_preserves_raw_ndjson_and_rejection_details ... ok
+test openapi::openapi_schema_tests::mapping_schema_matches_flattened_options_and_fast_wire_values ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 170 filtered out; finished in 0.01s
+

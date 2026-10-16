@@ -1,0 +1,4355 @@
+{
+  "components": {
+    "schemas": {
+      "BasicSearchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "extra_query": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "result_limit": {
+            "default": 100,
+            "format": "int32",
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sort_ascending": {
+            "type": "boolean"
+          },
+          "sort_field": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "BasicSearchResponse": {
+        "properties": {
+          "elapsed_time_micros": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "hits": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "num_hits": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "searched_splits": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "num_hits",
+          "hits",
+          "searched_splits",
+          "elapsed_time_micros"
+        ],
+        "type": "object"
+      },
+      "ChemistryError": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "ChemistryMapping": {
+        "additionalProperties": false,
+        "properties": {
+          "descriptor_layout": {
+            "$ref": "#/components/schemas/DescriptorLayout"
+          },
+          "descriptor_v1": {
+            "description": "Generate the complete Cheminee descriptor_v1 contract in process.",
+            "type": "boolean"
+          },
+          "prepared_smiles_field": {
+            "type": "string"
+          },
+          "smiles_field": {
+            "type": "string"
+          },
+          "spec": {
+            "$ref": "#/components/schemas/FingerprintSpec"
+          }
+        },
+        "required": [
+          "spec",
+          "smiles_field",
+          "prepared_smiles_field"
+        ],
+        "type": "object"
+      },
+      "CommitType": {
+        "description": "Specifies if the ingest request should block waiting for the records to be committed.",
+        "enum": [
+          "auto",
+          "wait_for",
+          "force"
+        ],
+        "type": "string"
+      },
+      "ConstWriteAmplificationMergePolicyConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "maturation_period": {
+            "description": "Duration relative to `split.created_timestamp` after which a split\nbecomes mature.\nIf `now() >= split.created_timestamp + maturation_period` then\nthe split is considered mature.",
+            "type": "string"
+          },
+          "max_finalize_merge_operations": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "max_finalize_split_num_docs": {
+            "description": "Splits with a number of docs higher than\n`max_finalize_split_num_docs` will not be considered\nfor finalize split merge operations.",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "max_merge_factor": {
+            "description": "Maximum number of splits that can be merged together in a single merge operation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "max_merge_ops": {
+            "description": "Maximum number of merges that a given split should undergo.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "merge_factor": {
+            "description": "Number of splits to merge together in a single merge operation.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "DescriptorLayout": {
+        "description": "Storage layout for the numeric descriptor contract. Existing indexes remain flat.",
+        "enum": [
+          "flat",
+          "nested"
+        ],
+        "type": "string"
+      },
+      "DocMapping": {
+        "additionalProperties": false,
+        "description": "Defines how the document of an index should be parsed, tokenized, partitioned, indexed, and\nstored.",
+        "properties": {
+          "chemistry": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChemistryMapping"
+              }
+            ],
+            "nullable": true
+          },
+          "doc_mapping_uid": {
+            "$ref": "#/components/schemas/DocMappingUid"
+          },
+          "dynamic_mapping": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuickwitJsonOptions"
+              }
+            ],
+            "nullable": true
+          },
+          "field_mappings": {
+            "description": "Defines the schema of ingested documents and describes how each field value should be\nparsed, tokenized, indexed, and stored.",
+            "items": {
+              "$ref": "#/components/schemas/FieldMappingEntryForSerialization"
+            },
+            "type": "array"
+          },
+          "index_field_presence": {
+            "description": "Whether to record the presence of the fields of each indexed document to allow `exists`\nqueries.",
+            "type": "boolean"
+          },
+          "max_num_partitions": {
+            "description": "The maximum number of partitions that an indexer can generate.",
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/ModeType"
+          },
+          "partition_key": {
+            "description": "Expresses via a \"mini-DSL\" how to route documents to split partitions.",
+            "nullable": true,
+            "type": "string"
+          },
+          "store_document_size": {
+            "description": "Whether to record and store the size (bytes) of each ingested document in a fast field.",
+            "type": "boolean"
+          },
+          "store_source": {
+            "description": "Whether to store the original source documents in the doc store.",
+            "type": "boolean"
+          },
+          "tag_fields": {
+            "description": "Declares the low cardinality fields for which the values ​​are recorded directly in the\nsplits metadata.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "timestamp_field": {
+            "description": "Declares the field which contains the date or timestamp at which the document\nwas emitted.",
+            "nullable": true,
+            "type": "string"
+          },
+          "tokenizers": {
+            "description": "A set of additional user-defined tokenizers to be used during indexing.",
+            "items": {
+              "$ref": "#/components/schemas/TokenizerEntry"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "DocMappingUid": {
+        "description": "Unique identifier for a document mapping.",
+        "format": "ulid",
+        "type": "string"
+      },
+      "FastFieldOptions": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "properties": {
+              "normalizer": {
+                "$ref": "#/components/schemas/QuickwitTextNormalizer"
+              }
+            },
+            "required": [
+              "normalizer"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "FieldMappingEntryForSerialization": {
+        "additionalProperties": {},
+        "description": "A `FieldMappingEntry` defines how a field is indexed, stored,\nand mapped from a JSON document to the related index fields.\n\nProperty parameters which defines the way the value must be indexed.\n\nProperties are determined by the specified type, for more information\nplease see: <https://quickwit.io/docs/configuration/index-config#field-types>",
+        "properties": {
+          "name": {
+            "description": "Field name in the index schema.",
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "x-preserve-mapping-options": true
+      },
+      "FileSourceMessageType": {
+        "enum": [
+          "s3_notification",
+          "raw_uri"
+        ],
+        "type": "string"
+      },
+      "FileSourceNotification": {
+        "discriminator": {
+          "mapping": {
+            "sqs": "#/components/schemas/FileSourceNotificationVariant0"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/FileSourceNotificationVariant0"
+          }
+        ]
+      },
+      "FileSourceNotificationVariant0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FileSourceSqs"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "sqs"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "FileSourceParamsForSerde": {
+        "additionalProperties": false,
+        "properties": {
+          "filepath": {
+            "nullable": true,
+            "type": "string"
+          },
+          "notifications": {
+            "items": {
+              "$ref": "#/components/schemas/FileSourceNotification"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "FileSourceSqs": {
+        "properties": {
+          "deduplication_cleanup_interval_secs": {
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "deduplication_window_duration_secs": {
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "deduplication_window_max_messages": {
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "message_type": {
+            "$ref": "#/components/schemas/FileSourceMessageType"
+          },
+          "queue_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "queue_url",
+          "message_type"
+        ],
+        "type": "object"
+      },
+      "FingerprintFormat": {
+        "enum": [
+          "morgan-r3-2048-lsb0-v1"
+        ],
+        "type": "string"
+      },
+      "FingerprintSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/FingerprintFormat"
+          },
+          "preparation_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[!-~]{1,128}$",
+            "type": "string"
+          },
+          "rdkit_version": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[!-~]{1,128}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "format",
+          "rdkit_version",
+          "preparation_id"
+        ],
+        "type": "object"
+      },
+      "GraphRanking": {
+        "enum": [
+          "best_match",
+          "fewest_extra_heavy_atoms",
+          "greatest_query_coverage",
+          "stable_id"
+        ],
+        "type": "string"
+      },
+      "GraphSearchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "extra_query": {
+            "type": "string"
+          },
+          "include_identity": {
+            "type": "boolean"
+          },
+          "prepared_smiles_field": {
+            "type": "string"
+          },
+          "ranking": {
+            "$ref": "#/components/schemas/GraphRanking"
+          },
+          "result_limit": {
+            "default": 100,
+            "format": "int32",
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "smiles": {
+            "type": "string"
+          },
+          "spec": {
+            "$ref": "#/components/schemas/FingerprintSpec"
+          },
+          "use_chirality": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "spec",
+          "smiles"
+        ],
+        "type": "object"
+      },
+      "IndexConfigV0_8": {
+        "additionalProperties": false,
+        "properties": {
+          "doc_mapping": {
+            "$ref": "#/components/schemas/DocMapping"
+          },
+          "index_id": {
+            "type": "string"
+          },
+          "index_uri": {
+            "type": "string"
+          },
+          "indexing_settings": {
+            "$ref": "#/components/schemas/IndexingSettings"
+          },
+          "ingest_settings": {
+            "$ref": "#/components/schemas/IngestSettings"
+          },
+          "retention": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RetentionPolicy"
+              }
+            ],
+            "nullable": true
+          },
+          "search_settings": {
+            "$ref": "#/components/schemas/SearchSettings"
+          }
+        },
+        "required": [
+          "index_id",
+          "doc_mapping"
+        ],
+        "type": "object"
+      },
+      "IndexMetadataV0_8": {
+        "properties": {
+          "checkpoint": {
+            "type": "object"
+          },
+          "create_timestamp": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "index_config": {
+            "$ref": "#/components/schemas/VersionedIndexConfig"
+          },
+          "index_uid": {
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/VersionedSourceConfig"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "index_uid",
+          "index_config",
+          "checkpoint",
+          "sources"
+        ],
+        "type": "object"
+      },
+      "IndexRecordOptionSchema": {
+        "enum": [
+          "basic",
+          "freq",
+          "position"
+        ],
+        "type": "string"
+      },
+      "IndexStats": {
+        "description": "Describes an index with its main information and statistics.",
+        "properties": {
+          "index_id": {
+            "type": "string"
+          },
+          "index_uri": {
+            "type": "string"
+          },
+          "max_timestamp": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "min_timestamp": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "num_published_docs": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "num_published_splits": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "size_published_docs_uncompressed": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "size_published_splits": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "timestamp_field_name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "index_id",
+          "index_uri",
+          "num_published_splits",
+          "size_published_splits",
+          "num_published_docs",
+          "size_published_docs_uncompressed"
+        ],
+        "type": "object"
+      },
+      "IndexingResources": {
+        "additionalProperties": false,
+        "properties": {
+          "heap_size": {
+            "default": "2 GB",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "IndexingSettings": {
+        "additionalProperties": false,
+        "properties": {
+          "commit_timeout_secs": {
+            "default": 60,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "docstore_blocksize": {
+            "default": 1000000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "docstore_compression_level": {
+            "default": 8,
+            "format": "int32",
+            "type": "integer"
+          },
+          "merge_policy": {
+            "$ref": "#/components/schemas/MergePolicyConfig"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/IndexingResources"
+          },
+          "split_num_docs_target": {
+            "description": "The merge policy aims to eventually produce mature splits that have a larger size but\nare within close range of `split_num_docs_target`.\n\nIn other words, splits that contain a number of documents greater than or equal to\n`split_num_docs_target` are considered mature and never merged.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "IngestSettings": {
+        "additionalProperties": false,
+        "description": "Settings for ingestion.",
+        "properties": {
+          "min_shards": {
+            "default": 1,
+            "description": "Configures the minimum number of shards to use for ingestion.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "validate_docs": {
+            "default": true,
+            "description": "Whether to validate documents against the current doc mapping during ingestion.\nDefaults to true. When false, documents will be written directly to the WAL without\nvalidation, but might still be rejected during indexing when applying the doc mapping\nin the doc processor, in that case the documents are dropped and a warning is logged.\n\nNote that when a source has a VRL transform configured, documents are not validated against\nthe doc mapping during ingestion either.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "KafkaSourceParams": {
+        "additionalProperties": false,
+        "properties": {
+          "client_log_level": {
+            "description": "Kafka client log level. Possible values are `debug`, `info`, `warn`, and `error`.",
+            "type": "string"
+          },
+          "client_params": {
+            "description": "Kafka client configuration parameters.",
+            "type": "object"
+          },
+          "enable_backfill_mode": {
+            "description": "When backfill mode is enabled, the source exits after reaching the end of the topic.",
+            "type": "boolean"
+          },
+          "topic": {
+            "description": "Name of the topic that the source consumes.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "KinesisSourceParams": {
+        "allOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RegionOrEndpoint"
+              }
+            ],
+            "nullable": true
+          },
+          {
+            "properties": {
+              "enable_backfill_mode": {
+                "description": "When backfill mode is enabled, the source exits after reaching the end of the stream.",
+                "type": "boolean"
+              },
+              "stream_name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "stream_name"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "MergePolicyConfig": {
+        "discriminator": {
+          "mapping": {
+            "limit_merge": "#/components/schemas/MergePolicyConfigVariant1",
+            "no_merge": "#/components/schemas/MergePolicyConfigVariant0",
+            "stable_log": "#/components/schemas/MergePolicyConfigVariant2"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MergePolicyConfigVariant0"
+          },
+          {
+            "$ref": "#/components/schemas/MergePolicyConfigVariant1"
+          },
+          {
+            "$ref": "#/components/schemas/MergePolicyConfigVariant2"
+          }
+        ]
+      },
+      "MergePolicyConfigVariant0": {
+        "properties": {
+          "type": {
+            "enum": [
+              "no_merge"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "MergePolicyConfigVariant1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConstWriteAmplificationMergePolicyConfig"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "limit_merge"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "MergePolicyConfigVariant2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/StableLogMergePolicyConfig"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "stable_log"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "ModeType": {
+        "description": "Defines how unmapped fields should be handled.",
+        "enum": [
+          "lenient",
+          "strict",
+          "dynamic"
+        ],
+        "type": "string"
+      },
+      "NgramTokenizerOption": {
+        "additionalProperties": false,
+        "properties": {
+          "max_gram": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min_gram": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "prefix_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "min_gram",
+          "max_gram"
+        ],
+        "type": "object"
+      },
+      "ParseFailureReason": {
+        "enum": [
+          "unspecified",
+          "invalid_json",
+          "invalid_schema"
+        ],
+        "type": "string"
+      },
+      "PubSubSourceParams": {
+        "additionalProperties": false,
+        "properties": {
+          "credentials_file": {
+            "description": "GCP service account credentials (`None` will use default via\nGOOGLE_APPLICATION_CREDENTIALS)\nPath to a google_cloud_auth::credentials::CredentialsFile serialized in JSON. See also\n`<https://cloud.google.com/docs/authentication/application-default-credentials>` and\n`<https://github.com/yoshidan/google-cloud-rust/tree/main/pubsub#automatically>` and\n`<https://docs.rs/google-cloud-auth/0.12.0/google_cloud_auth/credentials/struct.CredentialsFile.html>`.",
+            "nullable": true,
+            "type": "string"
+          },
+          "enable_backfill_mode": {
+            "description": "When backfill mode is enabled, the source exits after reaching the end of the topic.",
+            "type": "boolean"
+          },
+          "max_messages_per_pull": {
+            "description": "Maximum number of messages returned by a pull request (default 1,000)",
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "project_id": {
+            "description": "GCP project ID (Defaults to credentials file project ID).",
+            "nullable": true,
+            "type": "string"
+          },
+          "subscription": {
+            "description": "Name of the subscription that the source consumes.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subscription"
+        ],
+        "type": "object"
+      },
+      "PulsarSourceAuth": {
+        "oneOf": [
+          {
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "token"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "oauth2": {
+                "properties": {
+                  "audience": {
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "credentials_url": {
+                    "type": "string"
+                  },
+                  "issuer_url": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "issuer_url",
+                  "credentials_url"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "oauth2"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "PulsarSourceParams": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "description": "The connection URI for pulsar.",
+            "type": "string"
+          },
+          "authentication": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PulsarSourceAuth"
+              }
+            ],
+            "nullable": true
+          },
+          "consumer_name": {
+            "default": "quickwit",
+            "description": "The name to register with the pulsar source.",
+            "type": "string"
+          },
+          "topics": {
+            "description": "List of the topics that the source consumes.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "topics",
+          "address"
+        ],
+        "type": "object"
+      },
+      "QuickwitJsonOptions": {
+        "additionalProperties": false,
+        "description": "Options associated to a json field.\n\n`QuickwitJsonOptions` is also used to configure\nthe dynamic mapping.",
+        "properties": {
+          "description": {
+            "description": "Optional description of JSON object.",
+            "nullable": true,
+            "type": "string"
+          },
+          "expand_dots": {
+            "description": "If true, the '.' in json keys will be expanded.",
+            "type": "boolean"
+          },
+          "fast": {
+            "$ref": "#/components/schemas/FastFieldOptions"
+          },
+          "indexed": {
+            "description": "If true, all of the element in the json object will be indexed.",
+            "type": "boolean"
+          },
+          "record": {
+            "$ref": "#/components/schemas/IndexRecordOptionSchema"
+          },
+          "stored": {
+            "description": "If true, the field will be stored in the doc store.",
+            "type": "boolean"
+          },
+          "tokenizer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuickwitTextTokenizer"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "QuickwitTextNormalizer": {
+        "enum": [
+          "raw",
+          "lowercase"
+        ],
+        "type": "string"
+      },
+      "QuickwitTextTokenizer": {
+        "type": "string"
+      },
+      "RegexTokenizerOption": {
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pattern"
+        ],
+        "type": "object"
+      },
+      "RegionOrEndpoint": {
+        "oneOf": [
+          {
+            "properties": {
+              "region": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "region"
+            ],
+            "type": "object"
+          },
+          {
+            "properties": {
+              "endpoint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "endpoint"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "RestIngestResponse": {
+        "properties": {
+          "num_docs_for_processing": {
+            "description": "Number of rows in the request payload",
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "num_ingested_docs": {
+            "description": "Number of docs successfully ingested",
+            "format": "int64",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "num_rejected_docs": {
+            "description": "Number of docs rejected because of parsing errors",
+            "format": "int64",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "parse_failures": {
+            "description": "Detailed description of parsing errors (available if the query param\n`detailed_response` is set to `true`)",
+            "items": {
+              "$ref": "#/components/schemas/RestParseFailure"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "required": [
+          "num_docs_for_processing"
+        ],
+        "type": "object"
+      },
+      "RestParseFailure": {
+        "properties": {
+          "document": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/ParseFailureReason"
+          }
+        },
+        "required": [
+          "message",
+          "document",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "RetentionPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "period": {
+            "description": "Duration of time for which the splits should be retained, expressed in a human-friendly way\n(`1 hour`, `3 days`, `1 week`, ...).",
+            "type": "string"
+          },
+          "schedule": {
+            "description": "Defines the frequency at which the retention policy is evaluated and applied, expressed in\na human-friendly way (`hourly`, `daily`, ...) or as a cron expression (`0 0 * * * *`,\n`0 0 0 * * *`).",
+            "type": "string"
+          }
+        },
+        "required": [
+          "period"
+        ],
+        "type": "object"
+      },
+      "SearchSettings": {
+        "additionalProperties": false,
+        "properties": {
+          "default_search_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "SimilarityHit": {
+        "properties": {
+          "document": {
+            "type": "object"
+          },
+          "record_id": {
+            "type": "string"
+          },
+          "score": {
+            "format": "float",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "record_id",
+          "score",
+          "document"
+        ],
+        "type": "object"
+      },
+      "SimilarityResponse": {
+        "properties": {
+          "elapsed_time_micros": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SimilarityHit"
+            },
+            "type": "array"
+          },
+          "num_hits": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "searched_splits": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "num_hits",
+          "hits",
+          "searched_splits",
+          "elapsed_time_micros"
+        ],
+        "type": "object"
+      },
+      "SmilesSimilarityRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "extra_query": {
+            "default": "*",
+            "type": "string"
+          },
+          "result_limit": {
+            "default": 100,
+            "format": "int32",
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "smiles": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "spec": {
+            "$ref": "#/components/schemas/FingerprintSpec"
+          },
+          "tanimoto_minimum": {
+            "default": 0.4,
+            "format": "float",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "spec",
+          "smiles"
+        ],
+        "type": "object"
+      },
+      "SourceConfigV0_7": {
+        "discriminator": {
+          "mapping": {
+            "file": "#/components/schemas/SourceConfigV0_7Member0",
+            "ingest": "#/components/schemas/SourceConfigV0_7Member1",
+            "ingest-api": "#/components/schemas/SourceConfigV0_7Member2",
+            "ingest-cli": "#/components/schemas/SourceConfigV0_7Member3",
+            "kafka": "#/components/schemas/SourceConfigV0_7Member4",
+            "kinesis": "#/components/schemas/SourceConfigV0_7Member5",
+            "pubsub": "#/components/schemas/SourceConfigV0_7Member6",
+            "pulsar": "#/components/schemas/SourceConfigV0_7Member7",
+            "stdin": "#/components/schemas/SourceConfigV0_7Member8",
+            "vec": "#/components/schemas/SourceConfigV0_7Member9",
+            "void": "#/components/schemas/SourceConfigV0_7Member10"
+          },
+          "propertyName": "source_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member0"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member1"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member2"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member3"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member4"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member5"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member6"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member7"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member8"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member9"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member10"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant0"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant1"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member10": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant10"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant2"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant3"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member4": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant4"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member5": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant5"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member6": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant6"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member7": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant7"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member8": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant8"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_7Member9": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant9"
+          },
+          {
+            "properties": {
+              "desired_num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "max_num_pipelines_per_indexer": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8": {
+        "discriminator": {
+          "mapping": {
+            "file": "#/components/schemas/SourceConfigV0_8Member0",
+            "ingest": "#/components/schemas/SourceConfigV0_8Member1",
+            "ingest-api": "#/components/schemas/SourceConfigV0_8Member2",
+            "ingest-cli": "#/components/schemas/SourceConfigV0_8Member3",
+            "kafka": "#/components/schemas/SourceConfigV0_8Member4",
+            "kinesis": "#/components/schemas/SourceConfigV0_8Member5",
+            "pubsub": "#/components/schemas/SourceConfigV0_8Member6",
+            "pulsar": "#/components/schemas/SourceConfigV0_8Member7",
+            "stdin": "#/components/schemas/SourceConfigV0_8Member8",
+            "vec": "#/components/schemas/SourceConfigV0_8Member9",
+            "void": "#/components/schemas/SourceConfigV0_8Member10"
+          },
+          "propertyName": "source_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member0"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member1"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member2"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member3"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member4"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member5"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member6"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member7"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member8"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member9"
+          },
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member10"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant0"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant1"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member10": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant10"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant2"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant3"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member4": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant4"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member5": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant5"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member6": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant6"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member7": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant7"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member8": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant8"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceConfigV0_8Member9": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant9"
+          },
+          {
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "input_format": {
+                "$ref": "#/components/schemas/SourceInputFormat"
+              },
+              "num_pipelines": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "transform": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TransformConfig"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "SourceInputFormat": {
+        "enum": [
+          "json",
+          "otlp_logs_json",
+          "otlp_logs_protobuf",
+          "otlp_traces_json",
+          "otlp_traces_protobuf",
+          "plain_text"
+        ],
+        "type": "string"
+      },
+      "SourceParams": {
+        "discriminator": {
+          "mapping": {
+            "file": "#/components/schemas/SourceParamsVariant0",
+            "ingest": "#/components/schemas/SourceParamsVariant1",
+            "ingest-api": "#/components/schemas/SourceParamsVariant2",
+            "ingest-cli": "#/components/schemas/SourceParamsVariant3",
+            "kafka": "#/components/schemas/SourceParamsVariant4",
+            "kinesis": "#/components/schemas/SourceParamsVariant5",
+            "pubsub": "#/components/schemas/SourceParamsVariant6",
+            "pulsar": "#/components/schemas/SourceParamsVariant7",
+            "stdin": "#/components/schemas/SourceParamsVariant8",
+            "vec": "#/components/schemas/SourceParamsVariant9",
+            "void": "#/components/schemas/SourceParamsVariant10"
+          },
+          "propertyName": "source_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant0"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant1"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant2"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant3"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant4"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant5"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant6"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant7"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant8"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant9"
+          },
+          {
+            "$ref": "#/components/schemas/SourceParamsVariant10"
+          }
+        ]
+      },
+      "SourceParamsVariant0": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/FileSourceParamsForSerde"
+          },
+          "source_type": {
+            "enum": [
+              "file"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant1": {
+        "properties": {
+          "source_type": {
+            "enum": [
+              "ingest"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant10": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/VoidSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "void"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant2": {
+        "properties": {
+          "source_type": {
+            "enum": [
+              "ingest-api"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant3": {
+        "properties": {
+          "source_type": {
+            "enum": [
+              "ingest-cli"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant4": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/KafkaSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "kafka"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant5": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/KinesisSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "kinesis"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant6": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/PubSubSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "pubsub"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant7": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/PulsarSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "pulsar"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant8": {
+        "properties": {
+          "source_type": {
+            "enum": [
+              "stdin"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type"
+        ],
+        "type": "object"
+      },
+      "SourceParamsVariant9": {
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/VecSourceParams"
+          },
+          "source_type": {
+            "enum": [
+              "vec"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_type",
+          "params"
+        ],
+        "type": "object"
+      },
+      "SplitInfo": {
+        "description": "A summarized version of the split metadata for display purposes.",
+        "properties": {
+          "file_name": {
+            "description": "The name of the split file on disk.",
+            "type": "string"
+          },
+          "file_size_bytes": {
+            "description": "The size of the split file on disk in bytes.",
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "num_docs": {
+            "description": "The number of documents in the split.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "split_id": {
+            "description": "The split ID.",
+            "type": "string"
+          },
+          "uncompressed_docs_size_bytes": {
+            "description": "The sum of the sizes of the original JSON payloads in bytes.",
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "split_id",
+          "num_docs",
+          "uncompressed_docs_size_bytes",
+          "file_name",
+          "file_size_bytes"
+        ],
+        "type": "object"
+      },
+      "StableLogMergePolicyConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "maturation_period": {
+            "description": "Duration relative to `split.created_timestamp` after which a split\nbecomes mature.\nIf `now() >= split.created_timestamp + maturation_period` then\nthe split is mature.",
+            "type": "string"
+          },
+          "max_merge_factor": {
+            "description": "Maximum number of splits that can be merged together in a single merge operation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "merge_factor": {
+            "description": "Number of splits to merge together in a single merge operation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min_level_num_docs": {
+            "description": "Number of docs below which all splits are considered as belonging to the same level.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "TokenFilterType": {
+        "enum": [
+          "remove_long",
+          "lower_caser",
+          "ascii_folding"
+        ],
+        "type": "string"
+      },
+      "TokenizerConfig": {
+        "description": "Tokenizer configuration.",
+        "discriminator": {
+          "mapping": {
+            "ngram": "#/components/schemas/TokenizerConfigMember0",
+            "regex": "#/components/schemas/TokenizerConfigMember1",
+            "simple": "#/components/schemas/TokenizerConfigMember2",
+            "source_code": "#/components/schemas/TokenizerConfigMember3"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember0"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember1"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember2"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember3"
+          }
+        ]
+      },
+      "TokenizerConfigMember0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant0"
+          },
+          {
+            "properties": {
+              "filters": {
+                "items": {
+                  "$ref": "#/components/schemas/TokenFilterType"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerConfigMember1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant1"
+          },
+          {
+            "properties": {
+              "filters": {
+                "items": {
+                  "$ref": "#/components/schemas/TokenFilterType"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerConfigMember2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant2"
+          },
+          {
+            "properties": {
+              "filters": {
+                "items": {
+                  "$ref": "#/components/schemas/TokenFilterType"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerConfigMember3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant3"
+          },
+          {
+            "properties": {
+              "filters": {
+                "items": {
+                  "$ref": "#/components/schemas/TokenFilterType"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerEntry": {
+        "description": "A `TokenizerEntry` defines a custom tokenizer with its name and configuration.",
+        "discriminator": {
+          "mapping": {
+            "ngram": "#/components/schemas/TokenizerEntryMember0",
+            "regex": "#/components/schemas/TokenizerEntryMember1",
+            "simple": "#/components/schemas/TokenizerEntryMember2",
+            "source_code": "#/components/schemas/TokenizerEntryMember3"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerEntryMember0"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerEntryMember1"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerEntryMember2"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerEntryMember3"
+          }
+        ]
+      },
+      "TokenizerEntryMember0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember0"
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Tokenizer name.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerEntryMember1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember1"
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Tokenizer name.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerEntryMember2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember2"
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Tokenizer name.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerEntryMember3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerConfigMember3"
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Tokenizer name.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerType": {
+        "discriminator": {
+          "mapping": {
+            "ngram": "#/components/schemas/TokenizerTypeVariant0",
+            "regex": "#/components/schemas/TokenizerTypeVariant1",
+            "simple": "#/components/schemas/TokenizerTypeVariant2",
+            "source_code": "#/components/schemas/TokenizerTypeVariant3"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant0"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant1"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant2"
+          },
+          {
+            "$ref": "#/components/schemas/TokenizerTypeVariant3"
+          }
+        ]
+      },
+      "TokenizerTypeVariant0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NgramTokenizerOption"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "ngram"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerTypeVariant1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RegexTokenizerOption"
+          },
+          {
+            "properties": {
+              "type": {
+                "enum": [
+                  "regex"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "TokenizerTypeVariant2": {
+        "properties": {
+          "type": {
+            "enum": [
+              "simple"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "TokenizerTypeVariant3": {
+        "properties": {
+          "type": {
+            "enum": [
+              "source_code"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      },
+      "TransformConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "script": {
+            "description": "[VRL] source code of the transform compiled to a VRL [`Program`](vrl::compiler::Program).\n\n[VRL]: https://vector.dev/docs/reference/vrl/",
+            "type": "string"
+          },
+          "timezone": {
+            "description": "Timezone used in the VRL [`Program`](vrl::compiler::Program) for date and time\nmanipulations. Defaults to `UTC` if not timezone is specified.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "script"
+        ],
+        "type": "object"
+      },
+      "VecSourceParams": {
+        "additionalProperties": false,
+        "properties": {
+          "batch_num_docs": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "docs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "partition": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "docs",
+          "batch_num_docs"
+        ],
+        "type": "object"
+      },
+      "VersionedIndexConfig": {
+        "discriminator": {
+          "mapping": {
+            "0.8": "#/components/schemas/VersionedIndexConfigVariant1",
+            "0.9": "#/components/schemas/VersionedIndexConfigVariant0"
+          },
+          "propertyName": "version"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/VersionedIndexConfigVariant0"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedIndexConfigVariant1"
+          }
+        ]
+      },
+      "VersionedIndexConfigVariant0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IndexConfigV0_8"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedIndexConfigVariant1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IndexConfigV0_8"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.8"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedIndexMetadata": {
+        "discriminator": {
+          "mapping": {
+            "0.9": "#/components/schemas/VersionedIndexMetadataVariant0"
+          },
+          "propertyName": "version"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/VersionedIndexMetadataVariant0"
+          }
+        ]
+      },
+      "VersionedIndexMetadataVariant0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IndexMetadataV0_8"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfig": {
+        "discriminator": {
+          "mapping": {
+            "0.7": "#/components/schemas/VersionedSourceConfigVariant1",
+            "0.9": "#/components/schemas/VersionedSourceConfigVariant0"
+          },
+          "propertyName": "version"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0": {
+        "discriminator": {
+          "mapping": {
+            "file": "#/components/schemas/VersionedSourceConfigVariant0Member0",
+            "ingest": "#/components/schemas/VersionedSourceConfigVariant0Member1",
+            "ingest-api": "#/components/schemas/VersionedSourceConfigVariant0Member2",
+            "ingest-cli": "#/components/schemas/VersionedSourceConfigVariant0Member3",
+            "kafka": "#/components/schemas/VersionedSourceConfigVariant0Member4",
+            "kinesis": "#/components/schemas/VersionedSourceConfigVariant0Member5",
+            "pubsub": "#/components/schemas/VersionedSourceConfigVariant0Member6",
+            "pulsar": "#/components/schemas/VersionedSourceConfigVariant0Member7",
+            "stdin": "#/components/schemas/VersionedSourceConfigVariant0Member8",
+            "vec": "#/components/schemas/VersionedSourceConfigVariant0Member9",
+            "void": "#/components/schemas/VersionedSourceConfigVariant0Member10"
+          },
+          "propertyName": "source_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member0"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member1"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member2"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member3"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member4"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member5"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member6"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member7"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member8"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member9"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant0Member10"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member0"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member1"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member10": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member10"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member2"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member3"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member4": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member4"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member5": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member5"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member6": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member6"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member7": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member7"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member8": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member8"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant0Member9": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_8Member9"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.9"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1": {
+        "discriminator": {
+          "mapping": {
+            "file": "#/components/schemas/VersionedSourceConfigVariant1Member0",
+            "ingest": "#/components/schemas/VersionedSourceConfigVariant1Member1",
+            "ingest-api": "#/components/schemas/VersionedSourceConfigVariant1Member2",
+            "ingest-cli": "#/components/schemas/VersionedSourceConfigVariant1Member3",
+            "kafka": "#/components/schemas/VersionedSourceConfigVariant1Member4",
+            "kinesis": "#/components/schemas/VersionedSourceConfigVariant1Member5",
+            "pubsub": "#/components/schemas/VersionedSourceConfigVariant1Member6",
+            "pulsar": "#/components/schemas/VersionedSourceConfigVariant1Member7",
+            "stdin": "#/components/schemas/VersionedSourceConfigVariant1Member8",
+            "vec": "#/components/schemas/VersionedSourceConfigVariant1Member9",
+            "void": "#/components/schemas/VersionedSourceConfigVariant1Member10"
+          },
+          "propertyName": "source_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member0"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member1"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member2"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member3"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member4"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member5"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member6"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member7"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member8"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member9"
+          },
+          {
+            "$ref": "#/components/schemas/VersionedSourceConfigVariant1Member10"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member0": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member0"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member1"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member10": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member10"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member2"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member3"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member4": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member4"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member5": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member5"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member6": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member6"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member7": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member7"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member8": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member8"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VersionedSourceConfigVariant1Member9": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SourceConfigV0_7Member9"
+          },
+          {
+            "properties": {
+              "version": {
+                "enum": [
+                  "0.7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "version"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "VoidSourceParams": {
+        "default": null,
+        "nullable": true
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "hello@quickwit.io",
+      "name": "Quickwit, Inc."
+    },
+    "description": "REST API server",
+    "license": {
+      "name": "Apache-2.0"
+    },
+    "title": "Quickwit-Cheminee public Ruby contract",
+    "version": "0.9.1"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/api/v1/indexes": {
+      "post": {
+        "operationId": "createIndex",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "overwrite",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VersionedIndexConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionedIndexMetadata"
+                }
+              }
+            },
+            "description": "Successfully created index."
+          }
+        },
+        "summary": "Creates index.",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/api/v1/indexes/{index_id}": {
+      "delete": {
+        "operationId": "deleteIndex",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "dry_run",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "The index ID to delete.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SplitInfo"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successfully deleted index."
+          }
+        },
+        "summary": "Deletes index.",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/api/v1/indexes/{index_id}/describe": {
+      "get": {
+        "operationId": "describeIndex",
+        "parameters": [
+          {
+            "description": "The index ID to describe.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexStats"
+                }
+              }
+            },
+            "description": "Successfully fetched stats about Index."
+          }
+        },
+        "summary": "Describes an index.",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/api/v1/{index_id}/ingest": {
+      "post": {
+        "operationId": "ingest",
+        "parameters": [
+          {
+            "description": "The index ID to add docs to.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Force or wait for commit at the end of the indexing operation.",
+            "in": "query",
+            "name": "commit",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/CommitType"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "description": "Include per-document parse failures. Requires ingest v2; details contain original documents and must not be routinely logged.",
+            "in": "query",
+            "name": "detailed_response",
+            "required": false,
+            "schema": {
+              "nullable": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-ndjson": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Raw newline-delimited JSON documents, not a JSON-encoded string. Limited by the configured ingestion body size.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestIngestResponse"
+                }
+              }
+            },
+            "description": "Batch response. Individual documents may be rejected; inspect num_ingested_docs and num_rejected_docs. Missing counts mean acceptance is unknown, not zero. Acknowledgement does not imply search visibility with commit=auto."
+          },
+          "400": {
+            "description": "Invalid request or unsupported options."
+          },
+          "404": {
+            "description": "Index not found."
+          },
+          "411": {
+            "description": "Content-Length is required."
+          },
+          "413": {
+            "description": "Request exceeds configured body limit."
+          },
+          "415": {
+            "description": "Unsupported Content-Encoding."
+          },
+          "429": {
+            "description": "Ingestion capacity exhausted."
+          },
+          "500": {
+            "description": "Internal ingestion failure, including some timeout or missing-source failures; outcome may be uncertain."
+          },
+          "503": {
+            "description": "Ingestion unavailable or timed out; a late append may still occur. Do not blindly retry."
+          }
+        },
+        "summary": "Ingest documents",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/health/readyz": {
+      "get": {
+        "operationId": "ready",
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "The service is ready."
+          },
+          "503": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "description": "The service is not ready."
+          }
+        },
+        "summary": "Get Node Readiness",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/v1/indexes/{index_id}/search/basic": {
+      "post": {
+        "operationId": "chemineeV1Basic",
+        "parameters": [
+          {
+            "description": "One concrete molecule index.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasicSearchResponse"
+                }
+              }
+            },
+            "description": "Complete distributed results with stable record_id ties."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Invalid input, filter, contract or native feature unavailable."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "411": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Content length required."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Request exceeds 32 KiB."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "JSON required."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Capacity exhausted."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Internal execution failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Unavailable or incomplete split search."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Search timed out."
+          }
+        },
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/v1/indexes/{index_id}/search/identity": {
+      "post": {
+        "operationId": "chemineeV1Identity",
+        "parameters": [
+          {
+            "description": "One concrete molecule index.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GraphSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarityResponse"
+                }
+              }
+            },
+            "description": "Complete distributed results with stable record_id ties."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Invalid input, filter, contract or native feature unavailable."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "411": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Content length required."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Request exceeds 32 KiB."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "JSON required."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Capacity exhausted."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Internal execution failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Unavailable or incomplete split search."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Search timed out."
+          }
+        },
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/v1/indexes/{index_id}/search/similarity": {
+      "post": {
+        "operationId": "chemineeV1Similarity",
+        "parameters": [
+          {
+            "description": "One concrete molecule index.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SmilesSimilarityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarityResponse"
+                }
+              }
+            },
+            "description": "Complete distributed results with stable record_id ties."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Invalid input, filter, contract or native feature unavailable."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "411": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Content length required."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Request exceeds 32 KiB."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "JSON required."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Capacity exhausted."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Internal execution failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Unavailable or incomplete split search."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Search timed out."
+          }
+        },
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/v1/indexes/{index_id}/search/substructure": {
+      "post": {
+        "operationId": "chemineeV1Substructure",
+        "parameters": [
+          {
+            "description": "One concrete molecule index.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GraphSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarityResponse"
+                }
+              }
+            },
+            "description": "Complete distributed results with stable record_id ties."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Invalid input, filter, contract or native feature unavailable."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "411": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Content length required."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Request exceeds 32 KiB."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "JSON required."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Capacity exhausted."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Internal execution failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Unavailable or incomplete split search."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Search timed out."
+          }
+        },
+        "tags": [
+          "Default"
+        ]
+      }
+    },
+    "/v1/indexes/{index_id}/search/superstructure": {
+      "post": {
+        "operationId": "chemineeV1Superstructure",
+        "parameters": [
+          {
+            "description": "One concrete molecule index.",
+            "in": "path",
+            "name": "index_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GraphSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarityResponse"
+                }
+              }
+            },
+            "description": "Complete distributed results with stable record_id ties."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Invalid input, filter, contract or native feature unavailable."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "411": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Content length required."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Request exceeds 32 KiB."
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "JSON required."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Capacity exhausted."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Internal execution failure."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Unavailable or incomplete split search."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChemistryError"
+                }
+              }
+            },
+            "description": "Search timed out."
+          }
+        },
+        "tags": [
+          "Default"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Default"
+    }
+  ]
+}

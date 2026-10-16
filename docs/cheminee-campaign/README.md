@@ -1,9 +1,12 @@
-# Cheminee importer campaign — recovery-blocked preparation
+# Cheminee importer campaign — recovered source and SDK preparation
 
 Status: **no release gate has passed in this session**. This is a reviewable
 preparation branch based on public PR3 `6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa`.
-It is not the recovered composable-query branch. No server behavior was changed,
-gem generated, package published, deployment performed, or production data touched.
+It is separate from the now-recovered composable-query branch. The initial preparation snapshot
+was followed by a [generated PR3 Ruby candidate](../../sdk/ruby/README.md), schema
+fixes and focused tests. No package was published, deployment performed, or
+production data touched. The historical decision entries below describe recovery
+and the initial audit; current SDK validation is recorded separately.
 
 ## Sequenced decisions (2026-10-16)
 
@@ -54,11 +57,41 @@ gem generated, package published, deployment performed, or production data touch
 8. Keep the publication hold. No credentials, remote branches/tags, packages,
    infrastructure, or production catalogs may be created/changed by this work.
 
+9. Parent confirmed recovery archive access in its separate environment and supplied
+   SHA-256 `d5ee440b440fb50a31554dc7280472a8e38464dcaa34fe4a0472e8ce56cb3f50`.
+   That path is not shared with this environment. Requested a private text-readable
+   transfer of the 27,904-byte Git bundle; exact DSL bytes are still unavailable here.
+10. Prepared the actual PR3 generated SDK in `sdk/ruby`, with a pinned 7.11.0 JAR,
+    locked transport/test dependencies, deterministic schema projection, template
+    hashes and a read-only/manual artifact workflow. Inspected the old shipping
+    workflow before selecting the same generated Faraday/DefaultApi pattern.
+11. Independent Astra max implementation review found two concrete decoding defects:
+    flattened mapping options were dropped and the fast-field schema described an
+    internal enum instead of its wire JSON. Corrected both canonical server schemas
+    and pinned generator templates. Added nested mapping and dynamic-index coverage;
+    no runtime facade or monkeypatch. Also reject unsupported union-parent constraints,
+    make unknown discriminators fail explicitly, and preserve boolean false in unions.
+12. Focused verification now passes: three schema tests, seven projection tests,
+    twelve installed-gem HTTP/model tests (153 assertions), and live non-native
+    dynamic-index create/import/search/delete smoke. Six non-native chemistry and
+    thirteen ingest route tests passed earlier in this same preparation session.
+    Generation repeats byte-for-byte. These are scoped contract results, not native
+    chemistry, DSL, refresh safety, performance, durability or HA release approval.
+
+13. Recovery unblocked through private Library text transfer
+    `libfile_cc9c0af0f2348191955b463111bbb550`. Decoded bundle is 27,904 bytes,
+    SHA-256 `3143466d909bf0be52901afbae0497a576679e5e64592090a96c6bff22733bbe`.
+    `git bundle verify` passed against the exact PR3 prerequisite. Fetched the three
+    unpublished commits and created `/workspace/quickwit-cheminee-query`, clean at
+    `276bd1ab7455d0141bd8d9427d00acb1bb7ad845`; ancestry from PR3 verified. Full
+    archive integrity was reported by the parent, not independently checked here.
+    The PR3 gem remains a separate candidate pending DSL integration/revalidation.
+
 ## Confirmed source hazards
 
 | Contract | PR3 finding | Required evidence before release |
 |---|---|---|
-| NDJSON | Ingest annotation advertises `application/json` string and omits `detailed_response` | Generated Faraday sends exact newline-separated bytes; no JSON wrapping; response counts and rejections survive decoding |
+| NDJSON | Base annotation was wrong; corrected on the preparation branch and wire-tested | Generated Faraday sends exact newline-separated bytes; no JSON wrapping; response counts and rejections survive decoding |
 | Accepted batches | HTTP 200 may contain rejected records; legacy v1 lacks accepted/rejected counts | Mixed-validity batch; absent counts treated as unknown; promotion forbidden with rejection or unknown acceptance |
 | Uncertain writes | Document UIDs do not deduplicate WAL appends; timeout may precede late append | Lost acknowledgement, late append, duplicate submission, interruption and restart; no blind write retry |
 | Partial results | ES conversion can emit `relation: eq`, `timed_out: false`, nonzero `_shards.failed` and empty failure details | Fail closed by default; deliberate partial mode visibly incomplete; check every page and top-level errors |
@@ -72,10 +105,9 @@ to the public base; the unpublished DSL needs fresh review after recovery.
 
 ## Gate order and release checklist
 
-- [ ] Recover archive bytes through an authorized reachable transfer; verify archive
-  integrity and any included checksums, inspect paths before extraction, verify Git
-  bundle and exact final SHA, check clean status and ancestry from PR3. Preserve
-  archive, bundle and patches before applying preparation changes.
+- [x] Recover exact Git state through the authorized private bundle transfer; verify
+  checksum, bundle, final SHA, clean status and ancestry from PR3. Preserve original
+  worktree and bundle before integration. Full archive remains parent-verified only.
 - [ ] Run outstanding validation on recovered code, recording commands, feature
   flags and failures. Historical 174 aggregate tests and 16 HTTP cases are supplied
   checkpoint evidence with overlap, not fresh totals; workspace CI remains unrun.
@@ -127,10 +159,10 @@ semantics or error behavior require an explicitly documented compatibility break
 and migration tests. Server and gem version matching alone is not compatibility
 proof. No arbitrary Elasticsearch or Searchkick compatibility is promised.
 
-## Immediate unblock
+## Next integration gate
 
-Provide authorized byte access to the existing DSL handoff (the download host is
-blocked by the environment proxy), or place the intact archive in `/workspace/recovery`.
-This is a transfer dependency, not a request for permission to publish or merge.
-Until then, exact recovery, generated-gem integration, Compose, new benchmarks and
-HA validation cannot be honestly marked complete.
+Exact source recovery is complete. Integrate the reviewed SDK preparation into a
+new branch while retaining the recovered branch and bundle unchanged. Revalidate
+the generated contract against composable queries, completeness and native chemistry.
+The original benchmark corpus/index archive remains unavailable; performance, Compose,
+catalog safety and HA require independent evidence and remain pending.

@@ -1,0 +1,94 @@
+name: Prepare Ruby SDK (no publication)
+
+on:
+  workflow_dispatch:
+    inputs:
+      gem_version:
+        description: Explicit candidate Ruby version; no package will be published
+        required: true
+        default: 0.9.1.pre.pr3
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      SDK_VERSION: ${{ inputs.gem_version }}
+      BUNDLE_FROZEN: 'true'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          repository: rdkit-rs/cheminee-ruby
+          ref: 1655662d4c8b508e79c64d0401755a0e6ac65654
+          path: .sdk-legacy
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17.0.13+11'
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a
+        with:
+          ruby-version: '3.3.6'
+          bundler: '2.5.22'
+      - name: Export actual server schema and test non-native contracts
+        run: |
+          mkdir -p .sdk-build
+          docker run --rm --memory=5g --cpus=2 \
+            -v "$PWD:/work" -w /work/quickwit \
+            -e RUSTUP_TOOLCHAIN=1.96.1 -e CARGO_BUILD_JOBS=2 \
+            -e CARGO_PROFILE_DEV_DEBUG=0 -e CARGO_PROFILE_TEST_DEBUG=0 -e CARGO_INCREMENTAL=0 \
+            rust@sha256:a339861ae23e9abb272cea45dfafde21760d2ce6577a70f8a926153677902663 \
+            bash -ec '
+              apt-get update -qq
+              apt-get install -y -qq protobuf-compiler cmake clang libclang-dev pkg-config libssl-dev
+              dpkg-query -W > /work/.sdk-build/build-packages.txt
+              cargo run --locked -p quickwit-serve --example export_openapi > /work/.sdk-build/server-openapi.json
+              cargo test --locked -p quickwit-serve --lib openapi_schema_tests
+              cargo test --locked -p quickwit-serve --lib cheminee_api
+              cargo test --locked -p quickwit-serve --lib ingest_api
+            '
+          sudo chown -R "$(id -u):$(id -g)" .sdk-build
+      - name: Verify pinned generator and generate candidate
+        run: |
+          curl --fail --location --retry 2 \
+            https://repo.maven.apache.org/maven2/org/openapitools/openapi-generator-cli/7.11.0/openapi-generator-cli-7.11.0.jar \
+            --output .sdk-build/generator.jar
+          python3 sdk/ruby/projection_test.py .sdk-build/server-openapi.json
+          python3 sdk/ruby/generate.py --combined-schema .sdk-build/server-openapi.json \
+            --generator-jar .sdk-build/generator.jar --server-revision "$GITHUB_SHA" \
+            --gem-version "$SDK_VERSION" --output .sdk-build/generated
+          python3 sdk/ruby/generate.py --combined-schema .sdk-build/server-openapi.json \
+            --generator-jar .sdk-build/generator.jar --server-revision "$GITHUB_SHA" \
+            --gem-version "$SDK_VERSION" --output .sdk-build/reproduced
+          diff -qr .sdk-build/generated .sdk-build/reproduced
+      - name: Build and test installed gem outside generated source
+        run: |
+          bundle install --gemfile sdk/ruby/Gemfile
+          (cd .sdk-build/generated && gem build quickwit-cheminee.gemspec --output ../candidate.gem)
+          gem install --local --ignore-dependencies --no-document \
+            --install-dir "$PWD/.sdk-installed" .sdk-build/candidate.gem
+          export GEM_PATH="$PWD/.sdk-installed:$(ruby -e 'puts Gem.path.join(":")')"
+          export SDK_INSTALL_ROOT="$PWD/.sdk-installed" SDK_EXPECTED_VERSION="$SDK_VERSION"
+          export LEGACY_CHEMINEE_LIB="$PWD/.sdk-legacy/lib"
+          test_file="$PWD/sdk/ruby/wire_test.rb"
+          cd /tmp
+          ruby "$test_file"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ruby-sdk-candidate
+          path: |
+            .sdk-build/candidate.gem
+            .sdk-build/generated/provenance.json
+            .sdk-build/generated/openapi.json
+            .sdk-build/server-openapi.json
+            .sdk-build/build-packages.txt
+          retention-days: 14
+
+# Publication hold: deliberately no push, tag, credentials or RubyGems release job.
+# Native chemistry/DSL, live importer, Compose and HA gates remain separate.
