@@ -14,7 +14,7 @@
     "model": "gpt-6-astra",
     "effort": "max",
     "design": "explicit adapter over generated transport approved",
-    "implementation": "source fixes accepted; artifact re-review requested"
+    "implementation": "artifact approved for local use: installed16/319,452 reproduced files,296 packaged files, all provenance/support hashes verified"
   },
   "known_gate_gap": "Boolean simplification and split pruning can skip chemistry branches; adjacent-filter global error-domain guarantee not established",
   "corpus_available": false,
