@@ -10,12 +10,17 @@ require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 require 'bundler'
 
-# Verify the actual activated transport/test dependencies, including transitives.
+# Verify activated dependency specifications, including transitives.
+# This metadata check alone does not verify which code RUBYLIB loaded.
 lock = Bundler::LockfileParser.new(Bundler.read_file(File.join(__dir__, 'Gemfile.lock')))
 lock.specs.each do |locked|
   loaded = Gem.loaded_specs[locked.name]
   raise "Dependency differs from lock: #{locked.name}" unless loaded && loaded.version == locked.version
 end
+
+# Activated gem metadata alone does not prove which code RUBYLIB loaded.
+require_relative 'loaded_json_check'
+LoadedJsonCheck.verify!(spec: Gem.loaded_specs.fetch('json'), version: JSON::VERSION, features: $LOADED_FEATURES)
 
 # These are real HTTP transport tests against a controlled fixture peer. They
 # establish installed-gem wire behavior, not chemistry truth or storage durability.

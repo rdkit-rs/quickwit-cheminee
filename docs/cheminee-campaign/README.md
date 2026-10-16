@@ -355,3 +355,9 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     cooperating publisher contention. Production importer code is unchanged.
     Existing runtime inspection confirms JSON extension directory and SONAME mismatch;
     preserve the pinned-suite blocker rather than force ABI aliases or change the lock.
+
+35. Withdraw the original worker pinned-JSON attribution: activated spec3.1.0
+    masked loaded JSON2.7.2. Retain separately the corrected JSON3.1.0 worker
+    proof (20/392, seed10109), verify matching local interpreter/library hashes,
+    and harden wire acceptance with actual JSON version and loaded-file provenance.
+    Compatible extension bytes remain missing locally; no ABI aliases or installs.

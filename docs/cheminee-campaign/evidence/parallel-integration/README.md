@@ -7,7 +7,9 @@ and Git bundle prerequisites verified. Cherry-picked with provenance as `5a8861d
 after integrator handoff commit `544ca971`; only sdk/ruby/MIGRATION.md, README.md
 and wire_test.rb changed. No generated code or catalog examples changed.
 
-Worker evidence reports 20 tests/392 assertions and Astra max approval. Local pinned
+Original worker evidence reports 20 tests/392 assertions and Astra max approval,
+but its pinned-JSON attribution was later withdrawn: JSON2.7.2 actually loaded.
+See [corrected worker proof](../ruby-correction/README.md) for the JSON3.1.0 rerun. Local pinned
 wire rerun is blocked: retained JSON 3.1.0 extension platform differs from host Ruby
 3.3.8 layout. Do not count that rerun as passed or silently change its lock.
 

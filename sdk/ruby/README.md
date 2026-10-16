@@ -232,3 +232,9 @@ exact gem and tested server commit. No stable-version promise is made yet.
 Before external publication: resolve the demonstrated error-domain gap, pass importer
 safety and operational gates, resolve independent readiness findings, and obtain separate publication
 approval. Keep historical benchmark claims separate from these functional tests.
+
+The wire suite verifies activated dependency versions against the lock and also
+checks actual `JSON::VERSION` plus the real paths of loaded JSON Ruby/native code.
+An activated gem specification alone does not prove which code `RUBYLIB` loaded.
+See [corrected worker evidence](../../docs/cheminee-campaign/evidence/ruby-correction/README.md);
+the corrected worker result is separate from the still-blocked local pinned rerun.

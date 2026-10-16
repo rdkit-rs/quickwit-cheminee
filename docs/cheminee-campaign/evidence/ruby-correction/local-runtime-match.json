@@ -1,0 +1,10 @@
+{
+  "matching_local_files": {
+    "/workspace/.onboarding/sysroot/usr/bin/ruby3.3": "d23057791401d5687392c05b258a7e4fe1ebf85a447372ce11169b5e27cc3e2f",
+    "/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/libruby-3.3.so.3.3.8": "7c2d9793682780a5103814ec2401a4672479d3cb63bf2d52e3d0c9c4273d1e69"
+  },
+  "matching_worker_json_extensions_present": false,
+  "local_pinned_suite": "blocked; no corrected local run claimed",
+  "no_binary_transfer": true,
+  "no_build_install_container_or_alias": true
+}
