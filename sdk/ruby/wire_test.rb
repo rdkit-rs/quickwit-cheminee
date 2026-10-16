@@ -5,7 +5,9 @@ require 'socket'
 require 'timeout'
 require 'json'
 require 'stringio'
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl')
 require 'quickwit-cheminee'
+require 'quickwit-cheminee/exact_search'
 require 'bundler'
 
 # Verify the actual activated transport/test dependencies, including transitives.
@@ -62,7 +64,7 @@ class InstalledGemWireTest < Minitest::Test
   def test_loaded_from_installed_gem
     spec = Gem.loaded_specs.fetch('quickwit-cheminee')
     assert spec.full_gem_path.start_with?(ENV.fetch('SDK_INSTALL_ROOT'))
-    assert_equal ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.pr3'), QuickwitCheminee::VERSION
+    assert_equal ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl'), QuickwitCheminee::VERSION
   end
 
   def test_unicode_ndjson_mixed_rejections_and_http_metadata
@@ -208,6 +210,91 @@ class InstalledGemWireTest < Minitest::Test
     end
     assert_includes error.message, 'timed out'
     assert_equal "{}\n", captured[:body]
+  end
+
+  def exact_fixture(total: 1, hits: nil)
+    hits ||= [{_index: 'offers-001', _id: '', _source: {record_id: 18_446_744_073_709_551_615, note: '東京'},
+               sort: [2.5, 18_446_744_073_709_551_615]}]
+    {timed_out: false, terminated_early: nil, _shards: {total: 1, successful: 1, skipped: 0, failed: 0},
+     hits: {total: {value: total, relation: 'eq'}, hits: hits}}
+  end
+
+  def test_exact_search_sends_strict_policy_and_lossless_sort_values
+    query = {term: {'metadata.supplier': '東京'}}
+    result, captured = exchange(exact_fixture) do |api|
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: query, limit: 1)
+    end
+    assert_equal exact_fixture, result
+    assert_includes captured[:line], '/api/v1/_elastic/offers-001/_search?allow_partial_search_results=false'
+    assert_equal captured[:body].bytesize.to_s, captured[:headers]['content-length']
+    body = JSON.parse(captured[:body], symbolize_names: true)
+    assert_equal query, body[:query]
+    assert_equal true, body[:track_total_hits]
+    assert_equal [{_score: 'desc'}, {record_id: 'asc'}], body[:sort]
+    assert_equal 1, body[:size]
+    assert_equal 0, body[:from]
+  end
+
+  def test_exact_count_uses_strict_zero_hit_search_and_empty_index_is_valid
+    fixture = exact_fixture(total: 13, hits: [])
+    result, captured = exchange(fixture) do |api|
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').count(query: {match_all: {}})
+    end
+    assert_equal 13, result
+    assert_equal 0, JSON.parse(captured[:body])['size']
+    empty = exact_fixture(total: 0, hits: [])
+    empty[:_shards] = {total: 0, successful: 0, skipped: 0, failed: 0}
+    result, = exchange(empty) do |api|
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {match_all: {}})
+    end
+    assert_equal 0, result[:hits][:total][:value]
+  end
+
+  def test_exact_search_rejects_partial_inconsistent_or_malformed_success
+    mutations = [
+      ->(r) { r[:_shards][:failed] = 1; r[:_shards][:total] = 2 },
+      ->(r) { r[:_shards][:successful] = 0 },
+      ->(r) { r[:_shards][:skipped] = 1 },
+      ->(r) { r.delete(:_shards) },
+      ->(r) { r.delete(:timed_out) },
+      ->(r) { r[:timed_out] = true },
+      ->(r) { r[:terminated_early] = true },
+      ->(r) { r[:hits][:total][:relation] = 'gte' },
+      ->(r) { r[:hits][:total][:value] = -1 },
+      ->(r) { r[:hits][:hits] = [] },
+      ->(r) { r[:hits][:hits][0][:sort][1] = '18446744073709551615' },
+      ->(r) { r[:hits][:hits][0][:_index] = 'other-generation' },
+      ->(r) { r[:hits][:hits][0][:_source][:record_id] = 1 },
+      ->(r) { r[:_shards][:total] = 0; r[:_shards][:successful] = 0 },
+      ->(r) { r[:hits][:hits][0][:sort][1] = 1; r[:hits][:hits][0][:_source][:record_id] = 1.0 }
+    ]
+    mutations.each do |mutate|
+      response = exact_fixture
+      mutate.call(response)
+      error, = exchange(response) do |api|
+        assert_raises(QuickwitCheminee::ExactSearch::IncompleteResponse) do
+          QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {match_all: {}}, limit: 1)
+        end
+      end
+      refute_includes error.message, '東京'
+      assert_equal 200, error.status
+      assert_equal 'fixture-42', error.request_id
+      assert_kind_of Symbol, error.reason
+    end
+  end
+
+  def test_exact_search_rejects_wildcards_and_policy_override
+    %w[* offers-* offers,other offers%2Cother].each do |generation|
+      assert_raises(ArgumentError) { QuickwitCheminee::ExactSearch.new(api: nil, generation: generation) }
+    end
+    adapter = QuickwitCheminee::ExactSearch.new(api: nil, generation: 'offers-001')
+    assert_raises(ArgumentError) { adapter.search(query: {}, allow_partial_search_results: true) }
+    assert_raises(ArgumentError) { adapter.search(query: {}, limit: 10_001) }
+    assert_raises(ArgumentError) { adapter.search(query: {term: Object.new}) }
+    assert_raises(ArgumentError) { adapter.search(query: {term: Float::NAN}) }
+    assert_raises(ArgumentError) { adapter.search(query: {term: {}, 'term' => {}}) }
+    cyclic = {}; cyclic[:self] = cyclic
+    assert_raises(ArgumentError) { adapter.search(query: cyclic) }
   end
 
   def test_legacy_namespace_can_coexist

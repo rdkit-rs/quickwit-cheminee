@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 
 GENERATOR_VERSION = "7.11.0"
@@ -19,6 +20,7 @@ OPERATIONS = {
     ("/api/v1/indexes/{index_id}/describe", "get"): "describeIndex",
     ("/api/v1/{index_id}/ingest", "post"): "ingest",
     ("/health/readyz", "get"): "ready",
+    ("/api/v1/_elastic/{index}/_search", "post"): "searchComposableUnchecked",
     **{(f"/v1/indexes/{{index_id}}/search/{kind}", "post"): f"chemineeV1{kind.title()}"
        for kind in ("basic", "identity", "substructure", "superstructure", "similarity")},
 }
@@ -247,6 +249,11 @@ def main():
                     "-t", str(templates),
                     "--additional-properties", f"gemVersion={args.gem_version}",
                     "-o", str(args.output)], check=True)
+    support = Path(__file__).with_name("support")
+    for path in sorted(support.rglob("*.rb")):
+        destination = args.output / "lib" / path.relative_to(support)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, destination)
     # Server revision is supplied by the export job, not inferred from schema version.
     manifest = {"server_revision": args.server_revision,
                 "server_version": json.loads(raw)["info"]["version"],
@@ -254,6 +261,8 @@ def main():
                 "generator_sha256": GENERATOR_SHA256,
                 "generator_config_sha256": sha256(config.read_bytes()),
                 "projection_script_sha256": sha256(Path(__file__).read_bytes()),
+                "support_sha256": {str(p.relative_to(support)): sha256(p.read_bytes())
+                                   for p in sorted(support.rglob("*.rb"))},
                 "template_sha256": {p.name: sha256(p.read_bytes()) for p in sorted(templates.glob("*.mustache"))},
                 "ruby_dependency_lock_sha256": sha256(Path(__file__).with_name("Gemfile.lock").read_bytes()),
                 "combined_schema_sha256": sha256(raw), "sdk_schema_sha256": sha256(schema),

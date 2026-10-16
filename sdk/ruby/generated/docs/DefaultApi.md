@@ -14,6 +14,7 @@ All URIs are relative to *http://localhost*
 | [**describe_index**](DefaultApi.md#describe_index) | **GET** /api/v1/indexes/{index_id}/describe | Describes an index. |
 | [**ingest**](DefaultApi.md#ingest) | **POST** /api/v1/{index_id}/ingest | Ingest documents |
 | [**ready**](DefaultApi.md#ready) | **GET** /health/readyz | Get Node Readiness |
+| [**search_composable_unchecked**](DefaultApi.md#search_composable_unchecked) | **POST** /api/v1/_elastic/{index}/_search | Search the supported Elasticsearch-style query subset, including composable chemistry. |
 
 
 ## cheminee_v1_basic
@@ -657,4 +658,74 @@ No authorization required
 
 - **Content-Type**: Not defined
 - **Accept**: text/plain
+
+
+## search_composable_unchecked
+
+> Object search_composable_unchecked(index, body, opts)
+
+Search the supported Elasticsearch-style query subset, including composable chemistry.
+
+The JSON is intentionally represented as an open object: the runtime's custom deserializers validate the supported DSL, not an arbitrary Elasticsearch API. Partial results are allowed by default. For exhaustive results explicitly set allow_partial_search_results=false, track_total_hits=true in the body, and verify _shards.failed==0. relation=eq alone does not prove completeness.
+
+### Examples
+
+```ruby
+require 'time'
+require 'quickwit-cheminee'
+
+api_instance = QuickwitCheminee::DefaultApi.new
+index = 'index_example' # String | Index ID or patterns. Use one immutable generation for stable paging.
+body = { ... } # Object | JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.
+opts = {
+  allow_partial_search_results: true # Boolean | Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.
+}
+
+begin
+  # Search the supported Elasticsearch-style query subset, including composable chemistry.
+  result = api_instance.search_composable_unchecked(index, body, opts)
+  p result
+rescue QuickwitCheminee::ApiError => e
+  puts "Error when calling DefaultApi->search_composable_unchecked: #{e}"
+end
+```
+
+#### Using the search_composable_unchecked_with_http_info variant
+
+This returns an Array which contains the response data, status code and headers.
+
+> <Array(Object, Integer, Hash)> search_composable_unchecked_with_http_info(index, body, opts)
+
+```ruby
+begin
+  # Search the supported Elasticsearch-style query subset, including composable chemistry.
+  data, status_code, headers = api_instance.search_composable_unchecked_with_http_info(index, body, opts)
+  p status_code # => 2xx
+  p headers # => { ... }
+  p data # => Object
+rescue QuickwitCheminee::ApiError => e
+  puts "Error when calling DefaultApi->search_composable_unchecked_with_http_info: #{e}"
+end
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+| ---- | ---- | ----------- | ----- |
+| **index** | **String** | Index ID or patterns. Use one immutable generation for stable paging. |  |
+| **body** | **Object** | JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied. |  |
+| **allow_partial_search_results** | **Boolean** | Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll. | [optional] |
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
 

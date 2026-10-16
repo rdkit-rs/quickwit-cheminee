@@ -87,6 +87,32 @@ and the initial audit; current SDK validation is recorded separately.
     archive integrity was reported by the parent, not independently checked here.
     The PR3 gem remains a separate candidate pending DSL integration/revalidation.
 
+14. Integrated source on a separate local campaign branch, retaining the recovered
+    branch unchanged. Added the existing composable POST search route to canonical
+    OpenAPI and generated an explicitly unchecked JSON transport. Independent Astra
+    max review approved a narrow `ExactSearch` composition adapter: strict failures,
+    exact counts via size-zero search, concrete generation and numeric tie sort.
+15. Closed concrete review gaps with tests: positive totals with zero searched splits,
+    floating stored IDs, non-JSON inputs and malformed responses are rejected. Bounded
+    reason codes, HTTP status and sanitized request IDs support diagnosis without
+    document logging. Server conversion rejects top-level errors its ES-shaped
+    response cannot represent, even in partial mode; native regression passed.
+16. Native build prerequisites are now installed on pinned Ubuntu amd64 with verified
+    RDKit packages. Disk exhaustion interrupted the first build. Preserved binaries,
+    source and evidence, removed only this task's obsolete builder/intermediates,
+    and resumed with an automatic 1 GiB disk reserve. This is build headroom, not
+    measured production memory or durability. No scale benchmark was attempted.
+17. Native core/query/mapper suites passed 185 tests. The broader document-mapper
+    run exposed an old cross-field ordering assumption (228 passed, one failed).
+    Independent review confirmed object-key traversal has no cross-field order
+    promise. Changed only that test to assert exact contents for both input orders;
+    kept array-order checks. Full native rerun is separate evidence.
+18. Strong sibling-error-domain semantics remain an explicit gate gap: existing
+    Boolean simplification and split pruning can avoid chemistry execution. The
+    client does not rewrite queries to hide this issue, and documentation makes no
+    global malformed-data validation claim. Cursor APIs remain unexposed pending
+    distributed enumeration and merge-stability tests.
+
 ## Confirmed source hazards
 
 | Contract | PR3 finding | Required evidence before release |

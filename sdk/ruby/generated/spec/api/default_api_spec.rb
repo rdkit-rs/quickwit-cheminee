@@ -146,4 +146,18 @@ describe 'DefaultApi' do
     end
   end
 
+  # unit tests for search_composable_unchecked
+  # Search the supported Elasticsearch-style query subset, including composable chemistry.
+  # The JSON is intentionally represented as an open object: the runtime&#39;s custom deserializers validate the supported DSL, not an arbitrary Elasticsearch API. Partial results are allowed by default. For exhaustive results explicitly set allow_partial_search_results&#x3D;false, track_total_hits&#x3D;true in the body, and verify _shards.failed&#x3D;&#x3D;0. relation&#x3D;eq alone does not prove completeness.
+  # @param index Index ID or patterns. Use one immutable generation for stable paging.
+  # @param body JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.
+  # @param [Hash] opts the optional parameters
+  # @option opts [Boolean] :allow_partial_search_results Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.
+  # @return [Object]
+  describe 'search_composable_unchecked test' do
+    it 'should work' do
+      # assertion here. ref: https://rspec.info/features/3-12/rspec-expectations/built-in-matchers/
+    end
+  end
+
 end

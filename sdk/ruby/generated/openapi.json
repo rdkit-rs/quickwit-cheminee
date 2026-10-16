@@ -3453,6 +3453,90 @@
   },
   "openapi": "3.0.3",
   "paths": {
+    "/api/v1/_elastic/{index}/_search": {
+      "post": {
+        "description": "The JSON is intentionally represented as an open object: the runtime's custom\ndeserializers validate the supported DSL, not an arbitrary Elasticsearch API.\nPartial results are allowed by default. For exhaustive results explicitly set\nallow_partial_search_results=false, track_total_hits=true in the body, and\nverify _shards.failed==0. relation=eq alone does not prove completeness.",
+        "operationId": "searchComposableUnchecked",
+        "parameters": [
+          {
+            "description": "Index ID or patterns. Use one immutable generation for stable paging.",
+            "in": "path",
+            "name": "index",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.",
+            "in": "query",
+            "name": "allow_partial_search_results",
+            "required": false,
+            "schema": {
+              "nullable": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "description": "JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Search response with hits and _shards. May be incomplete when partial results are enabled; preserve and inspect completeness metadata."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Invalid or unsupported query."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Index not found."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Search failure, including a failed split in strict mode."
+          }
+        },
+        "summary": "Search the supported Elasticsearch-style query subset, including composable chemistry.",
+        "tags": [
+          "Default"
+        ]
+      }
+    },
     "/api/v1/indexes": {
       "post": {
         "operationId": "createIndex",

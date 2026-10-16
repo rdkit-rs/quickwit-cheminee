@@ -1,0 +1,22 @@
+{
+  "scope": "local integrated SDK candidate; native distributed HTTP, refresh and HA still pending",
+  "server_revision": "a52146c8fe2967af57308a3774c20c3b817ae8ac",
+  "recovered_dsl_revision": "276bd1ab7455d0141bd8d9427d00acb1bb7ad845",
+  "gem_version": "0.9.1.pre.dsl",
+  "gem_sha256": "8a700637e26d7b630dd1ddc194554fcdf4d7b1f9cedc9c800aa8220e79e8d43f",
+  "export_optional_features": [],
+  "native_validation_features": [
+    "native-chemistry"
+  ],
+  "native_rdkit_package_version": "2026.09.1+ds1-1~ubuntu26.04",
+  "native_builder_image": "sha256:abfc41123e9f25f8d4f8815dc625e73e896ab773a12ad79cce2a12c7d82d1866",
+  "independent_reviews": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "design": "explicit adapter over generated transport approved",
+    "implementation": "source fixes accepted; artifact re-review requested"
+  },
+  "known_gate_gap": "Boolean simplification and split pruning can skip chemistry branches; adjacent-filter global error-domain guarantee not established",
+  "corpus_available": false,
+  "publication_authorized": false
+}

@@ -1,23 +1,25 @@
 # Generated Quickwit-Cheminee Ruby SDK
 
-Local candidate: **0.9.1.pre.pr3**, generated from server source commit
-`a3c9789a179ae611a31da03a9f7fa833dc416fd0` on the separate PR3 preparation branch. No package has been published.
-The exact unpublished composable-query branch has been recovered separately but is not integrated into this candidate yet.
+Local candidate: **0.9.1.pre.dsl**, generated from server source commit
+`a52146c8fe2967af57308a3774c20c3b817ae8ac` on the local integration branch. No package has been published.
+The exact unpublished DSL commit `276bd1ab7455d0141bd8d9427d00acb1bb7ad845` is preserved and integrated.
 
 The client retains the existing shipping model: OpenAPI Generator, Faraday,
 `DefaultApi`, generated models, `Configuration`, and `ApiError`. Its namespace is
 `QuickwitCheminee`; `require 'quickwit-cheminee'`. The old `Cheminee` namespace can
-be loaded in the same process. There is no runtime facade or global monkeypatch.
+be loaded in the same process. A narrow opt-in `ExactSearch` adapter enforces completeness policy for composable queries;
+there is no global monkeypatch.
 
 ## What has been checked
 
-- Actual server schema export, three OpenAPI regression tests, six non-native
+- Actual server schema export, four OpenAPI regression tests, six non-native
   chemistry-route tests and thirteen ingestion tests passed.
-- Twelve installed-gem tests / 153 assertions passed against a controlled real
+- Sixteen installed-gem tests / 319 assertions passed against a controlled real
   HTTP peer: exact Unicode NDJSON bytes and Content-Length, false query options,
   mixed rejection counts, unknown counts as nil, metadata/discriminator handling,
   five search request shapes, full u64 document IDs, error status/request IDs,
-  no automatic write retry after timeout, and legacy namespace coexistence.
+  no automatic write retry after timeout, legacy namespace coexistence, and strict
+  search/count policies with malformed-success rejection and bounded diagnostics.
 - Nested field mappings preserve their additional JSON options; boolean and object
   fast-field variants round-trip. Activated dependencies match the lock.
 - All eleven source types round-trip under supported source versions 0.7 and 0.9;
@@ -28,10 +30,15 @@ be loaded in the same process. There is no runtime facade or global monkeypatch.
 - Two generations from the same schema, tools and manifest inputs matched
   byte-for-byte. This does not claim reproducible native binaries or gem tar timestamps.
 
-Native chemistry success, recovered DSL semantics, live failed-split injection,
+Native chemistry HTTP integration, complete DSL error domains, live Ruby failed-split injection,
 catalog-generation promotion, Compose coexistence, crash durability and HA remain
 unvalidated. Fixture response tests do not establish chemistry truth. The manual
 CI preparation workflow is committed for review but has not been run in GitHub.
+
+Fresh core/query tests on recovered code passed (174 tests without native chemistry;
+185 across core/query/native-mapper suites with native chemistry). These overlap
+and must not be added as independent cases. Broader native document-mapper/server
+validation is recorded separately in the campaign evidence.
 
 ## Import and filtered search
 
@@ -84,6 +91,40 @@ Availability is a dated scrape observation, not live stock. Neither a successful
 batch nor a published count proves unique offer IDs or a complete scrape. A partial
 scrape must never withdraw missing offers from the last complete catalog.
 
+## Strict composable search
+
+```ruby
+require 'quickwit-cheminee/exact_search'
+search = QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-immutable-001')
+result = search.search(query: {term: {'metadata.supplier': 'Acme'}}, limit: 20)
+count = search.count(query: {match_all: {}})
+```
+
+The adapter pins `allow_partial_search_results=false`, `track_total_hits:true`,
+`_score` descending and `record_id` ascending. It validates completeness metadata,
+page length, generation and lossless numeric sort IDs. `IncompleteResponse` exposes
+a bounded `reason`, HTTP `status` and sanitized optional `request_id`; its message
+contains no query, document or response body. HTTP failures remain generated `ApiError`.
+Do not use the separate server `_count` route for exact counts: it drops split failures.
+
+The generated `search_composable_unchecked` preserves the raw JSON response and the
+server's partial-by-default behavior. It is intentionally named unchecked. Use the
+adapter for exhaustive requests. An `eq` total alone is insufficient proof.
+
+Provide one concrete generation with unique stored u64 `record_id` values. The adapter
+does not make the index immutable, prove uniqueness across pages, or activate a catalog.
+`offset` is bounded with `offset + limit <= 10000`; this is a safety bound, not a
+benchmark-derived recommendation. No cursor helper is offered yet. Even immutable
+documents may change mixed text/chemistry score order after split merges; generic
+snapshot pagination has not been established.
+
+Outer clauses use the supported ES-shaped DSL; operator `candidates` use tagged
+Quickwit QueryAst. Prepared fingerprints/SMILES and matching chemistry contracts are
+required. The adapter never pushes sibling filters into candidates or changes scoring.
+Executed chemistry reports bad candidate data, but Boolean simplification and split
+pruning can skip branches entirely. Search is not a global catalog-validation scan.
+The requested stronger sibling-error-domain gate remains open.
+
 ## Migration from Cheminee
 
 ```ruby
@@ -108,8 +149,8 @@ structure identity, supplier offer identity and provenance separately. Fingerpri
 matching is not a substitute for exhaustive graph verification. No arbitrary
 Searchkick/Elasticsearch compatibility or arrays-of-offers correlation is claimed.
 
-The ten generated operations are readiness, create/delete/describe index, ingestion,
-and five legacy chemistry searches. `describe_index` reports published counts, not
+The eleven generated operations are readiness, create/delete/describe index, ingestion,
+five legacy chemistry searches, and an explicitly unchecked composable search transport. `describe_index` reports published counts, not
 offer uniqueness. Legacy `result_limit` is 1–10,000; it is not an offset or cursor.
 Stable record-ID ties do not provide a snapshot across refreshes. The ES partial
 result and scroll surfaces are deliberately absent from this client. Server legacy
@@ -130,7 +171,7 @@ python3 sdk/ruby/generate.py \
   --combined-schema /tmp/server-openapi.json \
   --generator-jar /path/to/openapi-generator-cli-7.11.0.jar \
   --server-revision "$(git rev-parse HEAD)" \
-  --gem-version 0.9.1.pre.pr3 --output /tmp/new-ruby-sdk
+  --gem-version 0.9.1.pre.dsl --output /tmp/new-ruby-sdk
 ```
 
 The output directory must be empty. Obtain the JAR from Maven Central at

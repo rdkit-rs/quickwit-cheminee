@@ -695,5 +695,82 @@ module QuickwitCheminee
       end
       return data, status_code, headers
     end
+
+    # Search the supported Elasticsearch-style query subset, including composable chemistry.
+    # The JSON is intentionally represented as an open object: the runtime's custom deserializers validate the supported DSL, not an arbitrary Elasticsearch API. Partial results are allowed by default. For exhaustive results explicitly set allow_partial_search_results=false, track_total_hits=true in the body, and verify _shards.failed==0. relation=eq alone does not prove completeness.
+    # @param index [String] Index ID or patterns. Use one immutable generation for stable paging.
+    # @param body [Object] JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.
+    # @param [Hash] opts the optional parameters
+    # @option opts [Boolean] :allow_partial_search_results Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.
+    # @return [Object]
+    def search_composable_unchecked(index, body, opts = {})
+      data, _status_code, _headers = search_composable_unchecked_with_http_info(index, body, opts)
+      data
+    end
+
+    # Search the supported Elasticsearch-style query subset, including composable chemistry.
+    # The JSON is intentionally represented as an open object: the runtime&#39;s custom deserializers validate the supported DSL, not an arbitrary Elasticsearch API. Partial results are allowed by default. For exhaustive results explicitly set allow_partial_search_results&#x3D;false, track_total_hits&#x3D;true in the body, and verify _shards.failed&#x3D;&#x3D;0. relation&#x3D;eq alone does not prove completeness.
+    # @param index [String] Index ID or patterns. Use one immutable generation for stable paging.
+    # @param body [Object] JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.
+    # @param [Hash] opts the optional parameters
+    # @option opts [Boolean] :allow_partial_search_results Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.
+    # @return [Array<(Object, Integer, Hash)>] Object data, response status code and response headers
+    def search_composable_unchecked_with_http_info(index, body, opts = {})
+      if @api_client.config.debugging
+        @api_client.config.logger.debug 'Calling API: DefaultApi.search_composable_unchecked ...'
+      end
+      # verify the required parameter 'index' is set
+      if @api_client.config.client_side_validation && index.nil?
+        fail ArgumentError, "Missing the required parameter 'index' when calling DefaultApi.search_composable_unchecked"
+      end
+      # verify the required parameter 'body' is set
+      if @api_client.config.client_side_validation && body.nil?
+        fail ArgumentError, "Missing the required parameter 'body' when calling DefaultApi.search_composable_unchecked"
+      end
+      # resource path
+      local_var_path = '/api/v1/_elastic/{index}/_search'.sub('{' + 'index' + '}', CGI.escape(index.to_s))
+
+      # query parameters
+      query_params = opts[:query_params] || {}
+      query_params[:'allow_partial_search_results'] = opts[:'allow_partial_search_results'] if !opts[:'allow_partial_search_results'].nil?
+
+      # header parameters
+      header_params = opts[:header_params] || {}
+      # HTTP header 'Accept' (if needed)
+      header_params['Accept'] = @api_client.select_header_accept(['application/json']) unless header_params['Accept']
+      # HTTP header 'Content-Type'
+      content_type = @api_client.select_header_content_type(['application/json'])
+      if !content_type.nil?
+          header_params['Content-Type'] = content_type
+      end
+
+      # form parameters
+      form_params = opts[:form_params] || {}
+
+      # http body (model)
+      post_body = opts[:debug_body] || @api_client.object_to_http_body(body)
+
+      # return_type
+      return_type = opts[:debug_return_type] || 'Object'
+
+      # auth_names
+      auth_names = opts[:debug_auth_names] || []
+
+      new_options = opts.merge(
+        :operation => :"DefaultApi.search_composable_unchecked",
+        :header_params => header_params,
+        :query_params => query_params,
+        :form_params => form_params,
+        :body => post_body,
+        :auth_names => auth_names,
+        :return_type => return_type
+      )
+
+      data, status_code, headers = @api_client.call_api(:POST, local_var_path, new_options)
+      if @api_client.config.debugging
+        @api_client.config.logger.debug "API called: DefaultApi#search_composable_unchecked\nData: #{data.inspect}\nStatus code: #{status_code}\nHeaders: #{headers}"
+      end
+      return data, status_code, headers
+    end
   end
 end

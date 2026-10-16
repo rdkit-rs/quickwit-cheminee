@@ -3,7 +3,9 @@
 # Run only against a disposable local server. This creates and deletes its own index.
 # This smoke deliberately uses a non-native server; chemistry requests must reject
 # absent native capability rather than returning empty successful results.
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl')
 require 'quickwit-cheminee'
+require 'quickwit-cheminee/exact_search'
 require 'json'
 require 'securerandom'
 
@@ -45,6 +47,15 @@ begin
   raise 'Filtered search mismatch' unless result.num_hits == 1 && result.hits.length == 1
   raise 'Nested metadata lost' unless result.hits.first.dig(:metadata, :note) == '東京'
   raise 'Published count mismatch' unless api.describe_index(index_id).num_published_docs == 2
+  exact = QuickwitCheminee::ExactSearch.new(api: api, generation: index_id)
+  query = {term: {'metadata.note': '東京'}}
+  strict = exact.search(query: query, limit: 1)
+  raise 'Strict Unicode query body lost or misinterpreted' unless strict[:hits][:total][:value] == 1 && strict[:hits][:hits][0][:_source][:record_id] == 1
+  raise 'Strict count mismatch' unless exact.count(query: {match_all: {}}) == 2
+  ids = (0..2).flat_map do |offset|
+    exact.search(query: {match_all: {}}, limit: 1, offset: offset)[:hits][:hits].map { |hit| hit[:sort][1] }
+  end
+  raise 'Frozen tiny offset pages overlap or omit hits' unless ids == [1, 2]
   spec = {format: 'morgan-r3-2048-lsb0-v1', preparation_id: 'sanitize-only-v1', rdkit_version: '2026.09.1'}
   %w[identity substructure superstructure similarity].each do |kind|
     begin
@@ -55,7 +66,7 @@ begin
     end
   end
   puts JSON.generate({status: 'passed', scope: 'live non-native PR3 importer contract',
-                      accepted: 2, rejected: 1, filtered_hits: 1, unavailable_chemistry_errors: 4})
+                      accepted: 2, rejected: 1, filtered_hits: 1, unavailable_chemistry_errors: 4, strict_count: 2, strict_unicode_hits: 1, offset_page_ids: ids})
 ensure
   api.delete_index(index_id) if created
 end
