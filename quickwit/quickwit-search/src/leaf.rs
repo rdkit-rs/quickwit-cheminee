@@ -1379,10 +1379,12 @@ impl CanSplitDoBetter {
             }
             CanSplitDoBetter::SplitTimestampHigher(_)
             | CanSplitDoBetter::FindTraceIdsAggregation(_) => {
-                splits.sort_unstable_by_key(|split| std::cmp::Reverse(split.timestamp_end()))
+                splits.sort_unstable_by_key(|split| {
+                    std::cmp::Reverse(split.timestamp_end.unwrap_or(i64::MAX))
+                })
             }
             CanSplitDoBetter::SplitTimestampLower(_) => {
-                splits.sort_unstable_by_key(|split| split.timestamp_start())
+                splits.sort_unstable_by_key(|split| split.timestamp_start.unwrap_or(i64::MIN))
             }
             CanSplitDoBetter::Uninformative => (),
         }
@@ -1457,12 +1459,12 @@ impl CanSplitDoBetter {
                 let biggest_end_timestamp = split_with_req
                     .iter()
                     .take(min_required_splits)
-                    .map(|(split, _)| split.timestamp_end())
-                    .max()
-                    // if min_required_splits is 0, we choose a value that disables all splits
-                    .unwrap_or(i64::MIN);
+                    .map(|(split, _)| split.timestamp_end)
+                    .try_fold(i64::MIN, |maximum, end| end.map(|end| maximum.max(end)));
                 for (split, request) in split_with_req.iter_mut().skip(min_required_splits) {
-                    if split.timestamp_start() > biggest_end_timestamp {
+                    if let (Some(start), Some(end)) = (split.timestamp_start, biggest_end_timestamp)
+                        && start > end
+                    {
                         disable_search_request_hits(request);
                     }
                 }
@@ -1477,12 +1479,15 @@ impl CanSplitDoBetter {
                 let smallest_start_timestamp = split_with_req
                     .iter()
                     .take(min_required_splits)
-                    .map(|(split, _)| split.timestamp_start())
-                    .min()
-                    // if min_required_splits is 0, we choose a value that disables all splits
-                    .unwrap_or(i64::MAX);
+                    .map(|(split, _)| split.timestamp_start)
+                    .try_fold(i64::MAX, |minimum, start| {
+                        start.map(|start| minimum.min(start))
+                    });
                 for (split, request) in split_with_req.iter_mut().skip(min_required_splits) {
-                    if split.timestamp_end() < smallest_start_timestamp {
+                    if let (Some(end), Some(start)) =
+                        (split.timestamp_end, smallest_start_timestamp)
+                        && end < start
+                    {
                         disable_search_request_hits(request);
                     }
                 }
@@ -1500,11 +1505,15 @@ impl CanSplitDoBetter {
             CanSplitDoBetter::SplitIdHigher(Some(split_id)) => split.split_id >= *split_id,
             CanSplitDoBetter::SplitTimestampHigher(Some(timestamp))
             | CanSplitDoBetter::FindTraceIdsAggregation(Some(timestamp)) => {
-                split.timestamp_end() >= *timestamp
+                match split.timestamp_end {
+                    Some(end) => end >= *timestamp,
+                    None => true,
+                }
             }
-            CanSplitDoBetter::SplitTimestampLower(Some(timestamp)) => {
-                split.timestamp_start() <= *timestamp
-            }
+            CanSplitDoBetter::SplitTimestampLower(Some(timestamp)) => match split.timestamp_start {
+                Some(start) => start <= *timestamp,
+                None => true,
+            },
             _ => true,
         }
     }
@@ -1519,17 +1528,15 @@ impl CanSplitDoBetter {
             CanSplitDoBetter::SplitTimestampHigher(timestamp)
             | CanSplitDoBetter::FindTraceIdsAggregation(timestamp) => {
                 if let Some(SortValue::I64(timestamp_ns)) = hit.sort_value() {
-                    // if we get a timestamp of, says 1.5s, we need to check up to 2s to make
-                    // sure we don't throw away something like 1.2s, so we should round up while
-                    // dividing.
-                    *timestamp = Some(quickwit_common::div_ceil(timestamp_ns, 1_000_000_000));
+                    // Split bounds are seconds truncated toward zero. Use the same
+                    // monotone projection: ceil would drop better subsecond hits
+                    // (and ties) from another split in the same second bucket.
+                    *timestamp = Some(timestamp_ns / 1_000_000_000);
                 }
             }
             CanSplitDoBetter::SplitTimestampLower(timestamp) => {
                 if let Some(SortValue::I64(timestamp_ns)) = hit.sort_value() {
-                    // if we get a timestamp of, says 1.5s, we need to check down to 1s to make
-                    // sure we don't throw away something like 1.7s, so we should truncate,
-                    // which is the default behavior of division
+                    // Match the metadata projection, including negative timestamps.
                     let timestamp_s = timestamp_ns / 1_000_000_000;
                     *timestamp = Some(timestamp_s);
                 }
@@ -2294,6 +2301,246 @@ mod tests {
 
     use super::*;
     use crate::LambdaLeafSearchInvoker;
+
+    #[test]
+    fn timestamp_sort_cutoffs_preserve_subseconds_ties_and_extremes() {
+        let nanos = [
+            i64::MIN,
+            i64::MIN + 1,
+            -2_000_000_001,
+            -2_000_000_000,
+            -1_800_000_000,
+            -1_200_000_000,
+            -1_000_000_001,
+            -1_000_000_000,
+            -999_999_999,
+            -1,
+            0,
+            1,
+            999_999_999,
+            1_000_000_000,
+            1_200_000_000,
+            1_500_000_000,
+            1_800_000_000,
+            2_000_000_000,
+            i64::MAX - 1,
+            i64::MAX,
+        ];
+        for incumbent in nanos {
+            let hit = PartialHit {
+                sort_value: Some(SortValue::I64(incumbent).into()),
+                ..Default::default()
+            };
+            for challenger in nanos {
+                // Same conversion as create_split_metadata's DateTime::into_timestamp_secs.
+                let seconds =
+                    tantivy::DateTime::from_timestamp_nanos(challenger).into_timestamp_secs();
+                let split = SplitIdAndFooterOffsets {
+                    timestamp_start: Some(seconds),
+                    timestamp_end: Some(seconds),
+                    ..Default::default()
+                };
+                for mut filter in [
+                    CanSplitDoBetter::SplitTimestampHigher(None),
+                    CanSplitDoBetter::FindTraceIdsAggregation(None),
+                ] {
+                    filter.record_new_worst_hit(&hit);
+                    if challenger >= incumbent {
+                        assert!(filter.can_be_better(&split), "{incumbent}/{challenger}");
+                    }
+                    if seconds < incumbent / 1_000_000_000 {
+                        assert!(!filter.can_be_better(&split));
+                    }
+                }
+                let mut filter = CanSplitDoBetter::SplitTimestampLower(None);
+                filter.record_new_worst_hit(&hit);
+                if challenger <= incumbent {
+                    assert!(filter.can_be_better(&split), "{incumbent}/{challenger}");
+                }
+                if seconds > incumbent / 1_000_000_000 {
+                    assert!(!filter.can_be_better(&split));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn timestamp_sort_unknown_bounds_never_prove_a_split_uncompetitive() {
+        for cutoff in [-2, 0, 2] {
+            for mut filter in [
+                CanSplitDoBetter::SplitTimestampHigher(None),
+                CanSplitDoBetter::SplitTimestampLower(None),
+                CanSplitDoBetter::FindTraceIdsAggregation(None),
+            ] {
+                filter.record_new_worst_hit(&PartialHit {
+                    sort_value: Some(SortValue::I64(cutoff * 1_000_000_000).into()),
+                    ..Default::default()
+                });
+                assert!(filter.can_be_better(&SplitIdAndFooterOffsets::default()));
+                let request = SearchRequest {
+                    query_ast: serde_json::to_string(&QueryAst::MatchAll).unwrap(),
+                    max_hits: 1,
+                    ..Default::default()
+                };
+                let splits = vec![
+                    SplitIdAndFooterOffsets {
+                        split_id: "known".into(),
+                        num_docs: 1,
+                        timestamp_start: Some(10),
+                        timestamp_end: Some(10),
+                        ..Default::default()
+                    },
+                    SplitIdAndFooterOffsets {
+                        split_id: "unknown".into(),
+                        num_docs: 1,
+                        ..Default::default()
+                    },
+                ];
+                let optimized = filter.optimize(&request, splits).unwrap();
+                assert_eq!(optimized[0].0.split_id, "unknown");
+                assert!(optimized.iter().all(|(_, request)| request.max_hits == 1));
+            }
+        }
+        assert!(
+            CanSplitDoBetter::SplitTimestampHigher(Some(2)).can_be_better(
+                &SplitIdAndFooterOffsets {
+                    timestamp_start: Some(-10),
+                    ..Default::default()
+                }
+            )
+        );
+        assert!(
+            CanSplitDoBetter::SplitTimestampLower(Some(-2)).can_be_better(
+                &SplitIdAndFooterOffsets {
+                    timestamp_end: Some(10),
+                    ..Default::default()
+                }
+            )
+        );
+    }
+
+    #[test]
+    fn timestamp_sort_pruning_retains_exact_counts_aggregations_and_offsets() {
+        let split = SplitIdAndFooterOffsets {
+            timestamp_start: Some(1),
+            timestamp_end: Some(1),
+            ..Default::default()
+        };
+        let filter = Arc::new(RwLock::new(CanSplitDoBetter::SplitTimestampHigher(Some(2))));
+        let request = SearchRequest {
+            start_offset: 2,
+            max_hits: 1,
+            count_hits: CountHits::CountAll as i32,
+            ..Default::default()
+        };
+        let count_only = simplify_search_request(request.clone(), &split, &filter).unwrap();
+        assert_eq!(count_only.max_hits, 0);
+        assert_eq!(count_only.start_offset, 0);
+        assert_eq!(count_only.count_hits(), CountHits::CountAll);
+        let approximate = SearchRequest {
+            count_hits: CountHits::Underestimate as i32,
+            ..request.clone()
+        };
+        assert!(simplify_search_request(approximate.clone(), &split, &filter).is_none());
+        let aggregation = SearchRequest {
+            aggregation_request: Some("{}".into()),
+            ..approximate
+        };
+        assert!(simplify_search_request(aggregation, &split, &filter).is_some());
+        let tied_split = SplitIdAndFooterOffsets {
+            timestamp_start: Some(2),
+            timestamp_end: Some(2),
+            ..Default::default()
+        };
+        let retained = simplify_search_request(request, &tied_split, &filter).unwrap();
+        assert_eq!(retained.max_hits, 1);
+        assert_eq!(retained.start_offset, 2);
+    }
+
+    #[test]
+    fn timestamp_sort_upfront_requires_complete_disjointness_proof() {
+        let request = SearchRequest {
+            query_ast: serde_json::to_string(&QueryAst::MatchAll).unwrap(),
+            max_hits: 1,
+            ..Default::default()
+        };
+        let split = |id: &str, start, end| SplitIdAndFooterOffsets {
+            split_id: id.into(),
+            timestamp_start: start,
+            timestamp_end: end,
+            num_docs: 1,
+            ..Default::default()
+        };
+        for (filter, uncertain, other) in [
+            (
+                CanSplitDoBetter::SplitTimestampHigher(None),
+                split("uncertain", None, Some(10)),
+                split("other", Some(1), Some(1)),
+            ),
+            (
+                CanSplitDoBetter::SplitTimestampLower(None),
+                split("uncertain", Some(-10), None),
+                split("other", Some(1), Some(1)),
+            ),
+        ] {
+            let requests = filter.optimize(&request, vec![other, uncertain]).unwrap();
+            assert_eq!(requests[0].0.split_id, "uncertain");
+            assert!(requests.iter().all(|(_, r)| r.max_hits == 1));
+        }
+        for filter in [
+            CanSplitDoBetter::SplitTimestampHigher(None),
+            CanSplitDoBetter::SplitTimestampLower(None),
+        ] {
+            let requests = filter
+                .optimize(
+                    &request,
+                    vec![
+                        split("low", Some(1), Some(1)),
+                        split("high", Some(10), Some(10)),
+                    ],
+                )
+                .unwrap();
+            assert_eq!(requests[0].1.max_hits, 1);
+            assert_eq!(requests[1].1.max_hits, 0);
+        }
+    }
+
+    #[test]
+    fn timestamp_sort_cutoff_waits_for_offset_plus_limit_hits() {
+        let request = SearchRequest {
+            start_offset: 2,
+            max_hits: 1,
+            count_hits: CountHits::CountAll as i32,
+            sort_fields: vec![quickwit_proto::search::SortField {
+                field_name: "timestamp".into(),
+                sort_order: SortOrder::Desc as i32,
+                sort_datetime_format: None,
+            }],
+            ..Default::default()
+        };
+        let mut collector =
+            IncrementalCollector::new(make_merge_collector(&request, Default::default()).unwrap());
+        for n in 1..=3 {
+            assert!(collector.peek_worst_hit().is_none());
+            collector
+                .add_result(LeafSearchResponse {
+                    num_hits: 1,
+                    partial_hits: vec![PartialHit {
+                        split_id: format!("split-{n}"),
+                        doc_id: n as u32,
+                        sort_value: Some(SortValue::I64(n * 1_000_000_000).into()),
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                })
+                .unwrap();
+        }
+        assert!(collector.peek_worst_hit().is_some());
+        let result = collector.finalize().unwrap();
+        assert_eq!(result.num_hits, 3);
+        assert_eq!(result.partial_hits.len(), 1);
+        assert_eq!(result.partial_hits[0].doc_id, 1);
+    }
 
     fn bool_filter(ast: impl Into<QueryAst>) -> QueryAst {
         BoolQuery {
