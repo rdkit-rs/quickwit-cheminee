@@ -30,9 +30,16 @@ there is no global monkeypatch.
 - Two generations from the same schema, tools and manifest inputs matched
   byte-for-byte. This does not claim reproducible native binaries or gem tar timestamps.
 
-Native chemistry HTTP integration, complete DSL error domains, live Ruby failed-split injection,
-catalog-generation promotion, Compose coexistence, crash durability and HA remain
-unvalidated. Fixture response tests do not establish chemistry truth. The manual
+The native distributed harness passed 16 HTTP cases. The installed gem passed
+[native_smoke.rb](native_smoke.rb) against restarted fixture services: graph and
+Tanimoto counts, complete offset enumeration with ties, and failed-leaf rejection
+for search and count. Unchecked partial responses reproduced the misleading exact
+total. These tiny fixtures do not measure paging performance or crash durability.
+
+Complete DSL error domains, catalog-generation promotion, Compose coexistence,
+crash durability and HA remain unvalidated. A live counterexample confirms that a
+sibling `match_none` can hide malformed-fingerprint errors; explicit candidates
+correctly narrow verification. Fixture response tests do not establish chemistry truth. The manual
 CI preparation workflow is committed for review but has not been run in GitHub.
 
 Fresh core/query tests on recovered code passed (174 tests without native chemistry;
@@ -212,6 +219,6 @@ breaking-version decision and migration tests; matching version numbers alone do
 not prove compatibility. During this prerelease phase, consumers should pin the
 exact gem and tested server commit. No stable-version promise is made yet.
 
-Before external publication: recover/integrate the DSL, pass native and importer
-safety gates, resolve independent readiness findings, and obtain separate publication
+Before external publication: resolve the demonstrated error-domain gap, pass importer
+safety and operational gates, resolve independent readiness findings, and obtain separate publication
 approval. Keep historical benchmark claims separate from these functional tests.

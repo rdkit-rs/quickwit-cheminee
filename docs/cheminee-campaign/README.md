@@ -113,6 +113,16 @@ and the initial audit; current SDK validation is recorded separately.
     global malformed-data validation claim. Cursor APIs remain unexposed pending
     distributed enumeration and merge-stability tests.
 
+19. Native rerun passed all 229 document-mapper and 178 server tests; native Clippy
+    passed with warnings denied. Distributed native HTTP harness passed 16 cases.
+    Restarted its persisted tiny indexes and tested the installed gem: complete
+    offset enumeration with score ties, strict counts and failed-leaf rejection.
+    This is graceful restart evidence on one host, not crash recovery or HA.
+20. Reproduced the sibling-domain gap over native HTTP: unbounded malformed
+    fingerprint query fails 500; adding sibling `match_none` returns exact zero
+    with HTTP 200. Explicit operator candidates excluding the malformed record
+    return exact two. Strong sibling-error-domain gate is known failing.
+
 ## Confirmed source hazards
 
 | Contract | PR3 finding | Required evidence before release |
@@ -187,8 +197,9 @@ proof. No arbitrary Elasticsearch or Searchkick compatibility is promised.
 
 ## Next integration gate
 
-Exact source recovery is complete. Integrate the reviewed SDK preparation into a
-new branch while retaining the recovered branch and bundle unchanged. Revalidate
-the generated contract against composable queries, completeness and native chemistry.
+Exact source recovery and local SDK integration are complete; the recovered branch
+and bundle remain unchanged. Resolve the demonstrated sibling-error-domain gap
+before calling the full contract gate passed. Native HTTP and installed Ruby smoke
+evidence is available under `evidence/sdk-dsl`; it is scoped functional validation.
 The original benchmark corpus/index archive remains unavailable; performance, Compose,
 catalog safety and HA require independent evidence and remain pending.
