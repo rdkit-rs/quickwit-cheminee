@@ -1,0 +1,5 @@
+/workspace/.onboarding/sysroot/usr/lib/ruby/3.3.0/rubygems/dependency.rb:303:in `to_specs': Could not find 'json' (= 3.1.0) - did find: [json-3.1.0,json-2.7.2] (Gem::MissingSpecVersionError)
+Checked in 'GEM_PATH=/workspace/recovery/ruby-dependencies/ruby/3.3.0:/workspace/.onboarding/sysroot/usr/share/rubygems-integration/all' , execute `gem env` for more information
+	from /workspace/.onboarding/sysroot/usr/lib/ruby/3.3.0/rubygems/dependency.rb:313:in `to_spec'
+	from /workspace/.onboarding/sysroot/usr/lib/ruby/3.3.0/rubygems/core_ext/kernel_gem.rb:56:in `gem'
+	from -e:1:in `<main>'
