@@ -1,5 +1,12 @@
 # Cheminee importer campaign — recovered source and SDK preparation
 
+> Continuation decision: relevance-based error semantics supersede the earlier
+> global verification proposal. Valid chemistry AND match-none can return exact
+> zero; eagerly reject invalid query inputs, and fail unresolved stored-data errors
+> only where they can affect membership/count/rank. The reproduced timestamp
+> candidate broadening remains a bug. See `ERROR_DOMAIN_REVIEW.md` before coding.
+
+
 Status: **no release gate has passed in this session**. This is a reviewable
 preparation branch based on public PR3 `6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa`.
 It is separate from the now-recovered composable-query branch. The initial preparation snapshot

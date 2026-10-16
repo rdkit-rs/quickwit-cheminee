@@ -1,3 +1,38 @@
+# Relevance-based error contract — continuation decision
+
+The parent delivered this superseding Astra decision on continuation from checkpoint
+`2f6ebc3c39aaf2562b931a9829fca99c936ab1d3`. It replaces the global verification
+proposal preserved below. Implementation and regression coverage remain pending.
+
+Validate query syntax, options and chemical inputs eagerly. Stored-data errors are
+fatal when unresolved errors could change membership, count or rank. Logically
+excluded corrupt records do not require a global integrity scan. In particular,
+valid chemistry AND `match_none` may return exact zero without stored verification.
+Relevant failed splits must never imply an exact complete total.
+
+Consequences for the retained evidence:
+
+- The `sibling-domain-probe.json` exact-zero result is not itself a defect under
+  this contract. Both clause orders must agree; invalid query inputs still fail.
+- The timestamp-candidate probe remains a real bug: moving explicit candidates
+  outside an operator broadens verification into explicitly excluded records.
+- The previous unconditional verification-wrapper proposal is superseded. Do not
+  implement it or disable all chemistry pruning merely to reproduce that proposal.
+- OR and NOT need separate membership/count/rank reasoning. A clause irrelevant
+  to membership may still affect ranking; no blanket short-circuit rule follows.
+
+Required next validation covers both conjunction orders, OR/NOT, relevant and
+irrelevant corrupt records, exact counts and rank, explicit candidate boundaries,
+and pushdown invariance. Query-input validation must survive Boolean simplification.
+Independent Astra max design and implementation reviews remain required.
+
+Catalog refresh, generated installed Ruby/paging, measured Compose coexistence,
+durability/HA/overload, observability, benchmark-based guidance and README comparison
+remain authorized work. Publication, remote merge, deployment, contacting others,
+credentials and paid infrastructure remain outside authorization.
+
+## Historical review — superseded where it requires global verification
+
 # Independent error-domain design gate — 2026-10-16
 
 Reviewer: independent `gpt-6-astra`, maximum effort. Decision: strong contract
