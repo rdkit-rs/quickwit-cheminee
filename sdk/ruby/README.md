@@ -39,7 +39,8 @@ total. These tiny fixtures do not measure paging performance or crash durability
 Complete DSL error domains, catalog-generation promotion, Compose coexistence,
 crash durability and HA remain unvalidated. A live counterexample confirms that a
 sibling `match_none` can hide malformed-fingerprint errors; explicit candidates
-correctly narrow verification. Fixture response tests do not establish chemistry truth. The manual
+correctly narrow verification for the tested numeric range. A second live probe
+shows timestamp candidate rewriting can broaden verification into excluded data. Fixture response tests do not establish chemistry truth. The manual
 CI preparation workflow is committed for review but has not been run in GitHub.
 
 Fresh core/query tests on recovered code passed (174 tests without native chemistry;

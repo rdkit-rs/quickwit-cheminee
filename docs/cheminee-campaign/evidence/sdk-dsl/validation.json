@@ -17,7 +17,7 @@
     "implementation": "artifact approved for local use: installed16/319,452 reproduced files,296 packaged files, all provenance/support hashes verified",
     "native_readiness": "Astra max independently reran strengthened native_smoke from fresh Ruby container against installed gem and verified three restarted ready nodes; scoped functional evidence approved, full error-domain gate failed"
   },
-  "known_gate_gap": "Confirmed live: sibling match_none hides malformed fingerprint error (HTTP200 exact0), while unbounded query fails500; explicit candidates return exact2",
+  "known_gate_gap": "Confirmed live: sibling match_none hides malformed fingerprint error (HTTP200 exact0), while unbounded query fails500; explicit candidates return exact2; explicit timestamp candidates also broaden to excluded malformed documents under leaf timestamp rewrite (live HTTP500)",
   "corpus_available": false,
   "publication_authorized": false,
   "native_http_cases": 16,

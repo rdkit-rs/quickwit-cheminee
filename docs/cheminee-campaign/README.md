@@ -123,6 +123,13 @@ and the initial audit; current SDK validation is recorded separately.
     with HTTP 200. Explicit operator candidates excluding the malformed record
     return exact two. Strong sibling-error-domain gate is known failing.
 
+21. A second native probe confirms candidate-domain broadening: a real timestamp
+    field with healthy 2020 and malformed 2021 documents in one split still fails
+    when explicit candidates restrict verification to 2020. Leaf timestamp rewriting
+    moves this filter outside the operator. Independent Astra max review recommends
+    a coordinated verification-obligation design, not an isolated simplifier patch;
+    see `ERROR_DOMAIN_REVIEW.md`. Both correctness failures remain open.
+
 ## Confirmed source hazards
 
 | Contract | PR3 finding | Required evidence before release |

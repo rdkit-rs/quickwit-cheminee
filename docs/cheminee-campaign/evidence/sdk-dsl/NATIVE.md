@@ -63,10 +63,18 @@ indexes; no conclusion about concurrent writes, merges or cursor behavior follow
 fingerprint fixture. The unbounded Tanimoto query returns HTTP 500. Wrapping it in
 `{"bool":{"must":[QUERY,{"match_none":{}}]}}` returns HTTP 200, exact zero and
 zero failed splits. This violates the requested stronger rule that adjacent
-Boolean filters must not hide verification errors. Explicit candidates restricting
+Boolean filters must not hide verification errors. Explicit numeric candidates restricting
 `record_id` to `[0,2]` correctly return exact two; that intentionally narrows the
 verification domain. The adapter does not repair the sibling case. It remains a
 release blocker for that guarantee.
 
 The cluster shares one host and a local filesystem; graceful process restart is
 not crash durability, replicated storage, failover or corruption recovery.
+
+A second live probe, `timestamp-domain-probe.json`, demonstrates that an explicit
+2020 timestamp candidate range still verifies a malformed 2021 record in the same
+split and fails HTTP 500. The index has a real `timestamp_field`. The leaf timestamp
+rewrite moves the candidate range outside the operator, broadening its verification
+domain. `probe-timestamp-domain.py` reproduces this against the retained native
+fixtures; it creates its own `composable-timestamp-domain` index and requires that
+name to be absent. Numeric candidate success must not be generalized to timestamps.
