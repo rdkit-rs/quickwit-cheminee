@@ -203,6 +203,19 @@ mod openapi_schema_tests {
         }
     }
 
+    #[test]
+    fn mapping_schema_matches_flattened_options_and_fast_wire_values() {
+        let docs = serde_json::to_value(build_docs()).unwrap();
+        let schemas = &docs["components"]["schemas"];
+        let mapping = &schemas["FieldMappingEntryForSerialization"];
+        assert_eq!(mapping["additionalProperties"], serde_json::json!({}));
+        assert_eq!(mapping["required"], serde_json::json!(["name", "type"]));
+        let fast = &schemas["FastFieldOptions"]["oneOf"];
+        assert_eq!(fast[0]["type"], "boolean");
+        assert_eq!(fast[1]["required"], serde_json::json!(["normalizer"]));
+        assert!(fast[1]["properties"]["normalizer"].get("$ref").is_some());
+    }
+
     fn resolve_openapi_schemas(openapi: &utoipa::openapi::OpenApi) -> anyhow::Result<()> {
         let schemas_lookup = if let Some(components) = &openapi.components {
             resolve_component_schemas(components)?
