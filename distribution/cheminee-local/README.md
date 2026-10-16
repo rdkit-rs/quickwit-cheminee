@@ -91,3 +91,45 @@ native run and resource observations are retained in the campaign evidence. The
 32 GiB workspace had under 1 GiB free during this experiment; Elasticsearch was
 not pulled or started. Full workspace CI, representative load, concurrent imports
 and searches, Elasticsearch coexistence, and recovery headroom remain open gates.
+
+## Prepared coexistence harness (execution still pending)
+
+An optional override starts a separate, single-node Elasticsearch on loopback.
+The 1 GiB JVM heap and 2 GiB container ceiling are test parameters, **not measured
+recommendations**. The repository's REST compatibility fixture uses ES 8.9.0;
+this override requires an explicitly selected immutable local image and does not
+claim compatibility with that or other versions. Record its digest and version.
+It has not been started here: the bounded native validation shares a 32 GiB VFS
+Docker filesystem, so another image/container could remove recovery headroom.
+
+After preparing images and measuring sufficient disk headroom, run from repo root:
+
+```sh
+export ELASTICSEARCH_IMAGE=sha256:<actual-local-image-id>
+docker compose -f docker-compose.yml.example \
+  -f distribution/cheminee-local/compose.elasticsearch.yml.example up -d --wait
+python3 distribution/cheminee-local/smoke.py \
+  --observe-container cheminee-local-elasticsearch-1 \
+  --output /tmp/cheminee-es-coexistence.json
+```
+
+The extended smoke records both containers during Cheminee idle/import/query/restart
+phases, including cgroup peaks/OOM and Elasticsearch process RSS. It reads process
+names only, not arguments or environment. It creates **no Elasticsearch workload**:
+that first run establishes idle-neighbor coexistence only. A separate run with a
+retained representative Elasticsearch indexing/search workload is required before
+making active-coexistence or sizing claims. Retain the workload, image identities,
+host CPU/RAM/disk, before/after storage, sampling gaps and result oracles. Do not add
+process RSS values as if shared pages were private memory. This harness has syntax
+and Compose configuration checks only; it is not runtime acceptance evidence.
+The optional Elasticsearch named volume persists across `down`; remove it only when
+its explicitly disposable test data is no longer needed.
+
+Observation requires cgroup v2 and a Docker healthcheck on every additional container.
+Counters/peaks are container-lifetime values, not increments attributable to this run.
+Docker commands have deadlines; the sampler stops before its verdict. Missing,
+stale or cross-phase samples cannot establish phase coverage. Short import or
+post-restart query phases may therefore deliberately fail measurement completeness.
+For a complete measured query phase, use a separately retained bounded repeated-read
+workload; do not substitute idle sleep and label it query memory. Historical native
+smoke evidence predates these stricter sampling checks and is not a run of this version.

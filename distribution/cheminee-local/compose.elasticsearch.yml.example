@@ -1,0 +1,28 @@
+# Optional local observation harness; not yet run with native Cheminee.
+# Supply an already-present digest-pinned Linux amd64 ES image. No implicit pull.
+services:
+  elasticsearch:
+    image: ${ELASTICSEARCH_IMAGE:?Set ELASTICSEARCH_IMAGE to an immutable local image ID or digest}
+    pull_policy: never
+    platform: linux/amd64
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+    ports: ["127.0.0.1:9200:9200"]
+    volumes: [elasticsearch-observation:/usr/share/elasticsearch/data]
+    cpus: 2
+    mem_limit: 2g
+    pids_limit: 512
+    stop_grace_period: 60s
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s"]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "2"}
+volumes:
+  elasticsearch-observation:
