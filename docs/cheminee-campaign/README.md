@@ -343,3 +343,15 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     independent Astra max reviews validate this bounded guard, not build capacity.
     [Runbook](../../quickwit/scripts/ci/CAMPAIGN_RUNBOOK.md) records reuse, cleanup
     measurement and retry rules. No new heavy build or Docker change was performed.
+
+33. Integrate the independently reviewed Ruby and Compose handoffs, preserving
+    their source commits and scopes. Verify text-transfer file hashes and exact Git
+    prerequisites; pass combined lightweight checks and bounded retained-server Ruby
+    smoke. V6 checkpoint retains the integrated source without claiming live Compose
+    resource measurements or a pinned Ruby wire-suite pass.
+34. Resume catalog recovery locally after the separate worker never dispatched.
+    Add real-journal/process tests with a shared fake-peer acceptance ledger: 16
+    tests/86 assertions cover ambiguous writes, interrupted promotion/rollback and
+    cooperating publisher contention. Production importer code is unchanged.
+    Existing runtime inspection confirms JSON extension directory and SONAME mismatch;
+    preserve the pinned-suite blocker rather than force ABI aliases or change the lock.
