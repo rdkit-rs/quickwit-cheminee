@@ -56,7 +56,7 @@ impl BuildTantivyAst for GraphQueryAst {
             .into();
         let query = tantivy_rdkit::GraphQuery::new(
             candidates,
-            context.schema,
+            context.chemistry_schema,
             &self.spec,
             self.prepared_field.clone(),
             std::sync::Arc::new(verifier),

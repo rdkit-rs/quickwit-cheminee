@@ -381,10 +381,7 @@ fn graph_and_fingerprint_require_columns_only_for_live_candidates() -> tantivy::
         let error = searcher
             .search(&*query, &Count)
             .expect_err("missing segment column with live candidates must fail");
-        let expected = match operator {
-            Operator::Graph => "missing prepared SMILES fast field",
-            _ => "missing fingerprint fast field",
-        };
+        let expected = "index does not contain the requested fingerprint specification";
         assert!(
             error.to_string().contains(expected),
             "{operator:?}: {error}"

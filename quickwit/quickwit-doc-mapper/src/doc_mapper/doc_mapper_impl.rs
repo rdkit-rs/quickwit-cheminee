@@ -675,6 +675,7 @@ impl DocMapper {
             query_ast,
             &BuildTantivyAstContext {
                 schema: &split_schema,
+                chemistry_schema: &self.schema,
                 tokenizer_manager: self.tokenizer_manager(),
                 search_fields: &self.default_search_field_names[..],
                 with_validation,

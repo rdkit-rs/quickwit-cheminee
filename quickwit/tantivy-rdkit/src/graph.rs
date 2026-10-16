@@ -55,6 +55,7 @@ pub trait GraphVerifier: std::fmt::Debug + Send + Sync {
 pub struct GraphQuery {
     candidates: Box<dyn Query>,
     prepared_field: String,
+    spec: FingerprintSpec,
     verifier: Arc<dyn GraphVerifier>,
 }
 
@@ -63,6 +64,7 @@ impl Clone for GraphQuery {
         Self {
             candidates: self.candidates.box_clone(),
             prepared_field: self.prepared_field.clone(),
+            spec: self.spec.clone(),
             verifier: self.verifier.clone(),
         }
     }
@@ -76,7 +78,21 @@ impl GraphQuery {
         prepared_field: String,
         verifier: Arc<dyn GraphVerifier>,
     ) -> tantivy::Result<Self> {
-        let fields = MoleculeFields::from_schema(schema, spec, &prepared_field)?;
+        Self::validate_schema(schema, spec, &prepared_field)?;
+        Ok(Self {
+            candidates,
+            prepared_field,
+            spec: spec.clone(),
+            verifier,
+        })
+    }
+    /// Check both fingerprint identity and the raw prepared-text physical contract.
+    pub fn validate_schema(
+        schema: &Schema,
+        spec: &FingerprintSpec,
+        prepared_field: &str,
+    ) -> tantivy::Result<()> {
+        let fields = MoleculeFields::from_schema(schema, spec, prepared_field)?;
         if !schema.get_field_entry(fields.prepared_smiles).is_fast() {
             return Err(invalid(
                 "graph search requires a raw fast prepared SMILES field; reindex with fast=true",
@@ -89,11 +105,7 @@ impl GraphQuery {
                 "prepared SMILES fast field must use the raw normalizer",
             ));
         }
-        Ok(Self {
-            candidates,
-            prepared_field,
-            verifier,
-        })
+        Ok(())
     }
 }
 
@@ -105,6 +117,7 @@ impl Query for GraphQuery {
                 searcher_opt: enable_scoring.searcher(),
             })?,
             prepared_field: self.prepared_field.clone(),
+            spec: self.spec.clone(),
             verifier: self.verifier.clone(),
         }))
     }
@@ -117,6 +130,7 @@ impl Query for GraphQuery {
 struct GraphWeight {
     candidates: Box<dyn Weight>,
     prepared_field: String,
+    spec: FingerprintSpec,
     verifier: Arc<dyn GraphVerifier>,
 }
 
@@ -132,6 +146,7 @@ impl Weight for GraphWeight {
         if candidates.doc() == TERMINATED {
             return Ok(Box::new(CandidateScores::new(Vec::new(), boost)));
         }
+        GraphQuery::validate_schema(reader.schema(), &self.spec, &self.prepared_field)?;
         let column = reader
             .fast_fields()
             .str(&self.prepared_field)?

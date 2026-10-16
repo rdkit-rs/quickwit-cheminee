@@ -42,7 +42,7 @@ impl BuildTantivyAst for FingerprintContainsQueryAst {
             .map_err(|error| InvalidQuery::InvalidChemistry(error.to_string()))?;
         FingerprintQuery::containment(
             candidates,
-            context.schema,
+            context.chemistry_schema,
             &self.spec,
             fingerprint,
             self.direction,

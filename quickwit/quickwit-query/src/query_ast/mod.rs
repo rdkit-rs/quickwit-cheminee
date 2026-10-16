@@ -203,7 +203,10 @@ impl QueryAst {
 
 /// Context used when building a tantivy ast.
 pub struct BuildTantivyAstContext<'a> {
+    /// Physical split schema for ordinary queries and candidate field IDs.
     pub schema: &'a TantivySchema,
+    /// Current declared schema: chemistry contracts remain eager across old splits.
+    pub chemistry_schema: &'a TantivySchema,
     pub tokenizer_manager: &'a TokenizerManager,
     pub search_fields: &'a [String],
     pub with_validation: bool,
@@ -219,6 +222,7 @@ impl<'a> BuildTantivyAstContext<'a> {
 
         BuildTantivyAstContext {
             schema,
+            chemistry_schema: schema,
             tokenizer_manager: &DEFAULT_TOKENIZER_MANAGER,
             search_fields: &[],
             with_validation: true,

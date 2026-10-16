@@ -184,6 +184,21 @@ impl Clone for FingerprintQuery {
     }
 }
 
+/// Validate the exact physical fingerprint field; never resolve through dynamic JSON.
+pub fn validate_fingerprint_field(
+    schema: &Schema,
+    field_name: &str,
+) -> tantivy::Result<tantivy::schema::Field> {
+    let field = schema
+        .get_field(field_name)
+        .map_err(|_| invalid("index does not contain the requested fingerprint specification"))?;
+    let entry = schema.get_field_entry(field);
+    if !matches!(entry.field_type(), FieldType::Bytes(_)) || !entry.is_fast() {
+        return Err(invalid("fingerprint field must be bytes with fast=true"));
+    }
+    Ok(field)
+}
+
 impl FingerprintQuery {
     pub fn new(
         candidates: Box<dyn Query>,
@@ -199,13 +214,7 @@ impl FingerprintQuery {
             ));
         }
         let field_name = spec.field_name();
-        let field = schema.get_field(&field_name).map_err(|_| {
-            invalid("index does not contain the requested fingerprint specification")
-        })?;
-        let entry = schema.get_field_entry(field);
-        if !matches!(entry.field_type(), FieldType::Bytes(_)) || !entry.is_fast() {
-            return Err(invalid("fingerprint field must be bytes with fast=true"));
-        }
+        validate_fingerprint_field(schema, &field_name)?;
         Ok(Self {
             candidates,
             field_name,
@@ -267,6 +276,7 @@ impl Weight for FingerprintWeight {
         if candidates.doc() == TERMINATED {
             return Ok(Box::new(CandidateScores::new(Vec::new(), boost)));
         }
+        validate_fingerprint_field(reader.schema(), &self.field_name)?;
         let column = reader
             .fast_fields()
             .bytes(&self.field_name)?

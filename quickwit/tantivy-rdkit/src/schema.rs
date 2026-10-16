@@ -41,13 +41,7 @@ impl MoleculeFields {
         prepared_name: &str,
     ) -> tantivy::Result<Self> {
         spec.validate()?;
-        let fingerprint = schema.get_field(&spec.field_name())?;
-        let fingerprint_entry = schema.get_field_entry(fingerprint);
-        if !matches!(fingerprint_entry.field_type(), FieldType::Bytes(_))
-            || !fingerprint_entry.is_fast()
-        {
-            return Err(invalid("fingerprint field must be bytes with fast=true"));
-        }
+        let fingerprint = crate::validate_fingerprint_field(schema, &spec.field_name())?;
         let prepared_smiles = schema.get_field(prepared_name)?;
         let prepared_entry = schema.get_field_entry(prepared_smiles);
         if !matches!(prepared_entry.field_type(), FieldType::Str(_)) || !prepared_entry.is_stored()

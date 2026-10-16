@@ -42,7 +42,7 @@ impl BuildTantivyAst for TanimotoQueryAst {
             .map_err(|error| InvalidQuery::InvalidChemistry(error.to_string()))?;
         let query = TanimotoQuery::new(
             candidates,
-            context.schema,
+            context.chemistry_schema,
             &self.spec,
             fingerprint,
             self.minimum.into(),
