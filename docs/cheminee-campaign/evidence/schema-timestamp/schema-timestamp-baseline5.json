@@ -1,0 +1,2468 @@
+{
+  "time_utc": "2026-10-16T14:43:27.380505+00:00",
+  "checks": [
+    {
+      "name": "tanimoto/new/0",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "tanimoto/new/5",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "tanimoto/absent/0",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "tanimoto/absent/5",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "tanimoto/old/0",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tanimoto/old/5",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tanimoto/unbounded",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tanimoto/sorted-count-relevant-error",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "minimum": 0.0
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tanimoto/eager-invalid",
+      "query": {
+        "tanimoto": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "invalid",
+          "minimum": 0.0,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 400,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tanimoto/necessary-sibling",
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "term": {
+                "family": "new"
+              }
+            },
+            {
+              "tanimoto": {
+                "spec": {
+                  "format": "morgan-r3-2048-lsb0-v1",
+                  "rdkit_version": "2026.09.1",
+                  "preparation_id": "sanitize-only-v1"
+                },
+                "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "minimum": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "fingerprint_contains/new/0",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "fingerprint_contains/new/5",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "fingerprint_contains/absent/0",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "fingerprint_contains/absent/5",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "fingerprint_contains/old/0",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "fingerprint_contains/old/5",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "fingerprint_contains/unbounded",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query"
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "fingerprint_contains/sorted-count-relevant-error",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "direction": "document_contains_query"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "fingerprint_contains/eager-invalid",
+      "query": {
+        "fingerprint_contains": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "fingerprint_hex": "invalid",
+          "direction": "document_contains_query",
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 400,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "fingerprint_contains/necessary-sibling",
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "term": {
+                "family": "new"
+              }
+            },
+            {
+              "fingerprint_contains": {
+                "spec": {
+                  "format": "morgan-r3-2048-lsb0-v1",
+                  "rdkit_version": "2026.09.1",
+                  "preparation_id": "sanitize-only-v1"
+                },
+                "fingerprint_hex": "00000000000000000000010000000000000000000000000000000040000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "direction": "document_contains_query"
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: An invalid argument was passed: 'index does not contain the requested fingerprint specification'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "molecular_graph/new/0",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "molecular_graph/new/5",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "new"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "molecular_graph/absent/0",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "molecular_graph/absent/5",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "molecular_graph/old/0",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "molecular_graph/old/5",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "old"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "molecular_graph/unbounded",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "molecular_graph/sorted-count-relevant-error",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "CCO",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 500,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "molecular_graph/eager-invalid",
+      "query": {
+        "molecular_graph": {
+          "spec": {
+            "format": "morgan-r3-2048-lsb0-v1",
+            "rdkit_version": "2026.09.1",
+            "preparation_id": "sanitize-only-v1"
+          },
+          "prepared_field": "prepared",
+          "prepared_smiles": "invalid",
+          "predicate": "identity",
+          "ranking": "stable_id",
+          "use_chirality": true,
+          "include_identity": true,
+          "candidates": {
+            "type": "term",
+            "field": "family",
+            "value": "absent"
+          }
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 400,
+      "expected_ids": [],
+      "expected_total": 0,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "molecular_graph/necessary-sibling",
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "term": {
+                "family": "new"
+              }
+            },
+            {
+              "molecular_graph": {
+                "spec": {
+                  "format": "morgan-r3-2048-lsb0-v1",
+                  "rdkit_version": "2026.09.1",
+                  "preparation_id": "sanitize-only-v1"
+                },
+                "prepared_field": "prepared",
+                "prepared_smiles": "CCO",
+                "predicate": "identity",
+                "ranking": "stable_id",
+                "use_chirality": true,
+                "include_identity": true
+              }
+            }
+          ]
+        }
+      },
+      "size": 5,
+      "offset": 0,
+      "sort": null,
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 1,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M52JP59YCTTYB2HM45VTYECB. For instance, split 01M52JP59YCTTYB2HM45VTYECB failed with the following error message: invalid query: invalid chemistry query: The field does not exist: 'morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9'`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "errors": [
+        "status"
+      ]
+    },
+    {
+      "name": "positive-desc/cold/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        18
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-positive-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.2Z"
+              },
+              "sort": [
+                1200,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [
+        "ordered IDs"
+      ]
+    },
+    {
+      "name": "positive-desc/cold/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-positive-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.2Z"
+              },
+              "sort": [
+                1200,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "positive-desc/cold/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 8,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "positive-desc/warm/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        18
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 12,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-positive-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 18,
+                "timestamp": "1970-01-01T00:00:01.8Z"
+              },
+              "sort": [
+                1800,
+                18
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "positive-desc/warm/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 14,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-positive-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.2Z"
+              },
+              "sort": [
+                1200,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "positive-desc/warm/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 8,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/cold/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        18
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-negative-asc",
+              "_source": {
+                "keep": true,
+                "record_id": 18,
+                "timestamp": "1969-12-31T23:59:58.2Z"
+              },
+              "sort": [
+                -1800,
+                18
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/cold/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-negative-asc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1969-12-31T23:59:58.8Z"
+              },
+              "sort": [
+                -1200,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/cold/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/warm/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        18
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 12,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-negative-asc",
+              "_source": {
+                "keep": true,
+                "record_id": 18,
+                "timestamp": "1969-12-31T23:59:58.2Z"
+              },
+              "sort": [
+                -1800,
+                18
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/warm/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-negative-asc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1969-12-31T23:59:58.8Z"
+              },
+              "sort": [
+                -1200,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "negative-asc/warm/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "asc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 6,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tie-desc/cold/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-tie-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.5Z"
+              },
+              "sort": [
+                1500,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [
+        "ordered IDs"
+      ]
+    },
+    {
+      "name": "tie-desc/cold/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 16,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-tie-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.5Z"
+              },
+              "sort": [
+                1500,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tie-desc/cold/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 11,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tie-desc/warm/1/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        2
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-tie-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 2,
+                "timestamp": "1970-01-01T00:00:01.5Z"
+              },
+              "sort": [
+                1500,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tie-desc/warm/1/1",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 1,
+      "offset": 1,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [
+        12
+      ],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "timestamp-tie-desc",
+              "_source": {
+                "keep": true,
+                "record_id": 12,
+                "timestamp": "1970-01-01T00:00:01.5Z"
+              },
+              "sort": [
+                1500,
+                12
+              ]
+            }
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "tie-desc/warm/0/0",
+      "query": {
+        "term": {
+          "keep": "true"
+        }
+      },
+      "size": 0,
+      "offset": 0,
+      "sort": [
+        {
+          "timestamp": "desc"
+        },
+        {
+          "record_id": "asc"
+        }
+      ],
+      "expected_status": 200,
+      "expected_ids": [],
+      "expected_total": 3,
+      "status": 200,
+      "response": {
+        "took": 8,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 3,
+          "successful": 3,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 3,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "errors": []
+    }
+  ],
+  "failures": [
+    "tanimoto/new/0",
+    "tanimoto/new/5",
+    "tanimoto/absent/0",
+    "tanimoto/absent/5",
+    "tanimoto/necessary-sibling",
+    "fingerprint_contains/new/0",
+    "fingerprint_contains/new/5",
+    "fingerprint_contains/absent/0",
+    "fingerprint_contains/absent/5",
+    "fingerprint_contains/necessary-sibling",
+    "molecular_graph/new/0",
+    "molecular_graph/new/5",
+    "molecular_graph/absent/0",
+    "molecular_graph/absent/5",
+    "molecular_graph/necessary-sibling",
+    "positive-desc/cold/1/0",
+    "tie-desc/cold/1/0"
+  ],
+  "binary_sha256": "0f12ffeff21f33173cdc9dbde85646a9466cc077cc50ae70faa81479ee83db29",
+  "probe_sha256": "68c0e986e6f463b3c81e72e99f0a1cf538a5b183286d1b0cc6d2f13eeea68c3f",
+  "scope": "single native worker, synthetic schema-evolution and timestamp fixtures",
+  "schema_splits": [
+    {
+      "split_state": "Published",
+      "update_timestamp": 1792161817,
+      "publish_timestamp": 1792161817,
+      "version": "0.9",
+      "split_id": "01M52JP97CGK8E4A539SN7NRE4",
+      "index_uid": "schema-evolution:01M52JNZKH9F161G93K414W846",
+      "partition_id": 0,
+      "source_id": "_ingest-source",
+      "node_id": "single",
+      "num_docs": 1,
+      "uncompressed_docs_size_in_bytes": 97,
+      "time_range": {
+        "start": 2,
+        "end": 2
+      },
+      "create_timestamp": 1792161817,
+      "maturity": {
+        "type": "mature"
+      },
+      "tags": [],
+      "footer_offsets": {
+        "start": 3592,
+        "end": 7892
+      },
+      "delete_opstamp": 0,
+      "num_merge_ops": 0,
+      "doc_mapping_uid": "01M52JP69E91FX2GEPNT470NDV"
+    },
+    {
+      "split_state": "Published",
+      "update_timestamp": 1792161813,
+      "publish_timestamp": 1792161813,
+      "version": "0.9",
+      "split_id": "01M52JP59YCTTYB2HM45VTYECB",
+      "index_uid": "schema-evolution:01M52JNZKH9F161G93K414W846",
+      "partition_id": 0,
+      "source_id": "_ingest-source",
+      "node_id": "single",
+      "num_docs": 1,
+      "uncompressed_docs_size_in_bytes": 97,
+      "time_range": {
+        "start": 1,
+        "end": 1
+      },
+      "create_timestamp": 1792161813,
+      "maturity": {
+        "type": "mature"
+      },
+      "tags": [],
+      "footer_offsets": {
+        "start": 2607,
+        "end": 6460
+      },
+      "delete_opstamp": 0,
+      "num_merge_ops": 0,
+      "doc_mapping_uid": "01M52JNZKF1AFQ8X1DPQDE2GS4"
+    }
+  ],
+  "timestamp_splits": {
+    "timestamp-positive-desc": [
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161823,
+        "publish_timestamp": 1792161823,
+        "version": "0.9",
+        "split_id": "01M52JPEN6XQX6676H7VS3D2RE",
+        "index_uid": "timestamp-positive-desc:01M52JPAQEKQBKQ4GZ3H61D7QZ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 2,
+        "uncompressed_docs_size_in_bytes": 157,
+        "time_range": {
+          "start": 1,
+          "end": 2
+        },
+        "create_timestamp": 1792161823,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2584,
+          "end": 6380
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPAQCE113MJGTBXNH7YDQ"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161825,
+        "publish_timestamp": 1792161825,
+        "version": "0.9",
+        "split_id": "01M52JPGKT0J4RZQX46QT5TS2B",
+        "index_uid": "timestamp-positive-desc:01M52JPAQEKQBKQ4GZ3H61D7QZ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 78,
+        "time_range": {
+          "start": 1,
+          "end": 1
+        },
+        "create_timestamp": 1792161825,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2537,
+          "end": 6337
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPAQCE113MJGTBXNH7YDQ"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161827,
+        "publish_timestamp": 1792161827,
+        "version": "0.9",
+        "split_id": "01M52JPJJDCQNKKXYNQDV4MZ68",
+        "index_uid": "timestamp-positive-desc:01M52JPAQEKQBKQ4GZ3H61D7QZ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 77,
+        "time_range": {
+          "start": 0,
+          "end": 0
+        },
+        "create_timestamp": 1792161827,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2536,
+          "end": 6332
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPAQCE113MJGTBXNH7YDQ"
+      }
+    ],
+    "timestamp-negative-asc": [
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161832,
+        "publish_timestamp": 1792161832,
+        "version": "0.9",
+        "split_id": "01M52JPQJK3DK3RRT0DFJKR01C",
+        "index_uid": "timestamp-negative-asc:01M52JPKMV2BDG9SGAYYWBBPJR",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 2,
+        "uncompressed_docs_size_in_bytes": 157,
+        "time_range": {
+          "start": -2,
+          "end": -1
+        },
+        "create_timestamp": 1792161832,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2586,
+          "end": 6379
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPKMTQPR9Y5X5SVKDXDFN"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161834,
+        "publish_timestamp": 1792161834,
+        "version": "0.9",
+        "split_id": "01M52JPSH4RCFQHGPVQED19GHQ",
+        "index_uid": "timestamp-negative-asc:01M52JPKMV2BDG9SGAYYWBBPJR",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 78,
+        "time_range": {
+          "start": -1,
+          "end": -1
+        },
+        "create_timestamp": 1792161834,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2541,
+          "end": 6331
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPKMTQPR9Y5X5SVKDXDFN"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161836,
+        "publish_timestamp": 1792161836,
+        "version": "0.9",
+        "split_id": "01M52JPVFQERSW86BMXXN2SWBM",
+        "index_uid": "timestamp-negative-asc:01M52JPKMV2BDG9SGAYYWBBPJR",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 77,
+        "time_range": {
+          "start": 0,
+          "end": 0
+        },
+        "create_timestamp": 1792161836,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2538,
+          "end": 6321
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPKMTQPR9Y5X5SVKDXDFN"
+      }
+    ],
+    "timestamp-tie-desc": [
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161841,
+        "publish_timestamp": 1792161841,
+        "version": "0.9",
+        "split_id": "01M52JQ0GD4FEX2V8WP67SHDDD",
+        "index_uid": "timestamp-tie-desc:01M52JPWJMDHX6RHF24C3K41SQ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 2,
+        "uncompressed_docs_size_in_bytes": 157,
+        "time_range": {
+          "start": 1,
+          "end": 2
+        },
+        "create_timestamp": 1792161841,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2584,
+          "end": 6369
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPWJHHJMH99GJ375H9N05"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161843,
+        "publish_timestamp": 1792161843,
+        "version": "0.9",
+        "split_id": "01M52JQ2F06CKQ1DAFDFW870FF",
+        "index_uid": "timestamp-tie-desc:01M52JPWJMDHX6RHF24C3K41SQ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 77,
+        "time_range": {
+          "start": 1,
+          "end": 1
+        },
+        "create_timestamp": 1792161843,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2535,
+          "end": 6323
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPWJHHJMH99GJ375H9N05"
+      },
+      {
+        "split_state": "Published",
+        "update_timestamp": 1792161845,
+        "publish_timestamp": 1792161845,
+        "version": "0.9",
+        "split_id": "01M52JQ4DJ644CATHX23XHP013",
+        "index_uid": "timestamp-tie-desc:01M52JPWJMDHX6RHF24C3K41SQ",
+        "partition_id": 0,
+        "source_id": "_ingest-source",
+        "node_id": "single",
+        "num_docs": 1,
+        "uncompressed_docs_size_in_bytes": 77,
+        "time_range": {
+          "start": 0,
+          "end": 0
+        },
+        "create_timestamp": 1792161845,
+        "maturity": {
+          "type": "mature"
+        },
+        "tags": [],
+        "footer_offsets": {
+          "start": 2536,
+          "end": 6327
+        },
+        "delete_opstamp": 0,
+        "num_merge_ops": 0,
+        "doc_mapping_uid": "01M52JPWJHHJMH99GJ375H9N05"
+      }
+    ]
+  },
+  "status": "failed"
+}

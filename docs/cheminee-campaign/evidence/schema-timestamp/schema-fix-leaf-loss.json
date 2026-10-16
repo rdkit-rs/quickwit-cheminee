@@ -1,0 +1,1401 @@
+{
+  "scope": "16 synthetic rows; one host, shared local storage, searcher process SIGKILL; no production HA or durability claim",
+  "binary_sha256": "5f92e5079f676e7bd6cb21df2e89e3334d8c976abbed69c17d058cb72c7e048d",
+  "probe_sha256": "2e2d337c13a9a3be2cd3bee2099e98ecd3b34937d1115d74fe2dc32c0909d2af",
+  "samples": [
+    {
+      "phase": "before",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.028334896996966563,
+      "status": 200,
+      "server_took_ms": 24,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144632,
+          "hwm_kib": 144632
+        },
+        "63031": {
+          "rss_kib": 121228,
+          "hwm_kib": 121228
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.025460211996687576,
+      "status": 200,
+      "server_took_ms": 22,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144632,
+          "hwm_kib": 144632
+        },
+        "63031": {
+          "rss_kib": 121236,
+          "hwm_kib": 121236
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.008716269003343768,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121236,
+          "hwm_kib": 121236
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.01571894699736731,
+      "status": 200,
+      "server_took_ms": 13,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121236,
+          "hwm_kib": 121236
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.021191556996200234,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.018136534999939613,
+      "status": 200,
+      "server_took_ms": 15,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.009346879996883217,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.013731008999457117,
+      "status": 200,
+      "server_took_ms": 11,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.019915454999136273,
+      "status": 200,
+      "server_took_ms": 17,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.020991630997741595,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.008013841994397808,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.013411572996119503,
+      "status": 200,
+      "server_took_ms": 11,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120728,
+          "hwm_kib": 120728
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.024146506999386474,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120736,
+          "hwm_kib": 120736
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.01951181200274732,
+      "status": 200,
+      "server_took_ms": 16,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120736,
+          "hwm_kib": 120736
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.0077645159981329925,
+      "status": 200,
+      "server_took_ms": 5,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120736,
+          "hwm_kib": 120736
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.01037392699799966,
+      "status": 200,
+      "server_took_ms": 8,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121248,
+          "hwm_kib": 121248
+        },
+        "63032": {
+          "rss_kib": 120736,
+          "hwm_kib": 120736
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.018475259996193927,
+      "status": 200,
+      "server_took_ms": 16,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121260,
+          "hwm_kib": 121260
+        },
+        "63032": {
+          "rss_kib": 120736,
+          "hwm_kib": 120736
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.018551543995272368,
+      "status": 200,
+      "server_took_ms": 15,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121292,
+          "hwm_kib": 121292
+        },
+        "63032": {
+          "rss_kib": 120744,
+          "hwm_kib": 120744
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.009148841003479902,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121292,
+          "hwm_kib": 121292
+        },
+        "63032": {
+          "rss_kib": 120744,
+          "hwm_kib": 120744
+        }
+      }
+    },
+    {
+      "phase": "before",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.012073066005541477,
+      "status": 200,
+      "server_took_ms": 9,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144760,
+          "hwm_kib": 144760
+        },
+        "63031": {
+          "rss_kib": 121292,
+          "hwm_kib": 121292
+        },
+        "63032": {
+          "rss_kib": 120744,
+          "hwm_kib": 120744
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.025325317998067476,
+      "status": 200,
+      "server_took_ms": 22,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144832,
+          "hwm_kib": 144832
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120856,
+          "hwm_kib": 120856
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.03234573800000362,
+      "status": 200,
+      "server_took_ms": 27,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144884,
+          "hwm_kib": 144884
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120860,
+          "hwm_kib": 120860
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.029153695002605673,
+      "status": 200,
+      "server_took_ms": 25,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144884,
+          "hwm_kib": 144884
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120872,
+          "hwm_kib": 120872
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.020591432999935932,
+      "status": 200,
+      "server_took_ms": 17,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120872,
+          "hwm_kib": 120872
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.020720852000522427,
+      "status": 200,
+      "server_took_ms": 17,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120892,
+          "hwm_kib": 120892
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.020740611995279323,
+      "status": 200,
+      "server_took_ms": 16,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120916,
+          "hwm_kib": 120916
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.024976382999739144,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120916,
+          "hwm_kib": 120916
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.024137177999364212,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120916,
+          "hwm_kib": 120916
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.024360474999411963,
+      "status": 200,
+      "server_took_ms": 19,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120920,
+          "hwm_kib": 120920
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.03311213300185045,
+      "status": 200,
+      "server_took_ms": 29,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120920,
+          "hwm_kib": 120920
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.025572801001544576,
+      "status": 200,
+      "server_took_ms": 21,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120920,
+          "hwm_kib": 120920
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02441376000206219,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120920,
+          "hwm_kib": 120920
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02233089799847221,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120920,
+          "hwm_kib": 120920
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02329632699547801,
+      "status": 200,
+      "server_took_ms": 19,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120960,
+          "hwm_kib": 120960
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.023331158998189494,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120972,
+          "hwm_kib": 120972
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02395550899382215,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120972,
+          "hwm_kib": 120972
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02405836000252748,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120972,
+          "hwm_kib": 120972
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.022941975003050175,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120972,
+          "hwm_kib": 120972
+        }
+      }
+    },
+    {
+      "phase": "loss_transition",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02394160099356668,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120988,
+          "hwm_kib": 120988
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.021894518002227414,
+      "status": 200,
+      "server_took_ms": 19,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 120988,
+          "hwm_kib": 120988
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.02229484100098489,
+      "status": 200,
+      "server_took_ms": 19,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121028,
+          "hwm_kib": 121028
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.008907365998311434,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121028,
+          "hwm_kib": 121028
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.013620376004837453,
+      "status": 200,
+      "server_took_ms": 11,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121068,
+          "hwm_kib": 121068
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.02040720300283283,
+      "status": 200,
+      "server_took_ms": 17,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.020962034002877772,
+      "status": 200,
+      "server_took_ms": 18,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.009023561004141811,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.010397320998890791,
+      "status": 200,
+      "server_took_ms": 8,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.023194886998680886,
+      "status": 200,
+      "server_took_ms": 20,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.020082043003640138,
+      "status": 200,
+      "server_took_ms": 17,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.013949460997537244,
+      "status": 200,
+      "server_took_ms": 11,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.013550315001339186,
+      "status": 200,
+      "server_took_ms": 11,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121092,
+          "hwm_kib": 121092
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.026810567003849428,
+      "status": 200,
+      "server_took_ms": 22,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.019162923003023025,
+      "status": 200,
+      "server_took_ms": 16,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.007536251003330108,
+      "status": 200,
+      "server_took_ms": 5,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.010412043004180305,
+      "status": 200,
+      "server_took_ms": 8,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.01698404099442996,
+      "status": 200,
+      "server_took_ms": 14,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.01697615499870153,
+      "status": 200,
+      "server_took_ms": 14,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.007657244001165964,
+      "status": 200,
+      "server_took_ms": 5,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "survivor",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.010656970996933524,
+      "status": 200,
+      "server_took_ms": 8,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "63031": {
+          "rss_kib": 0,
+          "hwm_kib": 0
+        },
+        "63032": {
+          "rss_kib": 121096,
+          "hwm_kib": 121096
+        }
+      }
+    },
+    {
+      "phase": "restored",
+      "query_kind": "broad",
+      "elapsed_seconds": 0.025317364001239184,
+      "status": 200,
+      "server_took_ms": 22,
+      "count": 16,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "89682": {
+          "rss_kib": 105284,
+          "hwm_kib": 105284
+        },
+        "63032": {
+          "rss_kib": 121380,
+          "hwm_kib": 121380
+        }
+      }
+    },
+    {
+      "phase": "restored",
+      "query_kind": "selective",
+      "elapsed_seconds": 0.019404565005970653,
+      "status": 200,
+      "server_took_ms": 16,
+      "count": 4,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "89682": {
+          "rss_kib": 105284,
+          "hwm_kib": 105284
+        },
+        "63032": {
+          "rss_kib": 121380,
+          "hwm_kib": 121380
+        }
+      }
+    },
+    {
+      "phase": "restored",
+      "query_kind": "empty",
+      "elapsed_seconds": 0.008175611998012755,
+      "status": 200,
+      "server_took_ms": 6,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "89682": {
+          "rss_kib": 105284,
+          "hwm_kib": 105284
+        },
+        "63032": {
+          "rss_kib": 121380,
+          "hwm_kib": 121380
+        }
+      }
+    },
+    {
+      "phase": "restored",
+      "query_kind": "novel",
+      "elapsed_seconds": 0.011296764998405706,
+      "status": 200,
+      "server_took_ms": 9,
+      "count": 0,
+      "process_memory": {
+        "63030": {
+          "rss_kib": 144888,
+          "hwm_kib": 144888
+        },
+        "89682": {
+          "rss_kib": 105284,
+          "hwm_kib": 105284
+        },
+        "63032": {
+          "rss_kib": 121380,
+          "hwm_kib": 121380
+        }
+      }
+    }
+  ],
+  "status": "passed",
+  "kill_monotonic": 34261.377522102,
+  "survivor_ready_seconds": 4.120783266000217,
+  "survivor_nodes": [
+    "leaf-b",
+    "root"
+  ],
+  "restored_pid": 89682
+}

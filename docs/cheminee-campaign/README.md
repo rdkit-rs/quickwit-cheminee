@@ -297,3 +297,33 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     [Resource and correctness evidence](evidence/local-compose/README.md) is not a
     benchmark or HA proof. With under 1 GiB workspace free space, Elasticsearch
     coexistence and full workspace CI remain blocked by headroom. No scale run starts.
+
+26. Separate current chemistry declarations from physical split resolution. Keep
+    candidate field IDs physical, validate current inputs eagerly, and defer invalid
+    old chemistry columns until a live candidate needs verification. Pure schema
+    warmup filtering does not catch I/O errors. The expanded mapper matrix and39
+    native HTTP checks pass; independent Astra max review approves this bounded
+    path. Compatible-column corruption and arbitrary migration remain open.
+27. Match timestamp cutoff quantization to the metadata writer and retain unknown
+    bounds conservatively. A cold baseline returned wrong top IDs with correct exact
+    counts; the replacement passes18 deterministic timestamp HTTP checks and five
+    units, including offsets, tie ordering, unknown bounds and count obligations.
+    Separate commits and [retained evidence](evidence/schema-timestamp/README.md)
+    make both fixes reviewable. Earlier open-gate statements above describe their
+    historical checkpoints; the [current ledger](REMAINING_GATES.md) governs status.
+28. Continue full workspace validation under a 640 MiB disk guard. Retain the default
+    TensorFlow download HTTP 403, existing-TensorFlow 2.15.1 disk stop, and subsequent
+    krb5-src const-qualifier compiler failures (including explicit C17). Scoped
+    native Clippy passes; full workspace CI does not. Compress and verify the
+    retired runtime context before removing its uncompressed copy; preserve
+    Library v4 and all source/evidence. No image or corpus reconstruction is implied.
+29. Exercise one synthetic searcher SIGKILL and rejoin with broad/selective/empty/
+    novel exact graph oracles. Final 62 sampled requests all succeed; 4.186 seconds
+    describes membership convergence, not downtime. Shared local storage, warmed
+    sequential requests and 16 repeated molecules do not establish deployment HA
+    or performance guidance. Independent Astra max review accepts this scope only.
+30. Prepare an explicitly unexecuted Elasticsearch override and observer with bounded
+    Docker calls, phase/freshness checks, frozen sampling and final container checks.
+    Python/configuration checks and independent preparation review pass. Actual
+    coexistence remains open. Preserve the next count-only OR design without
+    presenting unimplemented relevance behavior as supported.
