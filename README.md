@@ -1,3 +1,39 @@
+# Quickwit-Cheminee campaign status
+
+The Ruby/importer campaign is **blocked on recovery of unpublished chemistry work**.
+The local preparation branch is based on public PR3, not the unpublished DSL tip.
+See the [decision log, contract audit and release checklist](docs/cheminee-campaign/README.md).
+No new gem, Compose resource envelope, HA guarantee or performance result is claimed.
+
+## Why this beats the pants off stinking old cheminee
+
+That is the ambition; current evidence supports specific tradeoffs, not an overall
+win. The recovered [controlled 100k study report](docs/cheminee-campaign/evidence/controlled-study-report.md)
+compares the same immutable corpus, four CPUs, 14 GiB and three fresh ingestion
+runs. These are historical PR3 observations, not measurements of new DSL or Ruby code.
+
+| Measured case | Old Cheminee | Quickwit-Cheminee | Finding |
+|---|---:|---:|---|
+| Tuned ingestion, mean sampled peak process RSS | 2,986.0 MiB | 979.3 MiB, nested | Quickwit used about 67% less process RSS; not total machine memory |
+| Tuned time until searchable | 308.46 s | 390.94 s matched-flat; 395.88 s nested | Old Cheminee loaded faster |
+| Process-cold filtered graph query | 0.7780 s after merge | 11.8576 s nested | Old Cheminee was about 15.2 times faster |
+| Repeated warm exact similarity | 0.9027 s after merge | 0.0099 s nested | Quickwit was faster for this identical cached request; not evidence for novel queries |
+
+Old Cheminee also had lower cold exact-similarity latency after its inexpensive
+supported merge: 1.1213 s versus 1.5563 s nested Quickwit. Payloads differ, OS page
+cache was retained, and RSS omits much filesystem cache. See the report for ranges,
+connection-overlap flags and scope. Original corpus/index bundles have not been
+recovered in this session; the report was recovered from Library checkpoint v23.
+
+Supplier-refresh correctness, Ruby wire behavior, low-memory coexistence with
+Elasticsearch, HA/durability, stable generation-aware pagination and scale beyond
+100k remain unproven. The existing chemistry routes offer bounded result sets,
+not exhaustive cursor traversal. No arbitrary Elasticsearch/Searchkick compatibility
+or correlated arrays-of-offers support is promised. Use separate offer documents
+until correlation tests establish a stronger contract.
+
+---
+
 [![CI](https://github.com/quickwit-oss/quickwit/actions/workflows/ci.yml/badge.svg)](https://github.com/quickwit-oss/quickwit/actions?query=workflow%3ACI+branch%3Amain)
 [![codecov](https://codecov.io/gh/quickwit-oss/quickwit/branch/main/graph/badge.svg?token=06SRGAV5SS)](https://codecov.io/gh/quickwit-oss/quickwit)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/quickwit-oss/quickwit/badge)](https://scorecard.dev/viewer/?uri=github.com/quickwit-oss/quickwit)
@@ -51,7 +87,7 @@ Open-source search engine for observability (logs, traces, and soon metrics!).
 # 💡 Features
 
 - Full-text search and aggregation queries
-- Elasticsearch-compatible API, use Quickwit with any Elasticsearch or OpenSearch client
+- A subset of Elasticsearch-compatible APIs; client and operation compatibility require testing
 - [Jaeger-native](https://quickwit.io/docs/distributed-tracing/plug-quickwit-to-jaeger)
 - OTEL-native for [logs](https://quickwit.io/docs/log-management/overview) and [traces](https://quickwit.io/docs/distributed-tracing/overview)
 - [Schemaless](https://quickwit.io/docs/guides/schemaless) or strict schema indexing
