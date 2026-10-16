@@ -1,0 +1,7 @@
+{
+  "command": "cargo clippy --workspace --all-features --tests -- -D warnings",
+  "exit_code": -15,
+  "stopped_for_disk_headroom": true,
+  "minimum_free_bytes": 536870912,
+  "free_bytes_after": 450002944
+}

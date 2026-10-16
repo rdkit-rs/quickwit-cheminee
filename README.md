@@ -1,11 +1,14 @@
 # Quickwit-Cheminee campaign status
 
-The Ruby/importer campaign is **blocked on recovery of unpublished chemistry work**.
-The local preparation branch is based on public PR3, not the unpublished DSL tip.
-See the [decision log, contract audit and release checklist](docs/cheminee-campaign/README.md).
-A [generated PR3 Ruby candidate](sdk/ruby/README.md) now passes installed HTTP tests
-and a live non-native importer smoke. DSL/native integration, Compose resource
-measurements, HA guarantees and new performance results remain unvalidated.
+The unpublished composable-query work was recovered and integrated on the local
+campaign branch. The [generated Ruby candidate](sdk/ruby/README.md) passes installed
+HTTP contract tests and a native graph/fingerprint smoke, including strict rejection
+of incomplete searches. See the [decision log, contract audit and release checklist](docs/cheminee-campaign/README.md)
+and [native relevance evidence](docs/cheminee-campaign/evidence/relevance-continuation/).
+Bounded selective-filter and timestamp checks pass. A [catalog journal example](sdk/ruby/examples/README.md)
+and [native Compose experiment](distribution/cheminee-local/README.md) have scoped
+HTTP/restart evidence. Broader relevance, production refresh safety, Elasticsearch
+coexistence, HA and representative performance remain unvalidated. Publication is on hold.
 
 ## Why this beats the pants off stinking old cheminee
 
@@ -27,7 +30,7 @@ cache was retained, and RSS omits much filesystem cache. See the report for rang
 connection-overlap flags and scope. Original corpus/index bundles have not been
 recovered in this session; the report was recovered from Library checkpoint v23.
 
-Supplier-refresh correctness, native Ruby/server integration, low-memory coexistence with
+Supplier-refresh correctness, low-memory coexistence with
 Elasticsearch, HA/durability, stable generation-aware pagination and scale beyond
 100k remain unproven. The existing chemistry routes offer bounded result sets,
 not exhaustive cursor traversal. No arbitrary Elasticsearch/Searchkick compatibility

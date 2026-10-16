@@ -1,0 +1,15 @@
+   Compiling tantivy-rdkit v0.1.0 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/tantivy-rdkit)
+    Finished `test` profile [unoptimized] target(s) in 1.11s
+     Running tests/composable.rs (target/debug/deps/composable-68db6b975bb1ef30)
+
+running 7 tests
+test empty_candidates_preserve_graph_matcher_setup_errors ... ok
+test containment_directions_thresholds_candidates_and_seek ... ok
+test graph_and_fingerprint_require_columns_only_for_live_candidates ... ok
+test graph_and_fingerprint_errors_are_scoped_to_explicit_candidates ... ok
+test graph_checks_only_distinct_live_candidates_and_never_truncates_before_verification ... ok
+test explicit_score_and_id_order_survives_per_split_top_k ... ok
+test graph_and_fingerprint_ignore_deleted_invalid_values ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+

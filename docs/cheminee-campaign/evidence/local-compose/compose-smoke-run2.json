@@ -1,0 +1,415 @@
+{
+  "time_utc": "2026-10-16T14:07:40.990354+00:00",
+  "scope": "1000 synthetic raw offers; single node, no Elasticsearch; graceful restart only",
+  "stages": [
+    {
+      "phase": "idle",
+      "method": "GET",
+      "elapsed_seconds": 0.003941475999454269
+    },
+    {
+      "phase": "create",
+      "method": "POST",
+      "elapsed_seconds": 0.020574229001795175
+    },
+    {
+      "phase": "import",
+      "method": "POST",
+      "elapsed_seconds": 6.015253216999554
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.01983742399897892
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.013474322000547545
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.017782113998691784
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015000229999714065
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.017446682999434415
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.02195230999859632
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.026813184002094204
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.023955331002071034
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.013552018001064425
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.0139853110013064
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.01366512900131056
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.013214780999987852
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015254157002345892
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015556821999780368
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.018394581002212362
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.0133647420007037
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015459897000255296
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.01351808700201218
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.029572449002444046
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.020630042999982834
+    },
+    {
+      "phase": "restart",
+      "method": "GET",
+      "elapsed_seconds": 0.0035207740002078936
+    },
+    {
+      "phase": "query_after_restart",
+      "method": "POST",
+      "elapsed_seconds": 0.02480366899908404
+    },
+    {
+      "phase": "cleanup",
+      "method": "DELETE",
+      "elapsed_seconds": 0.02333534200079157
+    }
+  ],
+  "memory_samples": [
+    {
+      "phase": "idle",
+      "monotonic": 31054.532393603,
+      "cgroup_current_bytes": 17829888,
+      "cgroup_peak_bytes": 19791872
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31055.098912525,
+      "cgroup_current_bytes": 19771392,
+      "cgroup_peak_bytes": 19791872
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31055.662128462,
+      "cgroup_current_bytes": 18186240,
+      "cgroup_peak_bytes": 19791872
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31056.234529266,
+      "cgroup_current_bytes": 19521536,
+      "cgroup_peak_bytes": 19791872
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31056.817331125,
+      "cgroup_current_bytes": 19550208,
+      "cgroup_peak_bytes": 19791872
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31057.386543086,
+      "cgroup_current_bytes": 21426176,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31057.964910738,
+      "cgroup_current_bytes": 18915328,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31058.534050697,
+      "cgroup_current_bytes": 20533248,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31059.099657117,
+      "cgroup_current_bytes": 18870272,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31059.664132329,
+      "cgroup_current_bytes": 20529152,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31060.225873078,
+      "cgroup_current_bytes": 20803584,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31060.791240654,
+      "cgroup_current_bytes": 20824064,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31061.35663576,
+      "cgroup_current_bytes": 20848640,
+      "cgroup_peak_bytes": 21426176
+    },
+    {
+      "phase": "import",
+      "monotonic": 31061.926585437,
+      "cgroup_current_bytes": 24694784,
+      "cgroup_peak_bytes": 24764416
+    },
+    {
+      "phase": "import",
+      "monotonic": 31062.489782252,
+      "cgroup_current_bytes": 26472448,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "import",
+      "monotonic": 31063.062183468,
+      "cgroup_current_bytes": 22491136,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "query",
+      "monotonic": 31063.647949722,
+      "cgroup_current_bytes": 22958080,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31064.217961395,
+      "cgroup_current_bytes": 22953984,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31064.777437997,
+      "cgroup_current_bytes": 24633344,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31065.336946617,
+      "cgroup_current_bytes": 24375296,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31065.900177572,
+      "cgroup_current_bytes": 24653824,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31066.464253308,
+      "cgroup_current_bytes": 24662016,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31067.038041483,
+      "cgroup_current_bytes": 23060480,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31067.60149689,
+      "cgroup_current_bytes": 24580096,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31068.170562249,
+      "cgroup_current_bytes": 22937600,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31068.785027794,
+      "cgroup_current_bytes": 23007232,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31069.365406195,
+      "cgroup_current_bytes": 23015424,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31069.937762739,
+      "cgroup_current_bytes": 24911872,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31070.513296521,
+      "cgroup_current_bytes": 24924160,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31071.089151925,
+      "cgroup_current_bytes": 22769664,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31071.658508556,
+      "cgroup_current_bytes": 24432640,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31072.224668065,
+      "cgroup_current_bytes": 24989696,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31072.80059578,
+      "cgroup_current_bytes": 24604672,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31073.372724588,
+      "cgroup_current_bytes": 24608768,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31073.93777434,
+      "cgroup_current_bytes": 24633344,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31074.495057256,
+      "cgroup_current_bytes": 24666112,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31075.061446878,
+      "cgroup_current_bytes": 23044096,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31075.629910562,
+      "cgroup_current_bytes": 24707072,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31076.197217989,
+      "cgroup_current_bytes": 24723456,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31076.771334254,
+      "cgroup_current_bytes": 23367680,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31077.348740736,
+      "cgroup_current_bytes": 23437312,
+      "cgroup_peak_bytes": 26472448
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31077.934544487,
+      "cgroup_current_bytes": 19660800,
+      "cgroup_peak_bytes": 19660800
+    },
+    {
+      "phase": "query_after_restart",
+      "monotonic": 31078.503589095,
+      "cgroup_current_bytes": 19156992,
+      "cgroup_peak_bytes": 19660800
+    }
+  ],
+  "status": "passed",
+  "image": "sha256:c2805dfb0bae95824a80c7f2296e060b1a30cefa01bf53d8d353e4d5baf76a89",
+  "script_sha256": "3b166947474486c3757e4b19cc1afb38df5661658eea99368fea4cb72ffdd91c",
+  "startup_read_errors": [
+    {
+      "status": 500,
+      "reason": "searcher_membership_pending"
+    },
+    {
+      "status": 500,
+      "reason": "searcher_membership_pending"
+    },
+    {
+      "status": 500,
+      "reason": "searcher_membership_pending"
+    }
+  ],
+  "accepted": 1000,
+  "filtered_count_before_and_after_restart": 500
+}

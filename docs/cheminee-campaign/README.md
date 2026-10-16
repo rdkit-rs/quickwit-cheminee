@@ -4,16 +4,16 @@
 > global verification proposal. Valid chemistry AND match-none can return exact
 > zero; eagerly reject invalid query inputs, and fail unresolved stored-data errors
 > only where they can affect membership/count/rank. The reproduced timestamp
-> candidate broadening remains a bug. See `ERROR_DOMAIN_REVIEW.md` before coding.
+> candidate broadening is fixed in the bounded cases below; timestamp-sort pruning
+> remains an unvalidated concern. See `ERROR_DOMAIN_REVIEW.md` before coding.
 
 
-Status: **no release gate has passed in this session**. This is a reviewable
-preparation branch based on public PR3 `6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa`.
-It is separate from the now-recovered composable-query branch. The initial preparation snapshot
-was followed by a [generated PR3 Ruby candidate](../../sdk/ruby/README.md), schema
-fixes and focused tests. No package was published, deployment performed, or
-production data touched. The historical decision entries below describe recovery
-and the initial audit; current SDK validation is recorded separately.
+Status: **no full release gate has passed**. The recovered composable DSL and generated
+Ruby candidate are integrated on the local campaign branch. Targeted native HTTP,
+installed-gem, query and ingestion regressions pass as recorded below. Catalog
+promotion, old-schema migration, broader error relevance, measured Compose/Elasticsearch
+coexistence and HA remain open. No publication, deployment, or production write occurred.
+Historical entries below retain the recovery sequence; they are not current blockers.
 
 ## Sequenced decisions (2026-10-16)
 
@@ -167,16 +167,22 @@ and the initial audit; current SDK validation is recorded separately.
 | Nested metadata | Nested descriptors do not establish correlated arrays of offers | Cheap offer and available offer on different suppliers must not cross-match |
 
 Source hashes are recorded in `evidence/source-audit.json`. These findings apply
-to the public base; the unpublished DSL needs fresh review after recovery.
+to the public base. The recovered DSL has bounded fresh reviews recorded below;
+those reviews do not close every release gate.
 
 ## Gate order and release checklist
+
+Unchecked items are whole release gates; scoped successes and remaining limits are
+recorded in the continuation evidence, not implied absent by an unchecked box.
 
 - [x] Recover exact Git state through the authorized private bundle transfer; verify
   checksum, bundle, final SHA, clean status and ancestry from PR3. Preserve original
   worktree and bundle before integration. Full archive remains parent-verified only.
 - [ ] Run outstanding validation on recovered code, recording commands, feature
   flags and failures. Historical 174 aggregate tests and 16 HTTP cases are supplied
-  checkpoint evidence with overlap, not fresh totals; workspace CI remains unrun.
+  checkpoint evidence with overlap, not fresh totals. Fresh scoped suites are
+  recorded below; full workspace all-features Clippy was attempted and stopped
+  for disk headroom, so workspace validation remains incomplete.
 - [ ] Prove Boolean truth and missing-field behavior; malformed chemistry candidates
   under AND/OR/NOT, clause reordering and limits; explicit candidate error domains
   versus sibling filters; failed leaves, empty results, counts and deterministic ties.
@@ -233,3 +239,61 @@ before calling the full contract gate passed. Native HTTP and installed Ruby smo
 evidence is available under `evidence/sdk-dsl`; it is scoped functional validation.
 The original benchmark corpus/index archive remains unavailable; performance, Compose,
 catalog safety and HA require independent evidence and remain pending.
+
+## Continuation: selective verification and ambiguous writes (2026-10-16)
+
+The bounded planner copies only necessary term/range/presence predicates from a
+Boolean node's must/filter clauses into chemistry candidates. It retains the original
+clauses and wraps existing candidates to preserve implicit should requirements.
+Input validation precedes narrowing. Planning expansion has byte/copy limits and
+reserves the serialization depth required by downstream timestamp/cache wrappers.
+These are safety limits, not measured workload recommendations.
+
+Empty/deleted-only scorer candidates no longer require chemistry columns, while
+matcher setup and candidate errors remain eager. This is scorer-level coverage:
+old physical schemas can still fail during leaf compilation or warmup before the
+scorer; migration support is not established.
+
+Timestamp pruning now conservatively preserves subsecond matches, including legacy
+negative metadata. Precise pre-epoch/extreme dates survive leaf rewriting as RFC3339
+when numeric unit inference cannot represent them exactly. The first HTTP attempt
+exposed two pre-epoch failures; the corrected rerun passed all 68 cases. The existing
+109-request probe also passed 105 assertions with 4 observation-only OR cases. These
+counts overlap test domains and must not be summed into a unique-case claim.
+
+Source review found automatic ingest replay after Internal/Unavailable, ambiguous
+remote no-shards failures and omitted acknowledgements. The correction retries only
+proven pre-write rejections, reconciles returned IDs before recording successes,
+and explicitly reports unresolved replication acknowledgements. Remote no-shards is
+conservatively terminal for compatibility with older peers; local no-route remains
+retryable. Unknown outcomes still quarantine a staging generation. They cannot be
+replayed blindly or promoted merely because an observed count currently matches.
+
+Independent Astra max reviews and runtime evidence are under
+[evidence/selective-and-ingest](evidence/selective-and-ingest/). The real follower-WAL
+lost-ACK test complements router ledger tests; it is not durability/HA or exactly-once
+proof. Broader count-only OR relevance, old-schema warmup, and timestamp-sort pruning
+remain open. Record-ID/score ordering is the tested SDK path. Original 100k corpus
+and indexes remain unavailable; historical benchmark claims are unchanged.
+
+24. Final `.pre.contract1` candidate regenerated twice identically from source
+    `8009925c`, built and installed. Exact rebuilt runtime passed 68 selective HTTP
+    cases, 105 assertions/109 relevance requests (4 observations), native installed
+    client smoke and the 21-check catalog journal experiment. The live schema is
+    semantically equal to the retained export. [Attributed final evidence](evidence/selective-and-ingest/README.md)
+    includes hashes, limitations and independent Astra max reviews. The importer
+    example is bounded to 10,000 offers and cooperating writers on one host; it
+    establishes neither HA nor production catalog promotion safety.
+
+25. Package a local native runtime (305,602,041 image bytes) and exercise
+    `docker-compose.yml.example` with a persistent volume. The discriminatory
+    1,000-offer fixture checks chiral identity against same-supplier nonmatches and
+    opposite enantiomers, including chirality-disabled and unfiltered controls,
+    before and after graceful restart. Node readiness precedes searcher membership:
+    record bounded read startup retries separately, never replay writes. Capture both
+    process RSS and cgroup accounting because shared-file charging makes them differ
+    materially. The 768 MiB ceiling and 32 MiB per-index test heap are experimental
+    bounds; the server's 2 GB default indexing heap is unsuitable for this ceiling.
+    [Resource and correctness evidence](evidence/local-compose/README.md) is not a
+    benchmark or HA proof. With under 1 GiB workspace free space, Elasticsearch
+    coexistence and full workspace CI remain blocked by headroom. No scale run starts.
