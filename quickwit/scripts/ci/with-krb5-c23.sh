@@ -12,9 +12,15 @@ diff - <(printf '%s\n' \
     'checksum = "a04b2f0dfefd7b54af22d22768dc3ab1ed5e55e6d5ff6af3f619069aa17c0ba4"') \
     < <(grep -F -A3 'name = "krb5-src"' Cargo.lock)
 
-curl --fail --silent --show-error --location \
-    https://static.crates.io/crates/krb5-src/krb5-src-0.3.4.crate \
-    --output "$krb5_work_dir/krb5-src.crate"
+# Campaign continuations can reuse the verified local crate instead of relying on
+# network access. The checksum check below applies to both routes.
+if [[ -n "${QW_KRB5_CRATE:-}" ]]; then
+    cp -- "$QW_KRB5_CRATE" "$krb5_work_dir/krb5-src.crate"
+else
+    curl --fail --silent --show-error --location \
+        https://static.crates.io/crates/krb5-src/krb5-src-0.3.4.crate \
+        --output "$krb5_work_dir/krb5-src.crate"
+fi
 printf '%s  %s\n' a04b2f0dfefd7b54af22d22768dc3ab1ed5e55e6d5ff6af3f619069aa17c0ba4 \
     "$krb5_work_dir/krb5-src.crate" | sha256sum --check
 tar --extract --gzip --file "$krb5_work_dir/krb5-src.crate" --directory "$krb5_work_dir"

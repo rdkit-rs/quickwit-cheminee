@@ -1,0 +1,38 @@
+{
+  "created_unix": 1792164551.1328204,
+  "cwd": "/workspace/quickwit-cheminee-pr3-inspection/quickwit",
+  "status": "passed",
+  "scope": "offline dependency readiness, not build/test success or complete Cargo cache proof",
+  "environment": {
+    "PKG_CONFIG_PATH": "/workspace/.onboarding/sysroot/usr/lib/pkgconfig",
+    "QW_KRB5_CRATE": "/workspace/recovery/cargo-native/registry/cache/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4.crate"
+  },
+  "file_hashes": {
+    "/workspace/quickwit-cheminee-pr3-inspection/quickwit/Cargo.lock": "99358e532b6726b6c99bc6b84ac8f32ec29339bfe3891bea5a0f70e2296a1349",
+    "/workspace/quickwit-cheminee-pr3-inspection/quickwit/scripts/ci/with-krb5-c23.sh": "70289ba9b97826dbf151f0deb6cd2ea2f6b71d3519a676f0cd19c63ba4949ddb",
+    "/workspace/quickwit-cheminee-pr3-inspection/quickwit/scripts/ci/krb5-c23.patch": "5172f5da8bf2e218523945601d916513d35ea43628ca869dbde25da7cf38814e",
+    "/workspace/recovery/cargo-native/registry/cache/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4.crate": "a04b2f0dfefd7b54af22d22768dc3ab1ed5e55e6d5ff6af3f619069aa17c0ba4",
+    "/workspace/.onboarding/sysroot/usr/lib/pkgconfig/tensorflow.pc": "d0cc4ca017bc4b877d55d652caf81a64ad39683a96ef491e9d0c70c1b8e8eacf",
+    "/usr/bin/pkgconf": "33fe3cef13ad2e476c13416867bf0ba152423738ce299e03cdd3859aff780a91",
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_cc.so.2": "26c52413c74ae9495f742c93b87fcb515c9010627f3feb5ad29b65dff901a2ee",
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_framework.so.2": "1ed1f34811d338f934cb01155be51963f7a8ef4155cd201d0fba34b27425fc6b"
+  },
+  "network_required_for_selected_native_dependencies": false,
+  "tensorflow_version": "2.15.1",
+  "tensorflow_pc": "/workspace/.onboarding/sysroot/usr/lib/pkgconfig/tensorflow.pc",
+  "tensorflow_libraries": [
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_cc.so.2",
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_framework.so.2"
+  ],
+  "kerberos_crate": "/workspace/recovery/cargo-native/registry/cache/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4.crate",
+  "pkg_config_executable": "/usr/bin/pkgconf",
+  "tensorflow_link_flags": [
+    "-L/workspace/.onboarding/sysroot/usr/lib",
+    "-ltensorflow_cc",
+    "-ltensorflow_framework"
+  ],
+  "tensorflow_link_paths": {
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_cc.so": "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_cc.so.2",
+    "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_framework.so": "/workspace/.onboarding/sysroot/usr/lib/libtensorflow_framework.so.2"
+  }
+}

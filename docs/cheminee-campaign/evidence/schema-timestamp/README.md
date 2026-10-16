@@ -33,6 +33,10 @@ retry reached krb5-src 0.3.4 and failed on discarded const qualifiers under GCC 
 Explicit CFLAGS=-std=gnu17 was visible in the actual compiler command but did not
 resolve it. Logs/status are retained; no warning suppression was used. Neither
 scoped success nor an interrupted/failed run establishes full workspace CI.
+Subsequent diagnostic inspection found the existing CI wrapper
+`quickwit/scripts/ci/with-krb5-c23.sh` already handles that dependency. Raw Cargo
+retries bypassed it: this was an avoidable process error, not an unresolved
+repository defect. The correct wrapped validation remains unrun.
 
 Run the HTTP harness inside the trusted native builder, with a fresh work directory
 and output (it owns its temporary server and synthetic indexes):

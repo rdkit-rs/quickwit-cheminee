@@ -327,3 +327,19 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     Python/configuration checks and independent preparation review pass. Actual
     coexistence remains open. Preserve the next count-only OR design without
     presenting unimplemented relevance behavior as supported.
+
+31. Disk/process audit identifies the existing checksum-verified Kerberos CI
+    wrapper that the raw Cargo retries missed. Correct the diagnosis: those
+    failures were avoidable process error; the proper wrapped check remains
+    unrun. No new large build was started for the audit.
+    [Diagnostic packet](DISK_PROCESS_DIAGNOSTIC.md) distinguishes actual headroom,
+    transient growth, overlay reclamation and checkpoint cost from estimates.
+    Backend resume errors have no established causal link to disk.
+
+32. Apply the process audit before another heavy phase: offline dependency preflight,
+    checksum-verified cached Kerberos input, exclusive cooperating-job lock, durable
+    launch state, survivor inspection and separate admission/emergency thresholds.
+    The workspace phase is refused at current headroom. Tiny-process tests and
+    independent Astra max reviews validate this bounded guard, not build capacity.
+    [Runbook](../../quickwit/scripts/ci/CAMPAIGN_RUNBOOK.md) records reuse, cleanup
+    measurement and retry rules. No new heavy build or Docker change was performed.
