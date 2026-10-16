@@ -2,7 +2,7 @@
 
 # Requires the disposable fixtures from tantivy-rdkit/poc/composable.py and
 # their restarted services. Read-only: no benchmark or HA claims follow.
-gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl')
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 require 'json'

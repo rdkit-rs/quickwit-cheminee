@@ -11,5 +11,5 @@ Generator version: 7.11.0
 =end
 
 module QuickwitCheminee
-  VERSION = '0.9.1.pre.dsl'
+  VERSION = '0.9.1.pre.contract1'
 end

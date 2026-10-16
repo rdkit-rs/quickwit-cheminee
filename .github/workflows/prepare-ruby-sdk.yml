@@ -6,7 +6,7 @@ on:
       gem_version:
         description: Explicit candidate Ruby version; no package will be published
         required: true
-        default: 0.9.1.pre.dsl
+        default: 0.9.1.pre.contract1
 
 permissions:
   contents: read

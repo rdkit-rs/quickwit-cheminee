@@ -50,7 +50,9 @@ preparation/fingerprint contract. Readiness alone does not establish that capabi
 
 Ingest takes a raw newline-delimited JSON string. Request `detailed_response: true`
 and check both `num_ingested_docs` and `num_rejected_docs`; absent counts are unknown,
-not zero. A timeout has an uncertain write outcome and is not automatically retried.
+not zero. A timeout, transport failure, or missing/inconsistent acknowledgement after
+dispatch has an uncertain write outcome and is not automatically retried. Quarantine
+that staging generation; do not blindly replay the batch.
 Accepted, persisted, published and searchable are distinct states. Repeated documents
 are not guaranteed upserts; incomplete scrapes must not withdraw missing offers.
 
@@ -60,9 +62,11 @@ status, counts and a request ID when supplied by the server/proxy. The client pr
 HTTP status, headers and error bodies for controlled debugging; PR3 does not promise
 to generate request IDs. Availability is dated catalog information, not live stock.
 
-This candidate has limited PR3 importer/transport validation. Native chemistry
-success, complete DSL error-domain semantics, stable pagination, catalog promotion/rollback,
-crash durability, Elasticsearch coexistence and HA are not proven. Limits do not
+This candidate passes installed transport tests and scoped native graph/fingerprint
+smoke tests, including strict failed-leaf rejection and tied record-ID pagination.
+Complete chemistry/error-domain semantics, general snapshot pagination, production
+catalog promotion/rollback, crash durability, Elasticsearch coexistence and HA remain
+unproven. Limits do not
 provide stable pagination. No arbitrary Searchkick/Elasticsearch compatibility or
 correlated arrays-of-offers support is claimed. Consult the repository's `sdk/ruby/README.md`
 and campaign decision log for exact evidence and remaining release gates.

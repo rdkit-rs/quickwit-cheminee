@@ -1,6 +1,6 @@
 {
   "combined_schema_sha256": "241ce38b4d2af85b0d14843bbb0528651ab0fcd8862200be449a1705aa2347a8",
-  "gem_version": "0.9.1.pre.dsl",
+  "gem_version": "0.9.1.pre.contract1",
   "generator_config_sha256": "5591e87fac669353edd85cfd5632f52183b21aa6c26e6422ea580df66841b681",
   "generator_sha256": "113c25df5a781d5a1fc2b883f12fe8f263db285ab12e15854d5b15306e1bf7fc",
   "generator_version": "7.11.0",
@@ -9,13 +9,13 @@
   "publication_authorized": false,
   "ruby_dependency_lock_sha256": "4035816851193bca135641aac9a97aef5cc410a7606da0c9f3b19d822c121159",
   "sdk_schema_sha256": "cd6c8a497e622472fe8667871dae6a3efd922c95ed3238fa8e0e433d1c5c20d1",
-  "server_revision": "a52146c8fe2967af57308a3774c20c3b817ae8ac",
+  "server_revision": "8009925c6b9757edc77ef8e6111309503028e7c5",
   "server_version": "0.9.1",
   "support_sha256": {
     "quickwit-cheminee/exact_search.rb": "d9051923d5ed71fe0b8a9156fadb15f672b148f9b5003937f7f917e5f89afa31"
   },
   "template_sha256": {
-    "README.mustache": "700ed1fe4ea8969b051a3bdbca6de831bf0e6b236acf48af5b1a60486a07095a",
+    "README.mustache": "1b5c91dff2c914bb3c66a9456ed644a2421757f8bd6f65aa827dd527036ad661",
     "base_object.mustache": "ac9d01d2c4eeaed7fed355f9f2c52b07298f9113267bca790f94199a47ac92bf",
     "gemspec.mustache": "c403de99258f20cc03f47b8096e885ffa2d5cfad91d36e53911acb7aec6f40b0",
     "partial_model_generic.mustache": "656d8c6c40b61bdc1f158bcf38caadbf0078af2c5f38b76957c4f010ddc02eae",

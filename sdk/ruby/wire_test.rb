@@ -5,7 +5,7 @@ require 'socket'
 require 'timeout'
 require 'json'
 require 'stringio'
-gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl')
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 require 'bundler'
@@ -64,7 +64,7 @@ class InstalledGemWireTest < Minitest::Test
   def test_loaded_from_installed_gem
     spec = Gem.loaded_specs.fetch('quickwit-cheminee')
     assert spec.full_gem_path.start_with?(ENV.fetch('SDK_INSTALL_ROOT'))
-    assert_equal ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl'), QuickwitCheminee::VERSION
+    assert_equal ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1'), QuickwitCheminee::VERSION
   end
 
   def test_unicode_ndjson_mixed_rejections_and_http_metadata

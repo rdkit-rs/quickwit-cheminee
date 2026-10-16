@@ -1,7 +1,7 @@
 # Generated Quickwit-Cheminee Ruby SDK
 
-Local candidate: **0.9.1.pre.dsl**, generated from server source commit
-`a52146c8fe2967af57308a3774c20c3b817ae8ac` on the local integration branch. No package has been published.
+Local candidate: **0.9.1.pre.contract1**, generated from server source commit
+`8009925c6b9757edc77ef8e6111309503028e7c5` on the local integration branch. No package has been published.
 The exact unpublished DSL commit `276bd1ab7455d0141bd8d9427d00acb1bb7ad845` is preserved and integrated.
 
 The client retains the existing shipping model: OpenAPI Generator, Faraday,
@@ -36,15 +36,15 @@ Tanimoto counts, complete offset enumeration with ties, and failed-leaf rejectio
 for search and count. Unchecked partial responses reproduced the misleading exact
 total. These tiny fixtures do not measure paging performance or crash durability.
 
-Complete DSL error domains, catalog-generation promotion, Compose coexistence,
-crash durability and HA remain unvalidated. A valid chemistry query AND `match_none` may return exact zero without inspecting
-stored corruption under the adopted relevance-based contract. The tested numeric
-candidate range correctly narrows verification. The original timestamp probe failed, but the continuation server at `f9f9bab5`
-fixes candidate-boundary rewriting and eager validation under impossible Boolean
-queries. The installed gem passed its native smoke against that build; the gem
-artifact itself has not been regenerated. Broader relevance across Boolean forms,
-empty candidate columns and timestamp precision still need validation. Fixture response tests do not establish chemistry truth. The manual
-CI preparation workflow is committed for review but has not been run in GitHub.
+Selective candidate equivalence and precise timestamp tests passed on the continuation
+server: 68 HTTP cases, plus 105 assertions in the existing 109-request probe (4 cases
+remain observation-only). See the campaign evidence for exact binary hashes and
+source-review scope. The new candidate preserves the unchanged exported API schema,
+updates server provenance and documents uncertain acknowledgement handling.
+Broader OR relevance, old-schema compilation/warmup, timestamp-sort pruning, Compose
+coexistence, durability and HA remain open. Fixture response tests do not establish
+chemistry truth. The manual CI preparation workflow is committed for review but has
+not been run in GitHub.
 
 Fresh core/query tests on recovered code passed (174 tests without native chemistry;
 185 across core/query/native-mapper suites with native chemistry). These overlap
@@ -87,8 +87,8 @@ result = api.cheminee_v1_basic('offers-staging', {
 
 Use `*_with_http_info` to obtain `[model, HTTP_status, response_headers]`. A
 `QuickwitCheminee::ApiError` retains `code`, `response_body` and `response_headers`
-for HTTP errors. A transport timeout has an uncertain write outcome and no reliable
-server acknowledgement. The client does not retry it automatically. Do not wrap
+for HTTP errors. A timeout, failed transport, or missing/inconsistent acknowledgement
+after dispatch has an uncertain write outcome. The client does not retry it automatically. Do not wrap
 ingestion in a blanket retry middleware. Quarantine/reconcile an uncertain staging
 generation; activation/rollback automation still needs its own tested contract.
 
@@ -166,10 +166,10 @@ Searchkick/Elasticsearch compatibility or arrays-of-offers correlation is claime
 The eleven generated operations are readiness, create/delete/describe index, ingestion,
 five legacy chemistry searches, and an explicitly unchecked composable search transport. `describe_index` reports published counts, not
 offer uniqueness. Legacy `result_limit` is 1–10,000; it is not an offset or cursor.
-Stable record-ID ties do not provide a snapshot across refreshes. The ES partial
-result and scroll surfaces are deliberately absent from this client. Server legacy
-chemistry routes reject incomplete searches; the unpublished DSL still needs its
-own fail-closed integration. No production concurrency, timeout, deep-pagination or
+Stable record-ID ties do not provide a snapshot across refreshes. The unchecked composable transport exposes the server response; use `ExactSearch`
+for fail-closed queries and counts. Installed native tests verify rejection of failed
+leaves, exact counts and record-ID ties. Server legacy chemistry routes reject
+incomplete searches. Scroll/cursor traversal is not provided. No production concurrency, timeout, deep-pagination or
 batch-size recommendation has been established for this new client.
 
 ## Reproduce generation
@@ -185,7 +185,7 @@ python3 sdk/ruby/generate.py \
   --combined-schema /tmp/server-openapi.json \
   --generator-jar /path/to/openapi-generator-cli-7.11.0.jar \
   --server-revision "$(git rev-parse HEAD)" \
-  --gem-version 0.9.1.pre.dsl --output /tmp/new-ruby-sdk
+  --gem-version 0.9.1.pre.contract1 --output /tmp/new-ruby-sdk
 ```
 
 The output directory must be empty. Obtain the JAR from Maven Central at
