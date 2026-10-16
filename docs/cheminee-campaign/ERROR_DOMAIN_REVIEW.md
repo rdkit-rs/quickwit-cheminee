@@ -31,6 +31,24 @@ durability/HA/overload, observability, benchmark-based guidance and README compa
 remain authorized work. Publication, remote merge, deployment, contacting others,
 credentials and paid infrastructure remain outside authorization.
 
+## Current implementation slice and remaining gates
+
+Independent Astra max review approves preserving ES operands through eager input
+validation, then collapsing impossible minimum-should-match after every child has
+built. It also approves recursive generic transformer hooks with chemistry nodes
+opaque only to the leaf timestamp-range rewrite. These changes do not add a global
+integrity scan or disable ordinary split pruning. Native query tests passed 162
+cases; broader runtime validation is recorded separately as it completes.
+
+Remaining relevance cases are not claimed fixed: materialized chemistry scorers
+can still inspect a corrupt row excluded by a sibling filter in the same split;
+empty/deleted-only candidates currently require stored columns before discovering
+emptiness; and root timestamp extraction may round an exclusive subsecond lower
+bound too far forward (source-derived risk, not yet reproduced). Tests must compare
+explicit-candidate and sibling forms while preserving original scores and Boolean
+logic. OR with match-all may determine membership/count but still leave rank
+unresolved; use separate count-only and scored assertions.
+
 ## Historical review — superseded where it requires global verification
 
 # Independent error-domain design gate — 2026-10-16

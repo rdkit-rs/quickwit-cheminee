@@ -1,0 +1,28 @@
+{
+  "scope": "targeted relevance fixes, not full campaign approval",
+  "runtime_source_commit": "f9f9bab5",
+  "native_binary_sha256": "d55f0a3d93d698a609e13f1b2688af92fd66d4ee5c777efceb7098f9b6be74da",
+  "native_binary_bytes": 262831720,
+  "native_query_tests": 162,
+  "native_timestamp_tests": 9,
+  "http_probe_requests": 109,
+  "http_probe_failed_assertions": 0,
+  "http_observation_only_cases": 4,
+  "native_ruby_smoke": "passed; installed 0.9.1.pre.dsl against new runtime",
+  "gem_regenerated": false,
+  "remaining": [
+    "selective sibling versus explicit-candidate invariance",
+    "empty/deleted-only candidates and absent stored columns",
+    "subsecond timestamp pruning boundaries",
+    "catalog refresh",
+    "Compose/Elasticsearch measurements",
+    "HA/durability/overload",
+    "performance-derived guidance"
+  ],
+  "publication_authorized": false,
+  "independent_review": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "result": "Scoped fixes approved; independently reran109requests and timestampcount/topk; full relevance gate open"
+  }
+}

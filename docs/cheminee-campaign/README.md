@@ -137,6 +137,22 @@ and the initial audit; current SDK validation is recorded separately.
     a coordinated verification-obligation design, not an isolated simplifier patch;
     see `ERROR_DOMAIN_REVIEW.md`. Both correctness failures remain open.
 
+22. Continuation adopts relevance-based errors, superseding decisions 18/20 and the
+    global-obligation portion of 21. Valid chemistry AND match-none can return exact
+    zero without scanning excluded corruption. Query inputs must validate eagerly;
+    unresolved errors affecting membership/count/rank must prevent completeness
+    claims. Timestamp candidate broadening remains a defect. Astra max reviewers
+    are reviewing targeted fixes and the revised Boolean regression matrix.
+
+23. Native continuation fixes preserve invalid operands until eager validation,
+    then collapse impossible queries before stored reads; timestamp rewrites now
+    preserve explicit chemistry candidates. Native query162 and timestamp9 tests
+    passed; the independent109-request probe changed from23 failing cases to zero
+    failed assertions. Timestamp candidates now return exact1 instead of500, while
+    unbounded corruption still fails500. Installed Ruby native smoke and Clippy
+    passed. Remaining relevance cases and operational gates stay open. See
+    `evidence/relevance-continuation/validation.json`.
+
 ## Confirmed source hazards
 
 | Contract | PR3 finding | Required evidence before release |
@@ -212,7 +228,7 @@ proof. No arbitrary Elasticsearch or Searchkick compatibility is promised.
 ## Next integration gate
 
 Exact source recovery and local SDK integration are complete; the recovered branch
-and bundle remain unchanged. Resolve the demonstrated sibling-error-domain gap
+and bundle remain unchanged. The targeted timestamp and eager-validation fixes passed; finish the remaining relevance-based regressions
 before calling the full contract gate passed. Native HTTP and installed Ruby smoke
 evidence is available under `evidence/sdk-dsl`; it is scoped functional validation.
 The original benchmark corpus/index archive remains unavailable; performance, Compose,

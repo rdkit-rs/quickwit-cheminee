@@ -135,7 +135,8 @@ text/JSON examples, with deliberately synthetic bit vectors for hand-checkable s
 * Missing/incompatible fingerprint or graph schema fails validation, even when
   schema leniency is enabled. A live candidate with a missing, malformed, or
   multivalued chemistry value fails the segment. A missing entire segment fast-field
-  column fails even if candidates are empty. Values outside the explicit
+  column currently fails even if candidates are empty. This is an unresolved
+  relevance-contract gap, not a desired integrity-scan guarantee. Values outside the explicit
   candidate domain and deleted documents are not chemistry-validated. Missing
   descriptor values follow existing range behavior (no match).
 * Standard search endpoints retain their partial-result/error reporting. Quickwit

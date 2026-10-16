@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized] target(s) in 0.46s
+     Running unittests src/lib.rs (target/debug/deps/quickwit_search-ab6a7ae9c9c56c3e)
+
+running 9 tests
+test leaf::tests::test_remove_timestamp_range_keep_should ... ok
+test leaf::tests::test_remove_timestamp_range_multiple_bounds ... ok
+test leaf::tests::test_remove_timestamp_range ... ok
+test root::tests::test_extract_timestamp_range_from_ast ... ok
+test leaf::tests::timestamp_rewrite_preserves_chemistry_candidate_domains ... ok
+test leaf_cache::tests::test_leaf_search_cache_no_timestamp ... ok
+test leaf_cache::tests::test_leaf_search_cache_timestamp ... ok
+test root::tests::test_validate_request_and_build_metadatas_fail_with_different_timestamps ... ok
+test tests::test_single_node_without_timestamp_with_query_start_timestamp_enabled ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 192 filtered out; finished in 0.05s
+

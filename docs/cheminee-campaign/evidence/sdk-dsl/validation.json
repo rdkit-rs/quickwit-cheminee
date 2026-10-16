@@ -17,9 +17,10 @@
     "implementation": "artifact approved for local use: installed16/319,452 reproduced files,296 packaged files, all provenance/support hashes verified",
     "native_readiness": "Astra max independently reran strengthened native_smoke from fresh Ruby container against installed gem and verified three restarted ready nodes; scoped functional evidence approved, full error-domain gate failed"
   },
-  "known_gate_gap": "Confirmed live: sibling match_none hides malformed fingerprint error (HTTP200 exact0), while unbounded query fails500; explicit candidates return exact2; explicit timestamp candidates also broaden to excluded malformed documents under leaf timestamp rewrite (live HTTP500)",
+  "known_gate_gap": "Historical timestamp failure at a521 is fixed and independently tested at f9f9bab5. Broader relevance semantics remain open: selective siblings, empty candidate columns, subsecond timestamp pruning. Original gem artifact provenance remains unchanged; see ../relevance-continuation.",
   "corpus_available": false,
   "publication_authorized": false,
   "native_http_cases": 16,
-  "native_ruby_restart": "graph and Tanimoto count/pagination; strict search/count failed-leaf rejection; unchecked partial trap reproduced"
+  "native_ruby_restart": "graph and Tanimoto count/pagination; strict search/count failed-leaf rejection; unchecked partial trap reproduced",
+  "contract_revision": "Relevance-based continuation supersedes global verification: sibling match_none exact0 is permitted after eager input validation; relevant unresolved errors remain fatal"
 }

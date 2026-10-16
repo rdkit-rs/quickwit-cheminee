@@ -37,10 +37,13 @@ for search and count. Unchecked partial responses reproduced the misleading exac
 total. These tiny fixtures do not measure paging performance or crash durability.
 
 Complete DSL error domains, catalog-generation promotion, Compose coexistence,
-crash durability and HA remain unvalidated. A live counterexample confirms that a
-sibling `match_none` can hide malformed-fingerprint errors; explicit candidates
-correctly narrow verification for the tested numeric range. A second live probe
-shows timestamp candidate rewriting can broaden verification into excluded data. Fixture response tests do not establish chemistry truth. The manual
+crash durability and HA remain unvalidated. A valid chemistry query AND `match_none` may return exact zero without inspecting
+stored corruption under the adopted relevance-based contract. The tested numeric
+candidate range correctly narrows verification. The original timestamp probe failed, but the continuation server at `f9f9bab5`
+fixes candidate-boundary rewriting and eager validation under impossible Boolean
+queries. The installed gem passed its native smoke against that build; the gem
+artifact itself has not been regenerated. Broader relevance across Boolean forms,
+empty candidate columns and timestamp precision still need validation. Fixture response tests do not establish chemistry truth. The manual
 CI preparation workflow is committed for review but has not been run in GitHub.
 
 Fresh core/query tests on recovered code passed (174 tests without native chemistry;
@@ -131,7 +134,10 @@ Quickwit QueryAst. Prepared fingerprints/SMILES and matching chemistry contracts
 required. The adapter never pushes sibling filters into candidates or changes scoring.
 Executed chemistry reports bad candidate data, but Boolean simplification and split
 pruning can skip branches entirely. Search is not a global catalog-validation scan.
-The requested stronger sibling-error-domain gate remains open.
+The current contract requires eager query-input validation and failure when an
+unresolved stored-data error could affect membership, count or rank. It permits
+skipping logically irrelevant corrupt records. The old global-verification proposal
+is superseded; the full relevance-based regression gate remains open.
 
 ## Migration from Cheminee
 

@@ -77,10 +77,10 @@ impl BuildTantivyAst for BoolQuery {
         }
         // Validate every input above, but do not construct segment scorers for a
         // proven-impossible query: stored corruption cannot affect its result.
-        if let Some(minimum) = self.minimum_should_match {
-            if minimum > self.should.len() {
-                return Ok(TantivyQueryAst::match_none());
-            }
+        if let Some(minimum) = self.minimum_should_match
+            && minimum > self.should.len()
+        {
+            return Ok(TantivyQueryAst::match_none());
         }
         Ok(TantivyQueryAst::Bool(boolean_query))
     }
