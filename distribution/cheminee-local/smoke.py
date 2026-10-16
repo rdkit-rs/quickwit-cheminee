@@ -11,6 +11,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
+from readiness import wait_ready, assert_container_state
 
 if not __debug__:
     raise SystemExit('Run without Python optimization: correctness assertions are required')
@@ -22,6 +23,8 @@ p.add_argument('--url', default='http://127.0.0.1:7280')
 p.add_argument('--observe-container', action='append', default=[],
                help='Also sample a running local container; does not create load in it')
 a = p.parse_args()
+if a.container in a.observe_container:
+    p.error('primary container cannot also be observed')
 if len(a.observe_container)>3 or len(set(a.observe_container))!=len(a.observe_container):
     p.error('observe at most three distinct containers')
 if a.output.exists():
@@ -32,6 +35,7 @@ report = {'time_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'stages': [], 'memory_samples': [], 'status': 'running'}
 report['image'] = subprocess.check_output(['docker', 'inspect', a.container, '--format', '{{.Image}}'], text=True, timeout=5).strip()
 report['script_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+report['readiness_sha256'] = hashlib.sha256(Path(__file__).with_name('readiness.py').read_bytes()).hexdigest()
 report['observed_containers'] = {}
 for container in a.observe_container:
     report['observed_containers'][container] = {'image': subprocess.check_output(
@@ -80,12 +84,12 @@ def sample():
     try: sample_impl()
     except Exception as error: report['sampler_error']=type(error).__name__
 
-def request(method, path, body=None, content_type='application/json'):
+def request(method, path, body=None, content_type='application/json', timeout=90):
     if isinstance(body, dict): body = json.dumps(body).encode()
     req = urllib.request.Request(a.url + path, data=body, method=method,
                                  headers={'Content-Type': content_type})
     start = time.monotonic()
-    with http.open(req, timeout=90) as r:
+    with http.open(req, timeout=timeout) as r:
         data = r.read()
         result = json.loads(data) if data else None
     report['stages'].append({'phase': phase, 'method': method, 'elapsed_seconds': time.monotonic() - start})
@@ -95,7 +99,7 @@ created = False
 thread = threading.Thread(target=sample, daemon=True)
 thread.start()
 try:
-    assert request('GET', '/health/readyz') is True
+    wait_ready(lambda timeout: request('GET', '/health/readyz', timeout=timeout))
     stop.wait(3)
     phase = 'create'
     spec = {'format': 'morgan-r3-2048-lsb0-v1', 'rdkit_version': '2026.09.1', 'preparation_id': 'sanitize-only-v1'}
@@ -115,14 +119,14 @@ try:
     result = request('POST', '/api/v1/' + index + '/ingest?commit=wait_for&detailed_response=true',
                      data, 'application/x-ndjson')
     assert result.get('num_ingested_docs') == 1000 and result.get('num_rejected_docs') == 0, result
-    def search(chirality=True, supplier=True):
+    def search(chirality=True, supplier=True, timeout=90):
         graph = {'molecular_graph': {'spec': spec, 'prepared_field': 'prepared_smiles',
             'prepared_smiles': 'C[C@H](O)Cl', 'predicate': 'identity', 'ranking': 'best_match',
             'use_chirality': chirality, 'include_identity': True}}
         query = {'bool': {'filter': [{'term': {'supplier': 'Acme'}}, graph]}} if supplier else graph
         result = request('POST', '/api/v1/_elastic/' + index + '/_search?allow_partial_search_results=false',
                          {'query': query, 'size': 10, 'track_total_hits': True,
-                          'sort': [{'record_id': 'asc'}]})
+                          'sort': [{'record_id': 'asc'}]}, timeout=timeout)
         if not supplier:
             expected = [n for n in range(1000) if n % 4 in (0, 3)]
         elif not chirality:
@@ -139,19 +143,19 @@ try:
     search(supplier=False)
     phase = 'restart'
     subprocess.run(['docker', 'restart', '--time', '60', a.container], check=True, capture_output=True, timeout=75)
+    wait_ready(lambda timeout: request('GET', '/health/readyz', timeout=timeout))
     deadline = time.monotonic() + 90
-    while True:
-        try:
-            if request('GET', '/health/readyz') is True: break
-        except (urllib.error.URLError, ConnectionError): pass
-        if time.monotonic() > deadline: raise TimeoutError('readiness after restart')
-        stop.wait(.25)
-    phase = 'query_after_restart'
+    phase = 'searcher_membership'
     # Node readiness precedes searcher membership propagation. Retry only this
     # known read-only startup error, never an ingest or mismatched result.
     while True:
         try:
-            search()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError('searcher membership after restart')
+            search(timeout=min(3, remaining))
+            if time.monotonic() >= deadline:
+                raise TimeoutError('searcher membership after restart')
             break
         except urllib.error.HTTPError as e:
             body = e.read()
@@ -160,12 +164,25 @@ try:
             report.setdefault('startup_read_errors', []).append({'status': 500, 'reason': 'searcher_membership_pending'})
         if time.monotonic() > deadline: raise TimeoutError('searcher membership after restart')
         stop.wait(.25)
+    phase = 'query_after_restart'
+    for _ in range(20): search()
     search(chirality=False)
     search(supplier=False)
+    phase = 'final_health'
+    primary_state = {}
+    def primary_health(timeout):
+        global primary_state
+        primary_state = json.loads(subprocess.check_output(['docker', 'inspect', a.container, '--format', '{{json .State}}'], text=True, timeout=timeout))
+        if primary_state.get('Running') is not True or primary_state.get('OOMKilled') is not False:
+            raise RuntimeError('primary stopped or OOM killed')
+        return primary_state.get('Health', {}).get('Status') == 'healthy'
+    wait_ready(primary_health, timeout=15)
+    assert_container_state(primary_state)
     stop.set()
     thread.join(timeout=25)
     assert not thread.is_alive(), 'resource sampler did not stop within its deadline'
     assert 'sampler_error' not in report, 'resource sampler failed'
+    report['primary_final_state'] = {k: primary_state.get(k) for k in ('Running', 'OOMKilled', 'ExitCode')}
     assert report['memory_samples'], 'cgroup v2 and process RSS measurement required'
     assert not any(s['cgroup_oom_kill_events'] for s in report['memory_samples']), 'OOM kill observed'
     assert all(p=='restart' for p in report.get('memory_sample_failure_phases', [])), 'primary measurement failed outside restart'
@@ -203,7 +220,9 @@ finally:
     phase = 'cleanup'
     if created:
         try: request('DELETE', '/api/v1/indexes/' + index)
-        except Exception as e: report['cleanup_error'] = type(e).__name__
+        except Exception as e:
+            report['cleanup_error'] = type(e).__name__
+            report['status'] = 'failed'
     stop.set()
     thread.join(timeout=25)
     if thread.is_alive():

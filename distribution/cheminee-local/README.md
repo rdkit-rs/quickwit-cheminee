@@ -133,3 +133,13 @@ post-restart query phases may therefore deliberately fail measurement completene
 For a complete measured query phase, use a separately retained bounded repeated-read
 workload; do not substitute idle sleep and label it query memory. Historical native
 smoke evidence predates these stricter sampling checks and is not a run of this version.
+
+## Resuming from the v5 checkpoint
+
+V5 does not include the native runtime. Do not follow the historical build recipe
+above for the bounded campaign continuation. Obtain a compatible verified artifact
+and resource admission from the sole runtime owner. The new
+[resource measurement wrapper](../../docs/cheminee-campaign/resource-measurements/README.md)
+checks existing container identities, health, configured limits and explicit owner
+budgets before optionally invoking the smoke. It never builds or starts a runtime.
+Its unit/configuration checks are separate from pending live measurements.
