@@ -1174,6 +1174,15 @@ fn convert_to_es_search_response(
     _source_includes: Option<Vec<String>>,
     allow_partial_results: bool,
 ) -> Result<ElasticsearchResponse, ElasticsearchError> {
+    // This response format has no field carrying root-level search errors. Do not
+    // silently discard them, even when the caller explicitly permits failed splits.
+    if !resp.errors.is_empty() {
+        return Err(ElasticsearchError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Search returned top-level errors".to_string(),
+            None,
+        ));
+    }
     if (!allow_partial_results || resp.num_successful_splits == 0)
         && let Some(search_error) = SearchError::from_split_errors(&resp.failed_splits)
     {
@@ -1413,6 +1422,24 @@ mod tests {
         });
 
         assert_eq!(fields, expected);
+    }
+
+    #[test]
+    fn test_search_response_root_errors_are_not_discarded() {
+        for allow_partial in [false, true] {
+            let response = SearchResponse {
+                num_successful_splits: 1,
+                errors: vec!["private-catalog-details".to_string()],
+                ..Default::default()
+            };
+            let error = convert_to_es_search_response(response, false, None, None, allow_partial)
+                .unwrap_err();
+            assert_eq!(error.status, StatusCode::INTERNAL_SERVER_ERROR);
+            assert_eq!(
+                error.error.reason.as_deref(),
+                Some("Search returned top-level errors")
+            );
+        }
     }
 
     // We test that the behavior of allow partial search results.
