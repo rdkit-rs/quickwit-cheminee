@@ -141,6 +141,9 @@ is superseded; the full relevance-based regression gate remains open.
 
 ## Migration from Cheminee
 
+See the [short migration guide](MIGRATION.md) for a Searchkick-like read call,
+result extraction, bounded offset pagination and distinct error handling.
+
 ```ruby
 # Existing Cheminee GET basic search:
 old_api.v1_indexes_index_search_basic_get('offers', 'supplier:Acme')

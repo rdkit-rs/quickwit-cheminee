@@ -297,6 +297,77 @@ class InstalledGemWireTest < Minitest::Test
     assert_raises(ArgumentError) { adapter.search(query: cyclic) }
   end
 
+  def test_exact_search_offset_pages_and_terminal_empty_page
+    ids = [9_007_199_254_740_993, 9_007_199_254_740_994, 18_446_744_073_709_551_615]
+    all_hits = ids.map do |id|
+      {_index: 'offers-001', _source: {record_id: id}, sort: [1.0, id]}
+    end
+    seen = []
+    [0, 2, 3, 4].each do |offset|
+      page_hits = all_hits.drop(offset).first(2)
+      result, captured = exchange(exact_fixture(total: 3, hits: page_hits)) do |api|
+        QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001')
+          .search(query: {match_all: {}}, limit: 2, offset: offset)
+      end
+      body = JSON.parse(captured[:body])
+      assert_equal offset, body['from']
+      assert_equal 2, body['size']
+      assert_equal 3, result[:hits][:total][:value]
+      seen.concat(result[:hits][:hits].map { |hit| hit[:_source][:record_id] })
+    end
+    assert_equal ids, seen
+  end
+
+  def test_exact_search_offset_window_boundary_and_invalid_arguments
+    result, captured = exchange(exact_fixture(total: 0, hits: [])) do |api|
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001')
+        .search(query: {}, limit: 1, offset: 9_999)
+    end
+    assert_empty result[:hits][:hits]
+    assert_equal 9_999, JSON.parse(captured[:body])['from']
+    # A nil transport makes accidental dispatch fail instead of being mistaken
+    # for local argument rejection.
+    adapter = QuickwitCheminee::ExactSearch.new(api: nil, generation: 'offers-001')
+    [{limit: 1, offset: 10_000}, {limit: -1}, {offset: -1},
+     {limit: 1.0}, {offset: '2'}, {offset: nil}].each do |options|
+      assert_raises(ArgumentError) { adapter.search(query: {}, **options) }
+    end
+  end
+
+  def test_exact_search_rejects_short_offset_page_and_invalid_ties
+    hit = {_index: 'offers-001', _source: {record_id: 3}, sort: [1.0, 3]}
+    cases = [
+      [exact_fixture(total: 4, hits: [hit]), 1, :page_length],
+      [exact_fixture(total: 2, hits: [hit, hit]), 0, :duplicate_id],
+      [exact_fixture(total: 2, hits: [hit, {_index: 'offers-001',
+        _source: {record_id: 2}, sort: [1.0, 2]}]), 0, :sort_order]
+    ]
+    cases.each do |response, offset, reason|
+      error, = exchange(response) do |api|
+        assert_raises(QuickwitCheminee::ExactSearch::IncompleteResponse) do
+          QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001')
+            .search(query: {}, limit: 2, offset: offset)
+        end
+      end
+      assert_equal reason, error.reason
+    end
+  end
+
+  def test_exact_search_http_errors_remain_api_errors_without_retry
+    [400, 429, 503].each do |status|
+      response = {message: 'fixture rejection'}
+      error, = exchange(response, status: status) do |api|
+        assert_raises(QuickwitCheminee::ApiError) do
+          QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001')
+            .search(query: {match_all: {}})
+        end
+      end
+      assert_equal status, error.code
+      assert_equal response, JSON.parse(error.response_body, symbolize_names: true)
+      assert_equal 'fixture-42', error.response_headers['x-request-id']
+    end
+  end
+
   def test_legacy_namespace_can_coexist
     $LOAD_PATH.unshift(ENV.fetch('LEGACY_CHEMINEE_LIB'))
     require 'cheminee'
