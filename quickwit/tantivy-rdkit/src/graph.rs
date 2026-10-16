@@ -122,12 +122,20 @@ struct GraphWeight {
 
 impl Weight for GraphWeight {
     fn scorer(&self, reader: &SegmentReader, boost: Score) -> tantivy::Result<Box<dyn Scorer>> {
+        let mut matcher = self.verifier.matcher()?;
+        let mut candidates = self.candidates.scorer(reader, 1.0)?;
+        // Only live candidates make stored chemistry values relevant. Construct
+        // the candidate scorer first so its own errors are never suppressed.
+        while candidates.doc() != TERMINATED && reader.is_deleted(candidates.doc()) {
+            candidates.advance();
+        }
+        if candidates.doc() == TERMINATED {
+            return Ok(Box::new(CandidateScores::new(Vec::new(), boost)));
+        }
         let column = reader
             .fast_fields()
             .str(&self.prepared_field)?
             .ok_or_else(|| invalid("missing prepared SMILES fast field"))?;
-        let mut matcher = self.verifier.matcher()?;
-        let mut candidates = self.candidates.scorer(reader, 1.0)?;
         let mut cache = HashMap::new();
         let mut scores = Vec::new();
         let mut smiles = String::new();

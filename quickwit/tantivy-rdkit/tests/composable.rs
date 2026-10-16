@@ -342,7 +342,7 @@ fn graph_and_fingerprint_ignore_deleted_invalid_values() -> tantivy::Result<()> 
 }
 
 #[test]
-fn graph_and_fingerprint_empty_candidates_require_segment_columns() -> tantivy::Result<()> {
+fn graph_and_fingerprint_require_columns_only_for_live_candidates() -> tantivy::Result<()> {
     let mut builder = Schema::builder();
     builder.add_bytes_field(&spec().field_name(), FAST);
     builder.add_text_field("prepared_smiles", FAST | STORED);
@@ -354,7 +354,9 @@ fn graph_and_fingerprint_empty_candidates_require_segment_columns() -> tantivy::
     let group = builder.add_u64_field("group", INDEXED);
     let index = Index::create_in_ram(builder.build());
     let mut writer = index.writer_with_num_threads::<TantivyDocument>(1, 15_000_000)?;
+    writer.set_merge_policy(Box::new(NoMergePolicy));
     writer.add_document(doc!(group=>1u64))?;
+    writer.add_document(doc!(group=>2u64))?;
     writer.commit()?;
     let reader = index.reader()?;
     let searcher = reader.searcher();
@@ -374,9 +376,11 @@ fn graph_and_fingerprint_empty_candidates_require_segment_columns() -> tantivy::
     );
     for operator in OPERATORS {
         let query = operator.query(&query_schema, Box::new(EmptyQuery))?;
+        assert_eq!(searcher.search(&*query, &Count)?, 0, "{operator:?}");
+        let query = operator.query(&query_schema, Box::new(AllQuery))?;
         let error = searcher
             .search(&*query, &Count)
-            .expect_err("missing segment column must fail");
+            .expect_err("missing segment column with live candidates must fail");
         let expected = match operator {
             Operator::Graph => "missing prepared SMILES fast field",
             _ => "missing fingerprint fast field",
@@ -386,5 +390,54 @@ fn graph_and_fingerprint_empty_candidates_require_segment_columns() -> tantivy::
             "{operator:?}: {error}"
         );
     }
+    writer.delete_term(Term::from_field_u64(group, 2));
+    writer.commit()?;
+    reader.reload()?;
+    let searcher = reader.searcher();
+    assert_eq!(searcher.segment_reader(0).max_doc(), 2);
+    assert_eq!(searcher.segment_reader(0).num_docs(), 1);
+    for operator in OPERATORS {
+        let deleted_only = Box::new(TermQuery::new(
+            Term::from_field_u64(group, 2),
+            IndexRecordOption::Basic,
+        ));
+        let query = operator.query(&query_schema, deleted_only)?;
+        assert_eq!(searcher.search(&*query, &Count)?, 0, "{operator:?}");
+        let failing_candidates = operator.query(&query_schema, Box::new(AllQuery))?;
+        let query = operator.query(&query_schema, failing_candidates)?;
+        assert!(
+            searcher.search(&*query, &Count).is_err(),
+            "candidate errors must survive"
+        );
+    }
+    Ok(())
+}
+
+#[derive(Debug)]
+struct FailingVerifier;
+impl GraphVerifier for FailingVerifier {
+    fn matcher(&self) -> tantivy::Result<Box<dyn MoleculeMatcher>> {
+        Err(tantivy::TantivyError::InvalidArgument(
+            "invalid matcher setup".into(),
+        ))
+    }
+}
+
+#[test]
+fn empty_candidates_preserve_graph_matcher_setup_errors() -> tantivy::Result<()> {
+    let index = error_domain_index("missing", false)?;
+    let query = GraphQuery::new(
+        Box::new(EmptyQuery),
+        &index.schema(),
+        &spec(),
+        "prepared_smiles".into(),
+        Arc::new(FailingVerifier),
+    )?;
+    let error = index
+        .reader()?
+        .searcher()
+        .search(&query, &Count)
+        .unwrap_err();
+    assert!(error.to_string().contains("invalid matcher setup"));
     Ok(())
 }

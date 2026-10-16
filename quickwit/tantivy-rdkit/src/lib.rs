@@ -258,11 +258,19 @@ struct FingerprintWeight {
 
 impl Weight for FingerprintWeight {
     fn scorer(&self, reader: &SegmentReader, boost: Score) -> tantivy::Result<Box<dyn Scorer>> {
+        let mut candidates = self.candidates.scorer(reader, 1.0)?;
+        // Only live candidates make stored chemistry values relevant. Construct
+        // the candidate scorer first so its own errors are never suppressed.
+        while candidates.doc() != TERMINATED && reader.is_deleted(candidates.doc()) {
+            candidates.advance();
+        }
+        if candidates.doc() == TERMINATED {
+            return Ok(Box::new(CandidateScores::new(Vec::new(), boost)));
+        }
         let column = reader
             .fast_fields()
             .bytes(&self.field_name)?
             .ok_or_else(|| invalid("missing fingerprint fast field"))?;
-        let mut candidates = self.candidates.scorer(reader, 1.0)?;
         let mut cache = HashMap::new();
         let mut scores = Vec::new();
         let mut bytes = Vec::new();
