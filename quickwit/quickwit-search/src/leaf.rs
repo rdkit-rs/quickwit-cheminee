@@ -1041,6 +1041,23 @@ fn min_bound<T: Ord + Copy>(left: Bound<T>, right: Bound<T>) -> Bound<T> {
     }
 }
 
+// Numeric date literals use magnitude-based unit inference, which excludes
+// pre-1972 and extreme dates. Preserve those exact bounds as RFC3339 instead.
+fn timestamp_literal(bound: DateTime) -> quickwit_query::JsonLiteral {
+    use quickwit_query::InterpretUserInput;
+    let numeric = quickwit_query::JsonLiteral::Number(bound.into_timestamp_nanos().into());
+    if DateTime::interpret_json(&numeric) == Some(bound) {
+        numeric
+    } else {
+        quickwit_query::JsonLiteral::String(
+            bound
+                .into_utc()
+                .format(&time::format_description::well_known::Rfc3339)
+                .expect("i64 nanosecond timestamps are representable in RFC3339"),
+        )
+    }
+}
+
 /// remove timestamp range that would be present both in QueryAst and SearchRequest
 ///
 /// this can save us from doing double the work in some cases, and help with the partial request
@@ -1078,7 +1095,10 @@ fn remove_redundant_timestamp_range(
 
     let final_start_timestamp = match (
         visitor.start_timestamp,
-        split.timestamp_start.map(DateTime::from_timestamp_secs),
+        split
+            .timestamp_start
+            .and_then(|seconds| seconds.checked_mul(1_000_000_000))
+            .map(DateTime::from_timestamp_nanos),
     ) {
         (Bound::Included(query_ts), Some(split_ts)) => {
             if query_ts > split_ts {
@@ -1104,11 +1124,15 @@ fn remove_redundant_timestamp_range(
         ) => {
             // split.timestamp_end is the truncation of the highest timestamp in the split,
             // so the actual known bound for the split is split.timestamp_end+1 (exclusive)
-            let split_end_exclusive = DateTime::from_timestamp_secs(split_end + 1);
-            if query_ts < split_end_exclusive {
-                query_bound
-            } else {
-                Bound::Unbounded
+            match split_end
+                .checked_add(1)
+                .and_then(|seconds| seconds.checked_mul(1_000_000_000))
+            {
+                Some(nanos) if query_ts >= DateTime::from_timestamp_nanos(nanos) => {
+                    Bound::Unbounded
+                }
+                // Unknown/extreme metadata cannot prove the precise query redundant.
+                _ => query_bound,
             }
         }
         (Bound::Unbounded, Some(_)) => Bound::Unbounded,
@@ -1117,8 +1141,8 @@ fn remove_redundant_timestamp_range(
     if final_start_timestamp != Bound::Unbounded || final_end_timestamp != Bound::Unbounded {
         let range = RangeQuery {
             field: timestamp_field.to_string(),
-            lower_bound: final_start_timestamp.map(|bound| bound.into_timestamp_nanos().into()),
-            upper_bound: final_end_timestamp.map(|bound| bound.into_timestamp_nanos().into()),
+            lower_bound: final_start_timestamp.map(timestamp_literal),
+            upper_bound: final_end_timestamp.map(timestamp_literal),
         };
         new_ast = if let QueryAst::Bool(mut bool_query) = new_ast {
             if bool_query.must.is_empty()
@@ -2516,6 +2540,18 @@ mod tests {
         };
         remove_redundant_timestamp_range(&mut search_request, &split, &timestamp_field);
         assert_ast_eq(&search_request, &QueryAst::MatchAll);
+    }
+
+    #[test]
+    fn timestamp_literals_roundtrip_before_epoch_and_at_nanosecond_extremes() {
+        use quickwit_query::InterpretUserInput;
+        for nanos in [i64::MIN, -999_000_000, -1, 0, 1, 999_000_000, i64::MAX] {
+            let date = DateTime::from_timestamp_nanos(nanos);
+            assert_eq!(
+                DateTime::interpret_json(&timestamp_literal(date)),
+                Some(date)
+            );
+        }
     }
 
     #[test]

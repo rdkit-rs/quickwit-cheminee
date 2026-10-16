@@ -21,6 +21,8 @@ use tantivy::schema::Schema as TantivySchema;
 
 use crate::tokenizers::TokenizerManager;
 
+mod chemistry_candidates;
+pub use chemistry_candidates::narrow_chemistry_candidates;
 mod fingerprint_contains_query;
 pub use fingerprint_contains_query::FingerprintContainsQueryAst;
 mod graph_query;

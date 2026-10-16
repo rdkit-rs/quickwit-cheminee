@@ -276,6 +276,12 @@ fn validate_request_and_build_metadata(
         )
     })?;
 
+    // Eager validation above must see the original query. From here onward all
+    // planning, cache keys and execution share the same bounded candidate plan.
+    let query_ast_resolved =
+        quickwit_query::query_ast::narrow_chemistry_candidates(query_ast_resolved)
+            .map_err(|error| SearchError::InvalidQuery(error.to_string()))?;
+
     Ok(RequestMetadata {
         timestamp_field_opt,
         query_ast_resolved,
@@ -513,6 +519,17 @@ fn validate_request(
              end-timestamp are set in the query",
             search_request.index_id_patterns
         )));
+    }
+
+    for seconds in [search_request.start_timestamp, search_request.end_timestamp]
+        .into_iter()
+        .flatten()
+    {
+        if seconds.checked_mul(1_000_000_000).is_none() {
+            return Err(SearchError::InvalidQuery(
+                "timestamp seconds exceed the supported nanosecond range".into(),
+            ));
+        }
     }
 
     validate_requested_snippet_fields(schema, &search_request.snippet_fields)?;
@@ -1629,19 +1646,20 @@ impl ExtractTimestampRange<'_> {
     fn update_start_timestamp(
         &mut self,
         lower_bound: &quickwit_query::JsonLiteral,
-        included: bool,
+        _included: bool,
     ) {
         use quickwit_query::InterpretUserInput;
         let Some(lower_bound) = tantivy::DateTime::interpret_json(lower_bound) else {
             return;
         };
-        let mut lower_bound = lower_bound.into_timestamp_secs();
-        if !included {
-            // TODO saturating isn't exactly right, we should replace the RangeQuery with
-            // a match_none, but the visitor doesn't allow mutation.
-            lower_bound = lower_bound.saturating_add(1);
-        }
+        // Coarse pruning must retain subsecond matches even for an exclusive
+        // lower bound. The original AST still applies the precise comparison.
+        let lower_bound = lower_bound.into_timestamp_nanos().div_euclid(1_000_000_000);
 
+        if lower_bound.checked_mul(1_000_000_000).is_none() {
+            // The exact AST remains authoritative at the representable nanosecond edge.
+            return;
+        }
         self.start_timestamp = self.start_timestamp.max(Some(lower_bound));
     }
 
@@ -1650,14 +1668,16 @@ impl ExtractTimestampRange<'_> {
         let Some(upper_bound_timestamp) = tantivy::DateTime::interpret_json(upper_bound) else {
             return;
         };
-        let mut upper_bound = upper_bound_timestamp.into_timestamp_secs();
-        let round_up = (upper_bound_timestamp.into_timestamp_nanos() % 1_000_000_000) != 0;
+        let upper_nanos = upper_bound_timestamp.into_timestamp_nanos();
+        let mut upper_bound = upper_nanos.div_euclid(1_000_000_000);
+        let round_up = upper_nanos.rem_euclid(1_000_000_000) != 0;
         if included || round_up {
-            // TODO saturating isn't exactly right, we should replace the RangeQuery with
-            // a match_none, but the visitor doesn't allow mutation.
-            upper_bound = upper_bound.saturating_add(1);
+            upper_bound += 1;
         }
 
+        if upper_bound.checked_mul(1_000_000_000).is_none() {
+            return;
+        }
         let new_end_timestamp = self.end_timestamp.unwrap_or(upper_bound).min(upper_bound);
         self.end_timestamp = Some(new_end_timestamp);
     }
@@ -4740,6 +4760,78 @@ mod tests {
     }
 
     #[test]
+    fn timestamp_pruning_preserves_exclusive_subseconds_across_epoch() {
+        for (lower, upper, expected_start, expected_end) in [
+            (
+                "2020-01-01T00:00:00.001Z",
+                "2020-01-01T00:00:00.999Z",
+                1577836800,
+                1577836801,
+            ),
+            (
+                "1969-12-31T23:59:59.001Z",
+                "1969-12-31T23:59:59.999Z",
+                -1,
+                0,
+            ),
+            ("1969-12-31T23:59:59Z", "1970-01-01T00:00:00Z", -1, 0),
+        ] {
+            let query: QueryAst = serde_json::from_value(serde_json::json!({
+                "type": "range", "field": "timestamp",
+                "lower_bound": {"Excluded": lower}, "upper_bound": {"Excluded": upper}
+            }))
+            .unwrap();
+            let mut extractor = ExtractTimestampRange {
+                timestamp_field: "timestamp",
+                start_timestamp: None,
+                end_timestamp: None,
+            };
+            extractor.visit(&query).unwrap();
+            assert_eq!(extractor.start_timestamp, Some(expected_start));
+            assert_eq!(extractor.end_timestamp, Some(expected_end));
+        }
+    }
+
+    #[test]
+    fn timestamp_pruning_leaves_extreme_nanoseconds_in_exact_ast() {
+        let mut extractor = ExtractTimestampRange {
+            timestamp_field: "timestamp",
+            start_timestamp: None,
+            end_timestamp: None,
+        };
+        use quickwit_query::InterpretUserInput;
+        let minimum = quickwit_query::JsonLiteral::String("1677-09-21T00:12:43.145224192Z".into());
+        let maximum = quickwit_query::JsonLiteral::String("2262-04-11T23:47:16.854775807Z".into());
+        assert_eq!(
+            tantivy::DateTime::interpret_json(&minimum)
+                .unwrap()
+                .into_timestamp_nanos(),
+            i64::MIN
+        );
+        assert_eq!(
+            tantivy::DateTime::interpret_json(&maximum)
+                .unwrap()
+                .into_timestamp_nanos(),
+            i64::MAX
+        );
+        extractor.update_start_timestamp(&minimum, true);
+        extractor.update_end_timestamp(&maximum, true);
+        assert_eq!(extractor.start_timestamp, None);
+        assert_eq!(extractor.end_timestamp, None);
+        let schema = Schema::builder().build();
+        for seconds in [i64::MIN, i64::MAX] {
+            let request = SearchRequest {
+                start_timestamp: Some(seconds),
+                ..Default::default()
+            };
+            assert!(matches!(
+                validate_request(&schema, &Some("timestamp"), &request),
+                Err(SearchError::InvalidQuery(_))
+            ));
+        }
+    }
+
+    #[test]
     fn test_extract_timestamp_range_from_ast() {
         use std::ops::Bound;
 
@@ -4814,7 +4906,7 @@ mod tests {
         timestamp_range_extractor.start_timestamp = None;
         timestamp_range_extractor.end_timestamp = None;
         timestamp_range_extractor.visit(&unusual_bounds).unwrap();
-        assert_eq!(timestamp_range_extractor.start_timestamp, Some(1618353942));
+        assert_eq!(timestamp_range_extractor.start_timestamp, Some(1618353941));
         assert_eq!(timestamp_range_extractor.end_timestamp, Some(1620283880));
 
         let wrong_field = quickwit_query::query_ast::RangeQuery {
