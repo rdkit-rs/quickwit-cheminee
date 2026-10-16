@@ -1,0 +1,12 @@
+{
+  "base_commit": "a90687162c9037e159781b76e97ec43e0bb3a436",
+  "head_commit": "22d86bd8047aaa911d392412028493979fa85512",
+  "files": {
+    "README.md": "183aa2ee9542104e717c964aacb74b0888049c62e3e9b8a34dc17883963126ae",
+    "VALIDATION.txt": "d9ffbc9b4a29e0b20a93995822572c96df9a1af0830fb5cd0be106b90894627e",
+    "compose-validation.json": "2ac57b4a2585b081dcb0e0664859fa595047ef7e12fe053b7faf2863c8f8e898",
+    "harness-tests.txt": "c9e1b2ec554a0c51e0abde57b6159e4a14c3e0496a2b4b01485e393bbf3895e1",
+    "resource-harness.bundle": "f336809f5bd975a4381d69f08dd9989785f66a1962e30f8ec381e9c0f4eb2fdb",
+    "resource-harness.patch": "4e69f6dadb19fe88779b2825599ddbc7db91b3c0e374990e1ca0826efc043f67"
+  }
+}

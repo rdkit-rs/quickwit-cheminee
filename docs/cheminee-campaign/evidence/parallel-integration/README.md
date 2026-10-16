@@ -20,12 +20,29 @@ those without new containers or builds. Native smoke used available system JSON,
 so this is bounded live integration, not a pinned dependency-suite pass. Gem remains
 attributed to server 8009925c; no new release compatibility acceptance follows.
 
-Compose archive `libfile_2bcee88326808191bdd48762c8a57b7f` download failed through
-the supported helper. Its expected SHA256 is
-`b2fd3fa6d05f1f5643892179c348565a85bbb0fc126aff8a347cd0f549e85e9b`.
-It has not been verified or applied. Need a supported JSON text bundle containing
-patch, Git bundle as base64, per-file hashes and review/test evidence for commit
-`22d86bd8047aaa911d392412028493979fa85512`. Do not recreate worker work.
+Compose binary transfer was blocked, then supported text bundle
+`libfile_3389a3dfddfc81919ba90049e52014d3` was read completely in two windows.
+Reconstructed 79,146-byte transfer SHA256 matched
+`956de1b08f85d381171f755b366a7da4da98bfda5ddd2f0d364f08469fbb4929`.
+Every embedded size/hash and bundle prerequisite passed. Worker commit
+`22d86bd8047aaa911d392412028493979fa85512` cherry-picked as `3f575a33`.
+Changes are confined to distribution/cheminee-local and the resource harness.
+
+Combined lightweight checks pass: nine resource-harness tests, eleven campaign-
+guard tests, Python AST checks, combined Compose config assertions (never pull,
+loopback binding, positive CPU/memory limits), and git diff whitespace checks.
+These are separate suites; no new Ruby pinned-wire pass is claimed.
+
+Live resource measurements remain pending. Existing multi-node builder fixtures
+lack the harness's admitted Compose health/port/provenance contract. Older runtime
+context cannot be attributed to v5. No replacement container or image was created.
+Retained-server Ruby smoke above remains the bounded live integration evidence.
+
+Safe next work: inspect catalog recovery failure cases against existing example
+and journal tests, without duplicating the completed Ruby/Compose work or claiming
+a catalog worker launched. Full wrapped CI requires measured admission headroom;
+new-server SDK provenance, corpus recovery/profiling, actual coexistence, catalog
+fencing and storage/node/power-loss durability remain open.
 
 Publication hold, reviewed admission policy and remaining campaign gates remain.
 No heavy build, new container, publication or catalog recovery worker was launched.
