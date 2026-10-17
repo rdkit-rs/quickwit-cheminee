@@ -6,9 +6,11 @@ HTTP contract tests and a native graph/fingerprint smoke, including strict rejec
 of incomplete searches. See the [decision log, contract audit and release checklist](docs/cheminee-campaign/README.md)
 and [native relevance evidence](docs/cheminee-campaign/evidence/relevance-continuation/).
 Bounded selective-filter and timestamp checks pass. A [catalog journal example](sdk/ruby/examples/README.md)
-and [native Compose experiment](distribution/cheminee-local/README.md) have scoped
-HTTP/restart evidence. Broader relevance, production refresh safety, Elasticsearch
-coexistence, HA and representative performance remain unvalidated. Publication is on hold.
+and [native Compose experiment](distribution/cheminee-local/README.md) have historical
+HTTP/restart evidence from server `8009925c` and the then-current scripts. The revised
+Compose harness has not run against the current candidate. Broader relevance, production refresh safety, Elasticsearch
+coexistence, HA and representative performance remain unvalidated. Draft PR #6 is public;
+merge, package release and deployment remain on hold.
 
 ## Why this beats the pants off stinking old cheminee
 
