@@ -2,12 +2,12 @@
 
 # Single-host importer example, outside the gem. All writers must use this journal.
 # It is not a server alias, distributed lock, durable write fence, or exactly-once API.
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'json'
 require 'digest'
 require 'fileutils'
 require 'securerandom'
 require 'time'
-gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 

@@ -3,9 +3,9 @@
 require 'minitest/autorun'
 require 'socket'
 require 'timeout'
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'json'
 require 'stringio'
-gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 require 'bundler'
