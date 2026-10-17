@@ -11,7 +11,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
-from readiness import wait_ready, assert_container_state, container_incarnation, assert_incarnation
+from readiness import wait_ready, assert_container_state, container_incarnation, assert_incarnation, checked_restart
 
 if not __debug__:
     raise SystemExit('Run without Python optimization: correctness assertions are required')
@@ -42,9 +42,11 @@ for container in a.observe_container:
         ['docker', 'inspect', container, '--format', '{{.Image}}'], text=True, timeout=5).strip(), 'samples': [], 'counter_scope': 'container lifetime; peaks and OOM counts are not run deltas'}
 if a.observe_container:
     report['scope'] = '1000 synthetic offers with additional containers observed; no workload generated in observed containers; graceful restart only'
+def inspect_info(container):
+    return json.loads(subprocess.check_output(['docker', 'inspect', container], text=True, timeout=5))[0]
+
 def inspect_incarnation(container):
-    info = json.loads(subprocess.check_output(['docker', 'inspect', container], text=True, timeout=5))[0]
-    return container_incarnation(info)
+    return container_incarnation(inspect_info(container))
 
 # Record identities before any import. Automatic restart must be disabled for
 # the whole measurement, including the one explicitly requested restart window.
@@ -152,9 +154,9 @@ try:
     for name, expected in expected_incarnations.items():
         assert_incarnation(expected, inspect_incarnation(name))
     phase = 'restart'
-    subprocess.run(['docker', 'restart', '--time', '60', a.container], check=True, capture_output=True, timeout=75)
-    restarted = inspect_incarnation(a.container)
-    assert_incarnation(expected_incarnations[a.container], restarted, explicit_restart=True)
+    report['explicit_restart_evidence'] = {}
+    restarted = checked_restart(a.container, expected_incarnations[a.container],
+                                inspect_info, report['explicit_restart_evidence'])
     expected_incarnations[a.container] = restarted
     report['explicit_restart_incarnation'] = restarted
     wait_ready(lambda timeout: request('GET', '/health/readyz', timeout=timeout))

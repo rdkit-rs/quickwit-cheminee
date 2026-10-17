@@ -3896,6 +3896,9 @@ mod tests {
         let state_guard = ingester.state.lock_partially("test").await.unwrap();
         let shard = state_guard.shards.get(&queue_id).unwrap();
         shard.assert_is_closed();
+        // The broadcaster locks the WAL before inner state. Release inner state
+        // before waiting for the fetch task, which needs to read the WAL.
+        drop(state_guard);
 
         let fetch_response = timeout(Duration::from_millis(100), fetch_stream.next())
             .await

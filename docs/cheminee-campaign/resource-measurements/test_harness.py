@@ -1,16 +1,18 @@
+import copy
 import importlib.util
 import hashlib
 import json
 import tempfile
 from pathlib import Path
 import sys
+import subprocess
 import unittest
 from unittest.mock import patch
 import urllib.error
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2] / 'distribution/cheminee-local'))
-from readiness import wait_ready, assert_container_state, container_incarnation, assert_incarnation
+from readiness import wait_ready, assert_container_state, container_incarnation, assert_incarnation, checked_restart
 spec = importlib.util.spec_from_file_location('measurement_run', HERE / 'run.py')
 run = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(run)
@@ -32,6 +34,48 @@ class Checks(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 container_incarnation({'HostConfig':{'RestartPolicy':{'Name':policy}}})
         with self.assertRaises(RuntimeError): container_incarnation({})
+
+    def test_restart_preserves_stop_evidence_before_start(self):
+        base={'Id':'a','RestartCount':0,'HostConfig':{'RestartPolicy':{'Name':'no'}},
+              'State':{'Running':True,'OOMKilled':False,'ExitCode':0,'StartedAt':'first'}}
+        stopped=copy.deepcopy(base);stopped['State']['Running']=False
+        after=copy.deepcopy(base);after['State']['StartedAt']='second'
+        for failure in [None,'pre_oom','stopped_oom','stopped_exit','wait_exit','stopped_restarted']:
+            before=copy.deepcopy(base);termination=copy.deepcopy(stopped)
+            if failure=='pre_oom': before['State'].update(Running=False,OOMKilled=True,ExitCode=137)
+            if failure=='stopped_oom': termination['State'].update(OOMKilled=True,ExitCode=137)
+            if failure=='stopped_exit': termination['State']['ExitCode']=1
+            if failure=='stopped_restarted': termination['State']['StartedAt']='unexpected'
+            evidence={};calls=[];snapshots=iter([before,termination,after])
+            def command(argv,timeout):
+                calls.append(argv[1])
+                if argv[1]=='start':
+                    self.assertEqual(evidence['stopped_state']['ExitCode'],0)
+                    self.assertFalse(evidence['stopped_state']['OOMKilled'])
+                return ('137' if failure=='wait_exit' else '0') if argv[1]=='wait' else 'a'
+            if failure:
+                with self.assertRaises(RuntimeError):
+                    checked_restart('a',container_incarnation(base),lambda _: next(snapshots),evidence,command)
+                self.assertNotIn('start',calls)
+                if failure=='pre_oom': self.assertEqual(calls,[])
+                if failure=='stopped_oom': self.assertTrue(evidence['stopped_state']['OOMKilled'])
+            else:
+                self.assertEqual(checked_restart('a',container_incarnation(base),lambda _: next(snapshots),evidence,command)['started_at'],'second')
+                self.assertEqual(calls,['kill','wait','start'])
+
+    def test_failed_term_or_wait_never_starts_container(self):
+        info={'Id':'a','RestartCount':0,'HostConfig':{'RestartPolicy':{'Name':'no'}},
+              'State':{'Running':True,'OOMKilled':False,'ExitCode':0,'StartedAt':'first'}}
+        for failed_operation in ['kill','wait']:
+            calls=[]
+            def command(argv,timeout):
+                calls.append(argv[1])
+                if argv[1]==failed_operation:
+                    raise subprocess.TimeoutExpired(argv,timeout)
+                return 'a'
+            with self.assertRaises(subprocess.TimeoutExpired):
+                checked_restart('a',container_incarnation(info),lambda _:info,{},command)
+            self.assertNotIn('start',calls)
 
     def test_startup_503_then_ready(self):
         now = [0.0]
@@ -86,7 +130,7 @@ class Checks(unittest.TestCase):
 
     def test_admission_and_budget_failure_do_not_execute(self):
         image = 'sha256:' + 'a' * 64
-        info = {'Id': 'id', 'Image': image, 'RestartCount': 0, 'State': {'StartedAt': 'initial', 'Running': True, 'OOMKilled': False,
+        info = {'Id': 'id', 'Image': image, 'RestartCount': 0, 'State': {'StartedAt': 'initial', 'ExitCode': 0, 'Running': True, 'OOMKilled': False,
                 'Health': {'Status': 'healthy'}}, 'HostConfig': {'RestartPolicy': {'Name': 'no'}, 'Memory': 1024, 'MemorySwap': 1024, 'NanoCpus': 1000000000},
                 'Mounts': [], 'NetworkSettings': {'Ports': {'7280/tcp': [{'HostIp': '127.0.0.1', 'HostPort': '7280'}]}}}
         with tempfile.TemporaryDirectory() as temporary:
@@ -114,7 +158,7 @@ class Checks(unittest.TestCase):
 
     def test_image_and_resource_checks(self):
         image = 'sha256:' + 'a' * 64
-        info = {'Id': 'id', 'Image': image, 'RestartCount': 0, 'State': {'StartedAt': 'initial', 'Running': True, 'OOMKilled': False,
+        info = {'Id': 'id', 'Image': image, 'RestartCount': 0, 'State': {'StartedAt': 'initial', 'ExitCode': 0, 'Running': True, 'OOMKilled': False,
                 'Health': {'Status': 'healthy'}}, 'HostConfig': {'RestartPolicy': {'Name': 'no'}, 'Memory': 1024, 'MemorySwap': 1024, 'NanoCpus': 1000000000}}
         self.assertEqual(run.check_container(info, image)['cpu_limit'], 1)
         for bad in ['latest', 'sha256:' + 'b' * 64]:

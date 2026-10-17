@@ -242,8 +242,10 @@ approval. Keep historical benchmark claims separate from these functional tests.
 The wire suite verifies activated dependency versions against the lock and also
 checks actual `JSON::VERSION` plus the real paths of loaded JSON Ruby/native code.
 An activated gem specification alone does not prove which code `RUBYLIB` loaded.
-See [corrected worker evidence](../../docs/cheminee-campaign/evidence/ruby-correction/README.md);
-the corrected worker result is separate from the still-blocked local pinned rerun.
+See [corrected worker evidence](../../docs/cheminee-campaign/evidence/ruby-correction/README.md)
+and the completed [local pinned JSON 3.1.0 rerun](../../docs/cheminee-campaign/evidence/json31-local/README.md).
+The later Opus-fix suite passes 24 wire tests / 420 assertions with actual JSON 3.1.0;
+these overlapping runs are separate evidence, not additive test counts.
 
 For catalog enumeration use `search(query: ..., order: :record_id)`. Audits use this
 single-field order. The default score order can change when segments merge and BM25

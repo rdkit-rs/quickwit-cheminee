@@ -20,8 +20,14 @@ Both must use restart policy `no` for the entire measurement and memory-plus-swa
 limits equal to memory limits. The admission and smoke records link container IDs,
 RestartCount and StartedAt from admission to completion. Only the primary explicit
 restart may change StartedAt; any automatic restart or observed-container
-incarnation change fails the run. This closes the gap where recovered OOM state
-and reset cgroup counters could look healthy. Concurrent workload and PID-limit
+incarnation change fails the run. Before explicit startup, TERM/wait/inspect
+preserves and checks termination evidence: stopped, no OOM, exit 0, unchanged
+incarnation. An OOM immediately before or during termination therefore fails
+before startup can clear it. A failed signal/wait leaves the container for owner
+inspection, without a forced KILL or restart fallback. The sole runtime owner
+must exclude concurrent lifecycle writers; this is not a Docker event audit and
+does not attribute a clean exit coincident with TERM or prove detection of all
+external lifecycle manipulation. Concurrent workload and PID-limit
 validation remain unrun.
 Supply full local image IDs, not tags. The provenance file is JSON with `image_id`, `source_commit`
 matching the full 40-hex revision supplied in `--source-commit` exactly and a 64-hex `binary_sha256`.

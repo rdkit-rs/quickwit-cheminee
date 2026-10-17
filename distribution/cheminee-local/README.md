@@ -14,10 +14,16 @@ under this ceiling. Only Linux amd64 has been exercised. The 768 MiB ceiling,
 2 CPUs and individual cache limits are experimental bounds, not workload sizing
 recommendations. Elasticsearch coexistence has not been measured. The examples
 set total memory-plus-swap equal to the memory ceiling, disabling container swap.
-Restart policy is `no` throughout measurements so crashes/OOM cannot be hidden
-by recovery, including during the one explicit smoke restart. Container ID,
+Restart policy is `no` throughout measurements, preventing automatic recovery
+from replacing a failed container incarnation. Container ID,
 RestartCount and StartedAt are checked before and after that restart and at the
-end, including observed Elasticsearch containers. These are functional checks;
+end, including observed Elasticsearch containers. The explicit restart sends TERM,
+waits at most 60 seconds, and retains/validates the stopped state (no OOM, exit 0)
+before starting again. A timeout or abnormal termination fails without restarting
+or forcing KILL; inspect the retained report and container before recovery. The
+runtime owner must exclude other lifecycle writers. These checks do not establish
+the cause of a clean exit coincident with requested TERM, nor detect every hostile
+external stop/start between observations. These are functional checks;
 concurrent workload and PID-limit behavior have not been validated.
 
 ## Prepare and start

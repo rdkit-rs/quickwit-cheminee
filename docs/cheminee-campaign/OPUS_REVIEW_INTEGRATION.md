@@ -19,12 +19,12 @@ candidate, not release approval. Merge, publication and deployment remain held.
 
 | Finding | Disposition and evidence boundary |
 | --- | --- |
-| B1 | Implemented new `NoShardsAvailableBeforeAppend` and `NodeUnavailableBeforeAppend` protobuf reasons at the leader's pre-append refusal sites. Only these new reasons gain retries; legacy ambiguous reasons remain terminal. Added both-reason healthy-leader retry and safe-refusal-then-unknown terminal tests, updated existing refusal tests. Protobuf regenerated with the existing build-script binary. Rust tests are **not run** locally; CI required. |
+| B1 | Implemented new `NoShardsAvailableBeforeAppend` and `NodeUnavailableBeforeAppend` protobuf reasons at the leader's pre-append refusal sites. Only these new reasons gain retries; legacy ambiguous reasons remain terminal. Added both-reason healthy-leader retry and safe-refusal-then-unknown terminal tests, updated existing refusal tests. Protobuf regenerated with the existing build-script binary. Rust tests were not run locally; CI at `003d3509` subsequently passed the new tests (see follow-up below). |
 | B2 | Generated gem and generator template require JSON `>= 3.1, < 4`. Installed-gem wire tests reject duplicate response keys. Tests reject multibyte UTF-8 bytes tagged `ASCII-8BIT` before HTTP/index creation. Documentation requires explicit validated UTF-8 conversion, not lossy conversion. |
 | B3 | Explicit `CatalogGeneration.create` initializes state; opening requires directory, lock, scope, identities and active state, rechecked under every operation's lock. Loss before/after opening fails before writes in tests. An older internally valid journal rollback remains undetectable without an independent durable fence. |
 | B4 | Measurement Compose disables automatic restart. Smoke/admission/resource checks retain ID, RestartCount and StartedAt for Quickwit and observed Elasticsearch, including gaps around the explicit restart. Unit fixtures reject unexpected count/start changes. Revised live smoke and resource run remain unrun. |
 | M1 | Reject conflicting offer supplier/observed-at values and preserve nanosecond timestamp precision with `iso8601(9)`; catalog regressions pass. |
-| M2 | Rejected-document rendering uses UTF-8 replacement instead of panicking. Added a Warp route test for mixed invalid/valid NDJSON with a mocked ingest backend. This is not a live persist test; Rust execution remains pending. |
+| M2 | Rejected-document rendering uses UTF-8 replacement instead of panicking. Added a Warp route test for mixed invalid/valid NDJSON with a mocked ingest backend. This is not a live persist test; the route test passed in CI at `003d3509`. |
 | M3 | Guard checks the device of cwd, Cargo home and Cargo-metadata-resolved target against the measured filesystem, records paths and enforces observed growth budget during/following execution. Focused Python tests pass. |
 | M4 | Durable initial state precedes the lock pointer; fsync state, directory and lock. Missing previous state produces explicit operator-review refusal. Focused Python tests pass. |
 | M5 | Corrected SDK counts, live-smoke default version and JSON evidence status. Root/local/resource docs attribute historical unoptimized Compose evidence to `8009925c` and older scripts. No current-runtime claim. |
@@ -97,3 +97,37 @@ Before release: resolve R1/R2 and applicable native/contract gaps, obtain passin
 revised-head CI and native/runtime evidence, refresh schema provenance against
 that server, complete independent Astra review, and obtain separate publication
 approval. See [remaining gates](REMAINING_GATES.md) for the wider campaign.
+
+## Astra comparison follow-up
+
+Independent Astra comparison of `003d3509b9f1934767556425b5efc207c4eaf52e`
+confirmed B1–B3 and M1–M4/M6 within the reviewed scope, and identified three
+follow-ups incorporated here:
+
+- B4 now inspects clean running state, sends TERM, waits at most 60 seconds,
+  records and validates stopped OOM/exit/incarnation evidence, and only then starts
+  again. Preexisting OOM, termination-window OOM, abnormal exit, changed
+  incarnation and failed signal/wait must prevent startup. The revised harness
+  passes 13 tests, independently rerun by the coordinator. Runtime ownership must
+  exclude concurrent lifecycle writers; this is not an event audit or causal proof
+  for a clean exit coincident with TERM. No revised live smoke is claimed.
+- `test_ingester_close_shards` releases its inner-state guard before awaiting fetch
+  EOF. Otherwise the broadcaster can hold the WAL write lock while waiting for
+  inner state and prevent the fetch task's WAL read. The timeout is unchanged.
+  Astra reproduced the baseline failure both in the full suite and in isolation;
+  this was not introduced by the Opus retry changes. Execution of this test edit
+  is pending the next CI run.
+- The remaining SDK README sentence claiming the pinned JSON rerun was blocked
+  now links the completed local evidence and states the later 24/420 result.
+
+At `003d3509`, [workspace CI](https://github.com/rdkit-rs/quickwit-cheminee/actions/runs/39054582232)
+passed 2,908 tests (6 skipped), including all four new Rust tests, then passed
+REST tests. The close-shards test failed once and passed on retry. Wrapped
+all-features Clippy, deny, machete, documentation, license and nightly format
+steps passed. [DataFusion](https://github.com/rdkit-rs/quickwit-cheminee/actions/runs/39054582230)
+passed. [Dependency Review](https://github.com/rdkit-rs/quickwit-cheminee/actions/runs/39054582245)
+failed because the repository does not support it; no setting was changed.
+The chemistry workflow had reached raw-SMILES REST validation at follow-up time;
+its later stages were not yet a completed verdict. These results concern
+`003d3509`, not the subsequent restart/lock-test edits. R1/R2/R6 and the other
+explicit broader release/runtime gates remain open.
