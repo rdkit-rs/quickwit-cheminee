@@ -1,0 +1,15 @@
+    Checking quickwit-proto v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-proto)
+    Checking rand_distr v0.6.0
+    Checking quickwit-doc-mapper v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-doc-mapper)
+    Checking quickwit-parquet-engine v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-parquet-engine)
+    Checking quickwit-config v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-config)
+    Checking quickwit-transport v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-transport)
+    Checking quickwit-storage v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-storage)
+    Checking quickwit-cluster v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-cluster)
+    Checking quickwit-ingest v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-ingest)
+    Checking quickwit-directories v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-directories)
+    Checking quickwit-metastore v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-metastore)
+    Checking quickwit-opentelemetry v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-opentelemetry)
+    Checking quickwit-indexing v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-indexing)
+    Checking quickwit-search v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-search)
+    Finished `dev` profile [unoptimized] target(s) in 47.71s

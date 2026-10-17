@@ -34,17 +34,27 @@ use crate::{Automaton, QueryParserError, TermRange, WarmupInfo};
 #[derive(Default)]
 struct QueryFastFields {
     range_query_field_names: HashSet<String>,
+    fingerprint_field_names: HashSet<String>,
+    graph_fields: Vec<(tantivy_rdkit::FingerprintSpec, String)>,
 }
 
 impl<'a> QueryAstVisitor<'a> for QueryFastFields {
     type Err = Infallible;
 
+    fn visit_fingerprint_contains(
+        &mut self,
+        query: &'a quickwit_query::query_ast::FingerprintContainsQueryAst,
+    ) -> Result<(), Infallible> {
+        self.fingerprint_field_names.insert(query.spec.field_name());
+        self.visit(&query.candidates)
+    }
+
     fn visit_graph(
         &mut self,
         query: &'a quickwit_query::query_ast::GraphQueryAst,
     ) -> Result<(), Infallible> {
-        self.range_query_field_names
-            .insert(query.prepared_field.clone());
+        self.graph_fields
+            .push((query.spec.clone(), query.prepared_field.clone()));
         self.visit(&query.candidates)
     }
 
@@ -52,7 +62,7 @@ impl<'a> QueryAstVisitor<'a> for QueryFastFields {
         &mut self,
         query: &'a quickwit_query::query_ast::TanimotoQueryAst,
     ) -> Result<(), Infallible> {
-        self.range_query_field_names.insert(query.spec.field_name());
+        self.fingerprint_field_names.insert(query.spec.field_name());
         self.visit(&query.candidates)
     }
 
@@ -190,14 +200,36 @@ pub(crate) fn build_query(
     let mut range_query_fields = QueryFastFields::default();
     // This cannot fail. The error type is Infallible.
     let Ok(_) = range_query_fields.visit(&query_ast);
-    let range_query_fast_fields =
-        range_query_fields
-            .range_query_field_names
-            .into_iter()
-            .map(|name| FastFieldWarmupInfo {
-                name,
+    // Old physical splits may lack the current chemistry contract. Defer that
+    // error to a live candidate, while preserving all ordinary query warmups.
+    for name in &range_query_fields.fingerprint_field_names {
+        if tantivy_rdkit::validate_fingerprint_field(context.schema, name).is_ok() {
+            fast_fields.insert(FastFieldWarmupInfo {
+                name: name.clone(),
                 with_subfields: false,
             });
+        }
+    }
+    for (spec, name) in &range_query_fields.graph_fields {
+        if tantivy_rdkit::GraphQuery::validate_schema(context.schema, spec, name).is_ok() {
+            fast_fields.insert(FastFieldWarmupInfo {
+                name: name.clone(),
+                with_subfields: false,
+            });
+        }
+    }
+    let range_query_fast_fields = range_query_fields
+        .range_query_field_names
+        .into_iter()
+        .filter(|name| {
+            context.with_validation
+                || matches!(find_field_or_hit_dynamic(name, context.schema),
+                    Some((_, entry, _)) if entry.is_fast())
+        })
+        .map(|name| FastFieldWarmupInfo {
+            name,
+            with_subfields: false,
+        });
     fast_fields.extend(range_query_fast_fields);
 
     let Ok(_) = TermSearchOnColumnar {
@@ -214,7 +246,8 @@ pub(crate) fn build_query(
 
     let (query, required_terms) = query_ast.build_tantivy_query_and_required_terms(context)?;
 
-    let term_set_query_fields = extract_term_set_query_fields(&query_ast, context.schema)?;
+    let term_set_query_fields =
+        extract_term_set_query_fields(&query_ast, context.schema, context.with_validation)?;
     let (term_ranges_grouped_by_field, automatons_grouped_by_field) =
         extract_prefix_term_ranges_and_automaton(
             &query_ast,
@@ -251,13 +284,15 @@ pub(crate) fn build_query(
 struct ExtractTermSetFields<'a> {
     term_dict_fields_to_warm_up: HashSet<Field>,
     schema: &'a Schema,
+    with_validation: bool,
 }
 
 impl<'a> ExtractTermSetFields<'a> {
-    fn new(schema: &'a Schema) -> Self {
+    fn new(schema: &'a Schema, with_validation: bool) -> Self {
         ExtractTermSetFields {
             term_dict_fields_to_warm_up: HashSet::new(),
             schema,
+            with_validation,
         }
     }
 }
@@ -267,11 +302,11 @@ impl<'a> QueryAstVisitor<'a> for ExtractTermSetFields<'_> {
 
     fn visit_term_set(&mut self, term_set_query: &'a TermSetQuery) -> anyhow::Result<()> {
         for field in term_set_query.terms_per_field.keys() {
-            if let Some((field, _field_entry, _path)) =
-                find_field_or_hit_dynamic(field, self.schema)
-            {
-                self.term_dict_fields_to_warm_up.insert(field);
-            } else {
+            if let Some((field, entry, _path)) = find_field_or_hit_dynamic(field, self.schema) {
+                if entry.is_indexed() {
+                    self.term_dict_fields_to_warm_up.insert(field);
+                }
+            } else if self.with_validation {
                 anyhow::bail!("field does not exist: {}", field);
             }
         }
@@ -282,8 +317,9 @@ impl<'a> QueryAstVisitor<'a> for ExtractTermSetFields<'_> {
 fn extract_term_set_query_fields(
     query_ast: &QueryAst,
     schema: &Schema,
+    with_validation: bool,
 ) -> anyhow::Result<HashSet<Field>> {
-    let mut visitor = ExtractTermSetFields::new(schema);
+    let mut visitor = ExtractTermSetFields::new(schema, with_validation);
     visitor.visit(query_ast)?;
     Ok(visitor.term_dict_fields_to_warm_up)
 }
@@ -1001,6 +1037,238 @@ mod chemistry_tests {
 
     use super::*;
 
+    #[cfg(feature = "native-chemistry")]
+    #[test]
+    fn old_physical_chemistry_contract_is_checked_only_for_live_candidates() {
+        use tantivy::collector::Count;
+        use tantivy::schema::{BytesOptions, STORED, TextOptions};
+        use tantivy::{Index, TantivyDocument, doc};
+        use tantivy_rdkit::FingerprintSpec;
+
+        let spec_json = serde_json::json!({"format":"morgan-r3-2048-lsb0-v1",
+            "rdkit_version":"2026.09.1", "preparation_id":"sanitize-only-v1"});
+        let spec: FingerprintSpec = serde_json::from_value(spec_json.clone()).unwrap();
+        let fp = spec.field_name();
+        let mapper = serde_json::from_value::<crate::DocMapperBuilder>(serde_json::json!({
+            "mode":"strict", "chemistry":{"spec":spec_json, "smiles_field":"smiles",
+                "prepared_smiles_field":"prepared"},
+            "field_mappings":[
+                {"name":"record_id","type":"u64","fast":true},
+                {"name":fp,"type":"bytes","fast":true,"indexed":false,"input_format":"hex","output_format":"hex"},
+                {"name":"prepared","type":"text","fast":true,"indexed":false},
+                {"name":"smiles","type":"text","tokenizer":"raw"},
+                {"name":"family","type":"text","tokenizer":"raw"}]
+        }))
+        .unwrap()
+        .try_build()
+        .unwrap();
+        for contract in [
+            "missing",
+            "wrong_fp",
+            "nonfast_fp",
+            "missing_prepared",
+            "nonfast_prepared",
+            "nonraw_prepared",
+            "wrong_prepared",
+            "unstored_prepared",
+            "dynamic_only",
+            "dynamic_prepared",
+            "valid",
+        ] {
+            let mut builder = Schema::builder();
+            let family = builder.add_text_field("family", STRING);
+            let dynamic = if matches!(contract, "dynamic_only" | "dynamic_prepared") {
+                Some(builder.add_json_field(
+                    "_dynamic",
+                    tantivy::schema::JsonObjectOptions::default().set_fast(None),
+                ))
+            } else {
+                None
+            };
+            let fingerprint = match contract {
+                "missing" | "dynamic_only" => None,
+                "wrong_fp" => {
+                    builder.add_u64_field(&fp, FAST);
+                    None
+                }
+                "nonfast_fp" => Some(builder.add_bytes_field(&fp, BytesOptions::default())),
+                _ => Some(builder.add_bytes_field(&fp, FAST)),
+            };
+            let prepared = match contract {
+                "missing" | "missing_prepared" | "dynamic_only" | "dynamic_prepared" => None,
+                "wrong_prepared" => {
+                    builder.add_u64_field("prepared", FAST);
+                    None
+                }
+                "unstored_prepared" => {
+                    Some(builder.add_text_field("prepared", TextOptions::default().set_fast(None)))
+                }
+                "nonfast_prepared" => Some(builder.add_text_field("prepared", STORED)),
+                "nonraw_prepared" => Some(
+                    builder.add_text_field(
+                        "prepared",
+                        TextOptions::default()
+                            .set_stored()
+                            .set_fast(Some("default")),
+                    ),
+                ),
+                _ => Some(builder.add_text_field("prepared", STORED | FAST)),
+            };
+            let schema = builder.build();
+            assert_ne!(family, mapper.schema().get_field("family").unwrap());
+            let index = Index::create_in_ram(schema.clone());
+            let mut writer = index
+                .writer_with_num_threads::<TantivyDocument>(1, 15_000_000)
+                .unwrap();
+            let mut document = doc!(family => "legacy");
+            if let Some(field) = fingerprint {
+                document.add_bytes(field, &[1u8; 256]);
+            }
+            if let Some(field) = prepared {
+                document.add_text(field, "CCO");
+            }
+            if let Some(field) = dynamic {
+                document.add_object(
+                    field,
+                    std::collections::BTreeMap::from([(
+                        "prepared".to_string(),
+                        tantivy::schema::OwnedValue::Str("CCO".to_string()),
+                    )]),
+                );
+            }
+            writer.add_document(document).unwrap();
+            writer.commit().unwrap();
+            let reader = index.reader().unwrap();
+            let searcher = reader.searcher();
+            for operator in ["tanimoto", "fingerprint_contains", "graph"] {
+                for candidate in ["absent", "legacy"] {
+                    let mut value = serde_json::json!({"type":operator,"spec":spec_json,
+                        "candidates":{"type":"term","field":"family","value":candidate}});
+                    match operator {
+                        "tanimoto" => {
+                            value["fingerprint_hex"] = "01".repeat(256).into();
+                            value["minimum"] = 0.0.into();
+                        }
+                        "fingerprint_contains" => {
+                            value["fingerprint_hex"] = "01".repeat(256).into();
+                            value["direction"] = "document_contains_query".into();
+                        }
+                        _ => {
+                            value["prepared_field"] = "prepared".into();
+                            value["prepared_smiles"] = "CCO".into();
+                            value["predicate"] = "identity".into();
+                            value["ranking"] = "stable_id".into();
+                            value["use_chirality"] = true.into();
+                            value["include_identity"] = true.into();
+                        }
+                    }
+                    let ast: QueryAst = serde_json::from_value(value.clone()).unwrap();
+                    let (query, warmup) = mapper.query(schema.clone(), ast, false, None).unwrap();
+                    assert!(warmup.terms_grouped_by_field.contains_key(&family));
+                    let result = searcher.search(query.as_ref(), &Count);
+                    let invalid_physical = if operator == "graph" {
+                        contract != "valid"
+                    } else {
+                        matches!(
+                            contract,
+                            "missing" | "wrong_fp" | "nonfast_fp" | "dynamic_only"
+                        )
+                    };
+                    let expected_warmup = if invalid_physical {
+                        None
+                    } else if operator == "graph" {
+                        Some("prepared")
+                    } else {
+                        Some(fp.as_str())
+                    };
+                    let names: Vec<_> = warmup
+                        .fast_fields
+                        .iter()
+                        .map(|field| field.name.as_str())
+                        .collect();
+                    assert_eq!(
+                        names,
+                        expected_warmup.into_iter().collect::<Vec<_>>(),
+                        "{contract}/{operator}"
+                    );
+                    if candidate == "legacy" && invalid_physical {
+                        assert!(
+                            result.is_err(),
+                            "{contract}/{operator} must fail for live candidates"
+                        );
+                    } else {
+                        assert_eq!(
+                            result.unwrap(),
+                            usize::from(candidate == "legacy"),
+                            "{contract}/{operator}/{candidate}"
+                        );
+                    }
+                    // Invalid inputs stay eager, even on a physically old split with no candidates.
+                    value["candidates"]["value"] = "absent".into();
+                    if operator == "graph" {
+                        value["prepared_smiles"] = "not-smiles".into();
+                    } else {
+                        value["fingerprint_hex"] = "invalid".into();
+                    }
+                    assert!(
+                        mapper
+                            .query(
+                                schema.clone(),
+                                serde_json::from_value(value).unwrap(),
+                                false,
+                                None
+                            )
+                            .is_err()
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn old_candidate_term_set_and_nonfast_range_keep_empty_domain() {
+        use tantivy::collector::Count;
+        use tantivy::schema::NumericOptions;
+        use tantivy::{Index, TantivyDocument, doc};
+        let QueryAst::Tanimoto(chemistry) = ast() else {
+            panic!()
+        };
+        let mut current = Schema::builder();
+        current.add_bytes_field(&chemistry.spec.field_name(), FAST);
+        current.add_text_field("new_field", STRING);
+        current.add_u64_field("range_field", FAST);
+        let current = current.build();
+        let mut old = Schema::builder();
+        let range = old.add_u64_field("range_field", NumericOptions::default().set_indexed());
+        let old = old.build();
+        let index = Index::create_in_ram(old.clone());
+        let mut writer = index
+            .writer_with_num_threads::<TantivyDocument>(1, 15_000_000)
+            .unwrap();
+        writer.add_document(doc!(range => 1u64)).unwrap();
+        writer.commit().unwrap();
+        let reader = index.reader().unwrap();
+        for candidate in [
+            serde_json::json!({"type":"term_set","terms_per_field":{"new_field":["value"]}}),
+            serde_json::json!({"type":"range","field":"range_field","lower_bound":{"Included":0},"upper_bound":{"Included":2}}),
+        ] {
+            let mut query = chemistry.clone();
+            query.candidates = Box::new(serde_json::from_value(candidate).unwrap());
+            let mut context = BuildTantivyAstContext::for_test(&old).without_validation();
+            context.chemistry_schema = &current;
+            let (query, warmup) = build_query(QueryAst::Tanimoto(query), &context, None).unwrap();
+            assert!(warmup.fast_fields.is_empty());
+            assert!(warmup.term_dict_fields.is_empty());
+            assert_eq!(reader.searcher().search(query.as_ref(), &Count).unwrap(), 0);
+        }
+        // The same invalid ordinary range is still rejected during eager validation.
+        let invalid: QueryAst =
+            serde_json::from_value(serde_json::json!({"type":"range","field":"range_field",
+            "lower_bound":{"Included":0},"upper_bound":{"Included":2}}))
+            .unwrap();
+        assert!(build_query(invalid, &BuildTantivyAstContext::for_test(&old), None).is_err());
+    }
+
     fn ast() -> QueryAst {
         serde_json::from_value(serde_json::json!({
             "type":"tanimoto",
@@ -1031,6 +1299,47 @@ mod chemistry_tests {
                 .any(|field| field.name == field_name)
         );
         assert!(warmup.terms_grouped_by_field.contains_key(&family));
+    }
+
+    #[test]
+    fn containment_warms_fingerprints_and_preserves_candidate_postings() {
+        let QueryAst::Tanimoto(original) = ast() else {
+            panic!()
+        };
+        let field_name = original.spec.field_name();
+        let query =
+            QueryAst::FingerprintContains(quickwit_query::query_ast::FingerprintContainsQueryAst {
+                candidates: original.candidates,
+                spec: original.spec,
+                fingerprint_hex: original.fingerprint_hex,
+                direction: tantivy_rdkit::ContainmentDirection::DocumentContainsQuery,
+            });
+        let mut builder = Schema::builder();
+        builder.add_bytes_field(&field_name, FAST);
+        let family = builder.add_text_field("family", STRING);
+        let schema = builder.build();
+        let (_, warmup) = build_query(
+            query.clone(),
+            &BuildTantivyAstContext::for_test(&schema),
+            None,
+        )
+        .unwrap();
+        assert!(
+            warmup
+                .fast_fields
+                .iter()
+                .any(|field| field.name == field_name)
+        );
+        assert!(warmup.terms_grouped_by_field.contains_key(&family));
+        let empty_schema = Schema::builder().build();
+        assert!(
+            build_query(
+                query,
+                &BuildTantivyAstContext::for_test(&empty_schema).without_validation(),
+                None
+            )
+            .is_err()
+        );
     }
 
     #[test]

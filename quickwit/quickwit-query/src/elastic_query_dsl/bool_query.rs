@@ -155,7 +155,9 @@ impl ConvertibleToQueryAst for BoolQuery {
             MinimumShouldMatchResolved::Unspecified => None,
             MinimumShouldMatchResolved::Min(minimum_should_match) => Some(minimum_should_match),
             MinimumShouldMatchResolved::NoMatch => {
-                return Ok(QueryAst::MatchNone);
+                // Preserve operands for eager syntax/schema/chemistry validation.
+                // The AST compiler collapses this only after building all children.
+                Some(should.len() + 1)
             }
         };
         let bool_query_ast = query_ast::BoolQuery {
@@ -309,6 +311,20 @@ mod tests {
         };
         assert_eq!(bool_query_ast.should.len(), 3);
         assert_eq!(bool_query_ast.minimum_should_match, Some(2));
+    }
+
+    #[test]
+    fn impossible_minimum_preserves_operands_for_validation() {
+        let query: BoolQuery = serde_json::from_value(serde_json::json!({
+            "should": [{"query_string": {"query": "("}}],
+            "minimum_should_match": 2
+        }))
+        .unwrap();
+        let QueryAst::Bool(ast) = query.convert_to_query_ast().unwrap() else {
+            panic!("operands must survive until query-input validation");
+        };
+        assert_eq!(ast.should.len(), 1);
+        assert_eq!(ast.minimum_should_match, Some(2));
     }
 
     #[test]

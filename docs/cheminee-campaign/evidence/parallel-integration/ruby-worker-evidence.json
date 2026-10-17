@@ -1,0 +1,48 @@
+{
+  "base_commit": "a90687162c9037e159781b76e97ec43e0bb3a436",
+  "prerequisite_commit": "6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa",
+  "source_library_id": "libfile_04c2f50d59fc81919397d3e9def0f5db",
+  "source_bundle_sha256": "e549ae94807b20dde89426edb0bd3b34eee1de9267f8ca0745cc3b9183d3b3f0",
+  "gem_sha256": "43208077f9e1907390e306cff34cd901970c964557d4c6119516f4a4319036a9",
+  "original_archive_sha256_parent_verified": "9079f4d6a5d650f6b58acc79c029abbaadfe3731f9623060b2699605a6a776be",
+  "validation": {
+    "ruby": "3.3.8",
+    "runs": 20,
+    "assertions": 392,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seed": 704,
+    "elapsed_seconds": 0.358238,
+    "fixture": "real loopback HTTP, installed packaged gem",
+    "dependencies": "all activated versions verified against sdk/ruby/Gemfile.lock",
+    "diff_check": "passed"
+  },
+  "resources": {
+    "workspace_free_before": "30 GiB",
+    "tmp_free_before": "8.8 GiB",
+    "workspace_free_after": "30 GiB",
+    "task_disk_usage": "104 MiB",
+    "new_rust_builds": 0,
+    "new_containers": 0
+  },
+  "remaining_checks": [
+    "Live server integration pending: v5 has no native runtime",
+    "No performance, snapshot pagination, chemistry truth, HA or durability claim",
+    "Packaged gem provenance is 8009925c; release acceptance for newer server remains integrator responsibility"
+  ],
+  "scope": [
+    "sdk/ruby/wire_test.rb",
+    "sdk/ruby/README.md",
+    "sdk/ruby/MIGRATION.md"
+  ],
+  "head_commit": "f6e64991dec0c3690b4c6b2324bca084330b28f1",
+  "review": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "result": "Approved final commit; no remaining actionable findings. Two documentation findings corrected: transport exceptions and JSON serialization errors. Reviewer independently reproduced invalid UTF-8 exception; relied on reported 20 tests / 392 assertions."
+  },
+  "bundle_verification": "Passed; requires exact v5 base; clean working tree and diff check passed.",
+  "test_setup_notes": "First run rejected system JSON version; rerun with explicit pinned activations passed all lock checks. Repro script supplied. Dependencies installed with existing Ruby tooling; no Rust build.",
+  "apply": "On exact base, use git am ruby-tests-docs.patch OR fetch ruby-tests-docs.bundle HEAD and cherry-pick f6e64991dec0c3690b4c6b2324bca084330b28f1. Do not apply both."
+}

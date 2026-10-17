@@ -1,0 +1,18 @@
+{
+  "scope": "cached-crate wrapper invocation with harmless cargo substitute; no compilation/network",
+  "valid_cached_crate": "passed",
+  "captured_command": [
+    "clippy",
+    "--config",
+    "paths=[\"/tmp/tmp.J5t46SEotz/krb5-src-0.3.4\"]",
+    "--locked",
+    "--workspace",
+    "--tests",
+    "--all-features",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "bad_cached_crate_refused_before_cargo": true,
+  "wrapper_sha256": "70289ba9b97826dbf151f0deb6cd2ea2f6b71d3519a676f0cd19c63ba4949ddb"
+}

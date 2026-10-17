@@ -464,7 +464,7 @@ impl Ingester {
                     subrequest_id: subrequest.subrequest_id,
                     index_uid: subrequest.index_uid,
                     source_id: subrequest.source_id,
-                    reason: PersistFailureReason::NodeUnavailable as i32,
+                    reason: PersistFailureReason::NodeUnavailableBeforeAppend as i32,
                 };
                 persist_failures.push(persist_failure);
             }
@@ -494,7 +494,7 @@ impl Ingester {
                         subrequest_id: subrequest.subrequest_id,
                         index_uid: subrequest.index_uid,
                         source_id: subrequest.source_id,
-                        reason: PersistFailureReason::NoShardsAvailable as i32,
+                        reason: PersistFailureReason::NoShardsAvailableBeforeAppend as i32,
                     };
                     persist_failures.push(persist_failure);
                     continue;
@@ -551,7 +551,7 @@ impl Ingester {
                         subrequest_id: subrequest.subrequest_id,
                         index_uid: subrequest.index_uid,
                         source_id: subrequest.source_id,
-                        reason: PersistFailureReason::NoShardsAvailable as i32,
+                        reason: PersistFailureReason::NoShardsAvailableBeforeAppend as i32,
                     };
                     persist_failures.push(persist_failure);
                     continue;
@@ -674,11 +674,11 @@ impl Ingester {
             while let Some(replication_result) = replicate_futures.next().await {
                 let replicate_response = match replication_result {
                     Ok(replicate_response) => replicate_response,
-                    Err(_) => {
+                    Err(error) => {
+                        rate_limited_warn!(limit_per_min=6, outcome_unknown=true, error=%error, "replication acknowledgement failed");
                         // TODO: Handle replication error:
                         // 1. Close and evict all the shards hosted by the follower.
                         // 2. Close and evict the replication client.
-                        // 3. Return `PersistFailureReason::NodeUnavailable` to router.
                         continue;
                     }
                 };
@@ -706,11 +706,28 @@ impl Ingester {
                 }
             }
         }
+        // Every unresolved replication request has an unknown write outcome.
+        // Preserve explicit replica rejections; fill only missing acknowledgements.
+        let reported_failures: HashSet<_> = persist_failures
+            .iter()
+            .map(|failure| failure.subrequest_id)
+            .collect();
         // finally write locally
         {
             let now = Instant::now();
             for subrequest in pending_persist_subrequests.into_values() {
                 if !subrequest.successfully_replicated {
+                    if !reported_failures.contains(&subrequest.subrequest_id) {
+                        rate_limited_warn!(limit_per_min=6, outcome_unknown=true,
+                            leader_id=%self.self_node_id, subrequest_id=subrequest.subrequest_id,
+                            "replication result missing; append outcome unknown");
+                        persist_failures.push(PersistFailure {
+                            subrequest_id: subrequest.subrequest_id,
+                            index_uid: subrequest.index_uid,
+                            source_id: subrequest.source_id,
+                            reason: PersistFailureReason::NodeUnavailable as i32,
+                        });
+                    }
                     continue;
                 }
                 let queue_id = subrequest.queue_id;
@@ -1945,6 +1962,37 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_ingester_not_ready_rejects_before_append() {
+        let (context, ingester) = IngesterForTest::default().build().await;
+        ingester
+            .state
+            .lock_partially("test")
+            .await
+            .unwrap()
+            .set_status(IngesterStatus::Decommissioning)
+            .await;
+        let response = ingester
+            .persist(PersistRequest {
+                leader_id: context.node_id.to_string(),
+                subrequests: vec![PersistSubrequest {
+                    subrequest_id: 42,
+                    index_uid: Some(IndexUid::for_test("test-index", 0)),
+                    source_id: "test-source".to_string(),
+                    doc_batch: Some(DocBatchV2::for_test(["{}"])),
+                }],
+                ..Default::default()
+            })
+            .await
+            .unwrap();
+        assert!(response.successes.is_empty());
+        assert_eq!(response.failures.len(), 1);
+        assert_eq!(
+            response.failures[0].reason(),
+            PersistFailureReason::NodeUnavailableBeforeAppend
+        );
+    }
+
+    #[tokio::test]
     async fn test_ingester_persist_empty() {
         let (ingester_ctx, ingester) = IngesterForTest::default().build().await;
 
@@ -2264,7 +2312,7 @@ mod tests {
         let persist_failure = &persist_response.failures[0];
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
     }
 
@@ -2378,6 +2426,104 @@ mod tests {
 
         let state_guard = ingester.state.lock_fully("test").await.unwrap();
         assert_eq!(state_guard.shards.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn lost_replica_ack_preserves_real_wal_and_reports_unknown_outcome() {
+        use quickwit_proto::ingest::ingester::ack_replication_message;
+        let (leader_ctx, leader) = IngesterForTest::default()
+            .with_node_id("test-leader")
+            .with_replication()
+            .build()
+            .await;
+        let (follower_ctx, follower) = IngesterForTest::default()
+            .with_node_id("test-follower")
+            .with_ingester_pool(&leader_ctx.ingester_pool)
+            .with_replication()
+            .build()
+            .await;
+        let actual_follower = follower.clone();
+        let layer = tower::layer::layer_fn(move |_inner| {
+            let follower = actual_follower.clone();
+            tower::service_fn(move |request: ServiceStream<SynReplicationMessage>| {
+                let follower = follower.clone();
+                async move {
+                    let stream = follower.open_replication_stream(request).await?;
+                    Ok::<_, IngestV2Error>(ServiceStream::new(Box::pin(stream.map(|message| {
+                        match message {
+                            Ok(AckReplicationMessage {
+                                message:
+                                    Some(ack_replication_message::Message::ReplicateResponse(_)),
+                            }) => Err(IngestV2Error::Unavailable(
+                                "injected lost acknowledgement after real replica append".into(),
+                            )),
+                            other => other,
+                        }
+                    }))))
+                }
+            })
+        });
+        leader_ctx.ingester_pool.insert(
+            follower_ctx.node_id.clone(),
+            IngesterPoolEntry {
+                client: IngesterServiceClient::tower()
+                    .stack_open_replication_stream_layer(layer)
+                    .build(follower.clone()),
+                status: IngesterStatus::Ready,
+                availability_zone: None,
+            },
+        );
+        let index_uid = IndexUid::for_test("lost-ack", 0);
+        let doc_mapping_uid = DocMappingUid::random();
+        leader
+            .init_shards(InitShardsRequest {
+                subrequests: vec![InitShardSubrequest {
+                    subrequest_id: 0,
+                    shard: Some(Shard {
+                        index_uid: Some(index_uid.clone()),
+                        source_id: "source".into(),
+                        shard_id: Some(ShardId::from(1)),
+                        shard_state: ShardState::Open as i32,
+                        leader_id: leader_ctx.node_id.to_string(),
+                        follower_id: Some(follower_ctx.node_id.to_string()),
+                        doc_mapping_uid: Some(doc_mapping_uid),
+                        ..Default::default()
+                    }),
+                    doc_mapping_json: format!(r#"{{"doc_mapping_uid":"{doc_mapping_uid}"}}"#),
+                    validate_docs: true,
+                }],
+            })
+            .await
+            .unwrap();
+        let response = leader
+            .persist(PersistRequest {
+                leader_id: leader_ctx.node_id.to_string(),
+                commit_type: CommitTypeV2::Force as i32,
+                subrequests: vec![PersistSubrequest {
+                    subrequest_id: 7,
+                    index_uid: Some(index_uid.clone()),
+                    source_id: "source".into(),
+                    doc_batch: Some(DocBatchV2::for_test([r#"{"doc":"once"}"#])),
+                }],
+            })
+            .await
+            .unwrap();
+        assert!(response.successes.is_empty());
+        assert_eq!(response.failures.len(), 1);
+        assert_eq!(response.failures[0].subrequest_id, 7);
+        assert_eq!(
+            response.failures[0].reason(),
+            PersistFailureReason::NodeUnavailable
+        );
+        let queue = queue_id(&index_uid, "source", &ShardId::from(1));
+        let follower_state = follower.state.lock_fully("test").await.unwrap();
+        follower_state.mrecordlog.assert_records_eq(
+            &queue,
+            ..,
+            &[(0, [0, 0], r#"{"doc":"once"}"#), (1, [0, 1], "")],
+        );
+        let leader_state = leader.state.lock_fully("test").await.unwrap();
+        leader_state.mrecordlog.assert_records_eq(&queue, .., &[]);
     }
 
     #[tokio::test]
@@ -2808,7 +2954,7 @@ mod tests {
         assert_eq!(persist_failure.source_id, "test-source");
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
 
         let state_guard = ingester.state.lock_fully("test").await.unwrap();
@@ -2886,7 +3032,7 @@ mod tests {
         assert_eq!(persist_failure.source_id, "test-source");
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
 
         let state_guard = ingester.state.lock_fully("test").await.unwrap();
@@ -3750,6 +3896,9 @@ mod tests {
         let state_guard = ingester.state.lock_partially("test").await.unwrap();
         let shard = state_guard.shards.get(&queue_id).unwrap();
         shard.assert_is_closed();
+        // The broadcaster locks the WAL before inner state. Release inner state
+        // before waiting for the fetch task, which needs to read the WAL.
+        drop(state_guard);
 
         let fetch_response = timeout(Duration::from_millis(100), fetch_stream.next())
             .await

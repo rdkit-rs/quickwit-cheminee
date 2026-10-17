@@ -1,0 +1,16 @@
+test_admission_and_budget_failure_do_not_execute (test_harness.Checks.test_admission_and_budget_failure_do_not_execute) ... ok
+test_auth_failure_is_immediate (test_harness.Checks.test_auth_failure_is_immediate) ... ok
+test_context_overrides_host (test_harness.Checks.test_context_overrides_host) ... ok
+test_final_container_failure (test_harness.Checks.test_final_container_failure) ... ok
+test_image_and_resource_checks (test_harness.Checks.test_image_and_resource_checks) ... ok
+test_late_success_rejected (test_harness.Checks.test_late_success_rejected) ... ok
+test_remote_docker_host_rejected (test_harness.Checks.test_remote_docker_host_rejected) ... ok
+test_startup_503_then_ready (test_harness.Checks.test_startup_503_then_ready) ... ok
+test_wrong_type_does_not_establish_readiness (test_harness.Checks.test_wrong_type_does_not_establish_readiness) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+OK
+{"status": "admitted_not_executed", "live_measurements": "pending"}
+{"status": "failed", "live_measurements": "pending"}

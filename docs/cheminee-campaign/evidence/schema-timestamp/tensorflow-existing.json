@@ -1,0 +1,10 @@
+{
+  "version": "2.15.1",
+  "pkg_config_path": "/workspace/.onboarding/sysroot/usr/lib/pkgconfig",
+  "default_download_version": "2.13.0",
+  "existing_library_sha256": {
+    "libtensorflow_cc.so.2": "26c52413c74ae9495f742c93b87fcb515c9010627f3feb5ad29b65dff901a2ee",
+    "libtensorflow_framework.so.2": "1ed1f34811d338f934cb01155be51963f7a8ef4155cd201d0fba34b27425fc6b"
+  },
+  "result": "incomplete; disk guard terminated process group; no workspace success claim"
+}

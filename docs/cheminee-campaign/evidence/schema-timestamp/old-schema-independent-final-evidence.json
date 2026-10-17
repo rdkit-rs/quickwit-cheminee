@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "scope": "independent validation of retained HTTP old-schema responses, not an independent HTTP execution",
+  "schema_checks_verified": 39,
+  "combined_report_checks": 57,
+  "binary_sha256": "5f92e5079f676e7bd6cb21df2e89e3334d8c976abbed69c17d058cb72c7e048d",
+  "probe_sha256": "2949f97a09c784d221c3a1b12f08799216d14009686580b7e3518d519cc80328",
+  "report_sha256": "c1522e0005e50ec7cc6aee189ada0f1fd47685bd7714b1a461205326f58ee725",
+  "old_split_id": "01M52JP59YCTTYB2HM45VTYECB",
+  "old_and_new_split_ids_match_baseline": true,
+  "base_revision": "c15204119d29285511ac1a5563732a6a714a3315",
+  "source_sha256": {
+    "quickwit/quickwit-doc-mapper/src/doc_mapper/doc_mapper_impl.rs": "a435edecddd8d89aa06946b4cd5db384da72e9dfa4e85e3d3b974488cef32356",
+    "quickwit/quickwit-doc-mapper/src/query_builder.rs": "360ab111b4a38c6dd29b134216008ce3c7de2e4e9fcf63a2324d63931d6167a9",
+    "quickwit/quickwit-query/src/query_ast/mod.rs": "da284c2e381ede61c86b1f18d7fb32961cbd99fb64bd64b5afff10ae896649c9",
+    "quickwit/quickwit-query/src/query_ast/fingerprint_contains_query.rs": "fd7e16d86c93a00aeb411430508d98d6cd533bda8aab0b50c6e6bbbac5058d7c",
+    "quickwit/quickwit-query/src/query_ast/tanimoto_query.rs": "c231e817aaa8dbe7a4c23f047e8007cf2cc01f166126dfd248728326e01176fe",
+    "quickwit/quickwit-query/src/query_ast/graph_query.rs": "0d655c790e4d3af41a15d581a5e1c99767df207842bdfb87c4ebd227a78d1767",
+    "quickwit/tantivy-rdkit/src/lib.rs": "ee059852a66eb9741b5f78b29724bcb1b40a06328d44482d51d709b78d74bd6f",
+    "quickwit/tantivy-rdkit/src/graph.rs": "1db77168d084719e055ba7df76c59595a2b7fe069424884d228d18242db2249a",
+    "quickwit/tantivy-rdkit/src/schema.rs": "8d0b2d20a3e893ffb07882550d1b6528ea4240cfe1c50ab2262e9bd84dbd2fe1",
+    "quickwit/tantivy-rdkit/tests/composable.rs": "3521400f060cc88a64e122a2e4ecb5d72768d358cd5d716795eb502b7b78c463"
+  }
+}

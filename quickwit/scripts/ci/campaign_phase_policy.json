@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "budget_note": "Admission allowances are conservative operational policy, not measured sufficient capacity. Failed-run growth is only a lower bound. No successful full-workspace peak has been established.",
+  "reserve_mib": 1024,
+  "emergency_floor_mib": 640,
+  "lock_path": "/workspace/recovery/campaign-heavy.lock",
+  "phases": {
+    "native-build": {
+      "growth_budget_mib": 1024,
+      "observed_growth_lower_bound_mib": 248,
+      "timeout_seconds": 1800,
+      "command": ["cargo", "build", "--locked", "-p", "quickwit-cli", "--features", "native-chemistry", "--bin", "quickwit"]
+    },
+    "native-check": {
+      "growth_budget_mib": 768,
+      "observed_growth_lower_bound_mib": 224,
+      "timeout_seconds": 1800,
+      "command": ["cargo", "clippy", "--locked", "-p", "quickwit-query", "-p", "quickwit-doc-mapper", "-p", "quickwit-search", "-p", "tantivy-rdkit", "--features", "quickwit-doc-mapper/native-chemistry", "--tests", "--", "-D", "warnings"]
+    },
+    "workspace-check": {
+      "growth_budget_mib": 4096,
+      "observed_growth_lower_bound_mib": 1215,
+      "timeout_seconds": 1800,
+      "requires_preflight": true,
+      "command": ["bash", "scripts/ci/with-krb5-c23.sh", "clippy", "--locked", "--workspace", "--tests", "--all-features", "--", "-D", "warnings"]
+    },
+    "image-build": {"growth_budget_mib": null, "command": []},
+    "image-export": {"growth_budget_mib": null, "command": []},
+    "container-create": {"growth_budget_mib": null, "command": []}
+  }
+}

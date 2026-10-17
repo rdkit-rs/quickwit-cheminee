@@ -419,6 +419,10 @@ pub enum PersistFailureReason {
     Timeout = 5,
     NoShardsAvailable = 6,
     NodeUnavailable = 7,
+    /// This subrequest/attempt initiated no append on either leader or follower.
+    /// Legacy reasons above do not carry this guarantee; never infer it from transport errors.
+    NoShardsAvailableBeforeAppend = 8,
+    NodeUnavailableBeforeAppend = 9,
 }
 impl PersistFailureReason {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -432,6 +436,12 @@ impl PersistFailureReason {
             Self::Timeout => "PERSIST_FAILURE_REASON_TIMEOUT",
             Self::NoShardsAvailable => "PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE",
             Self::NodeUnavailable => "PERSIST_FAILURE_REASON_NODE_UNAVAILABLE",
+            Self::NoShardsAvailableBeforeAppend => {
+                "PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE_BEFORE_APPEND"
+            }
+            Self::NodeUnavailableBeforeAppend => {
+                "PERSIST_FAILURE_REASON_NODE_UNAVAILABLE_BEFORE_APPEND"
+            }
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -442,6 +452,12 @@ impl PersistFailureReason {
             "PERSIST_FAILURE_REASON_TIMEOUT" => Some(Self::Timeout),
             "PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE" => Some(Self::NoShardsAvailable),
             "PERSIST_FAILURE_REASON_NODE_UNAVAILABLE" => Some(Self::NodeUnavailable),
+            "PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE_BEFORE_APPEND" => {
+                Some(Self::NoShardsAvailableBeforeAppend)
+            }
+            "PERSIST_FAILURE_REASON_NODE_UNAVAILABLE_BEFORE_APPEND" => {
+                Some(Self::NodeUnavailableBeforeAppend)
+            }
             _ => None,
         }
     }

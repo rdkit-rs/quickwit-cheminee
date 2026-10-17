@@ -21,6 +21,7 @@ use crate::InvalidQuery;
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct GraphQueryAst {
+    #[serde(default = "super::chemistry_match_all")]
     pub candidates: Box<QueryAst>,
     pub spec: FingerprintSpec,
     pub prepared_field: String,
@@ -55,7 +56,7 @@ impl BuildTantivyAst for GraphQueryAst {
             .into();
         let query = tantivy_rdkit::GraphQuery::new(
             candidates,
-            context.schema,
+            context.chemistry_schema,
             &self.spec,
             self.prepared_field.clone(),
             std::sync::Arc::new(verifier),

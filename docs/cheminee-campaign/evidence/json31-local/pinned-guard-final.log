@@ -1,0 +1,10 @@
+{"ruby":"3.3.8","json":"3.1.0","native_paths":["/workspace/recovery/json31-isolated/gems/json-3.1.0/lib/json/ext/parser.so","/workspace/recovery/json31-isolated/gems/json-3.1.0/lib/json/ext/generator.so"]}
+Run options: --seed 32420
+
+# Running:
+
+.........
+
+Finished in 0.004282s, 2101.9551 runs/s, 2335.5057 assertions/s.
+
+9 runs, 10 assertions, 0 failures, 0 errors, 0 skips

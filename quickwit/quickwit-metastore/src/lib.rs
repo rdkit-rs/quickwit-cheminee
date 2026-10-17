@@ -63,6 +63,7 @@ pub(crate) use split_metadata_version::{SplitMetadataV0_8, VersionedSplitMetadat
 #[openapi(components(schemas(
     IndexMetadataV0_8,
     Split,
+    SplitInfo,
     SplitMetadataV0_8,
     SplitState,
     VersionedIndexMetadata,

@@ -1,0 +1,112 @@
+{
+  "scope": "Static independent preparation review only; no image pull, container launch, or coexistence run",
+  "python_syntax": "passed",
+  "source_head": "8a8959005ec426c4a846b06ca3ba9e7c8bd9bc43",
+  "files": {
+    "distribution/cheminee-local/smoke.py": "c8e0064d9a37806533f02b16fe9756d3b5c9e856b6cceca526580b7e3e8e3632",
+    "distribution/cheminee-local/compose.elasticsearch.yml.example": "95d86a72875e1a5076820c8e43d30027ba70bae74a96cdc71d072d91f13fbab2",
+    "distribution/cheminee-local/README.md": "573f58dc4fa9c06f513af3b5ec9ce69af1a6c09335a3a7fb987cf531420f6a96",
+    "docs/cheminee-campaign/REMAINING_GATES.md": "1bac54423889d99f877ab5c07d7eaaec8001a4b5f6a5fc86b83fa61dea53121a"
+  },
+  "compose_project": "cheminee-local",
+  "services": {
+    "cheminee": {
+      "pull_policy": "never",
+      "platform": "linux/amd64",
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 7280,
+          "published": "7280",
+          "protocol": "tcp"
+        }
+      ],
+      "mem_limit": "805306368",
+      "cpus": 2,
+      "pids_limit": 256,
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://127.0.0.1:7280/health/readyz"
+        ],
+        "timeout": "2s",
+        "interval": "5s",
+        "retries": 24,
+        "start_period": "10s"
+      }
+    },
+    "elasticsearch": {
+      "pull_policy": "never",
+      "platform": "linux/amd64",
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 9200,
+          "published": "9200",
+          "protocol": "tcp"
+        }
+      ],
+      "mem_limit": "2147483648",
+      "cpus": 2,
+      "pids_limit": 512,
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s"
+        ],
+        "timeout": "3s",
+        "interval": "5s",
+        "retries": 24,
+        "start_period": "30s"
+      }
+    }
+  },
+  "schema-fix-native-clippy-status.json": {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "-p",
+      "quickwit-query",
+      "-p",
+      "quickwit-doc-mapper",
+      "-p",
+      "quickwit-search",
+      "-p",
+      "tantivy-rdkit",
+      "--features",
+      "quickwit-doc-mapper/native-chemistry",
+      "--tests",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "stopped_for_disk_headroom": false,
+    "free_bytes_after": 1284546560
+  },
+  "schema-fix-workspace-existing-tf-clippy-status.json": {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-features",
+      "--tests",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": -15,
+    "stopped_for_disk_headroom": true,
+    "free_bytes_after": 665366528
+  }
+}

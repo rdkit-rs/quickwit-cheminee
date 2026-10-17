@@ -1,0 +1,14 @@
+{
+  "python_ast_parses": [
+    "distribution/cheminee-local/smoke.py",
+    "quickwit/tantivy-rdkit/poc/schema_timestamp.py",
+    "quickwit/tantivy-rdkit/poc/leaf_loss.py"
+  ],
+  "file_sha256": {
+    "distribution/cheminee-local/smoke.py": "c8e0064d9a37806533f02b16fe9756d3b5c9e856b6cceca526580b7e3e8e3632",
+    "quickwit/tantivy-rdkit/poc/schema_timestamp.py": "2949f97a09c784d221c3a1b12f08799216d14009686580b7e3518d519cc80328",
+    "quickwit/tantivy-rdkit/poc/leaf_loss.py": "9802e45107cc85fe01e0351c403de4e0e315c07c1e93374b1c1fe9eea34e4f04"
+  },
+  "compose_config": "passed with placeholder immutable-image IDs, no containers started",
+  "runtime_scope": "schema_timestamp and leaf_loss final scripts executed separately; updated Compose smoke unexecuted"
+}

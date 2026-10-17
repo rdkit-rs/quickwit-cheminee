@@ -1,0 +1,36 @@
+# Local amd64 experiment; limits are test bounds, not production sizing advice.
+# Build the source-attributed runtime using distribution/cheminee-local/README.md first.
+name: cheminee-local
+services:
+  cheminee:
+    image: ${CHEMINEE_IMAGE:?Set CHEMINEE_IMAGE to the locally built immutable image ID}
+    environment:
+      QW_DISABLE_PER_INDEX_METRICS: "true"
+    pull_policy: never
+    platform: linux/amd64
+    command: [run, --config, /etc/cheminee/quickwit.yaml]
+    ports: ["127.0.0.1:7280:7280"]
+    volumes:
+      - ./distribution/cheminee-local/quickwit.yaml:/etc/cheminee/quickwit.yaml:ro
+      - cheminee-data:/var/lib/cheminee
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 2
+    mem_limit: 768m
+    memswap_limit: 768m
+    pids_limit: 256
+    stop_grace_period: 60s
+    restart: "no"
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://127.0.0.1:7280/health/readyz]
+      interval: 5s
+      timeout: 2s
+      retries: 24
+      start_period: 10s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "2"}
+volumes:
+  cheminee-data:

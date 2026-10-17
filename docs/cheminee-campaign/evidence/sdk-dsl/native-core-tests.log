@@ -1,0 +1,223 @@
+running 160 tests
+test elastic_query_dsl::bool_query::tests::test_dsl_query_single ... ok
+test elastic_query_dsl::bool_query::tests::test_dsl_bool_query_deserialize_simple ... ok
+test elastic_query_dsl::bool_query::tests::test_dsl_bool_query_deserialize_minimum_should_match ... ok
+test elastic_query_dsl::bool_query::tests::test_dsl_bool_query_deserialize_adjust_pure_negative ... ok
+test elastic_query_dsl::bool_query::tests::test_dsl_query_with_null_values ... ok
+test elastic_query_dsl::bool_query::tests::test_parse_percentage ... ok
+test elastic_query_dsl::bool_query::tests::test_dsl_query_with_minimum_should_match ... ok
+test elastic_query_dsl::exists_query::tests::test_dsl_exists_query_deserialize_simple ... ok
+test elastic_query_dsl::bool_query::tests::test_resolve_minimum_should_match ... ok
+test elastic_query_dsl::match_phrase_query::tests::test_deserialize_match_query_string ... ok
+test elastic_query_dsl::match_phrase_query::tests::test_deserialize_match_query_nice_errors ... ok
+test elastic_query_dsl::match_phrase_query::tests::test_match_query ... ok
+test elastic_query_dsl::match_phrase_query::tests::test_deserialize_match_query_struct ... ok
+test elastic_query_dsl::match_query::tests::test_deserialize_match_query_string ... ok
+test elastic_query_dsl::match_query::tests::test_deserialize_match_query_nice_errors ... ok
+test elastic_query_dsl::match_query::tests::test_deserialize_match_query_struct ... ok
+test elastic_query_dsl::match_query::tests::test_match_query ... ok
+test elastic_query_dsl::one_field_map::tests::test_one_field_hash_map_deserialize_error_no_fields ... ok
+test elastic_query_dsl::multi_match::tests::test_multimatch_unsupported ... ok
+test elastic_query_dsl::one_field_map::tests::test_one_field_hash_map_deserialize_error_too_many_fields ... ok
+test elastic_query_dsl::phrase_prefix_query::tests::test_term_query_simple ... ok
+test elastic_query_dsl::one_field_map::tests::test_one_field_hash_map_simple ... ok
+test elastic_query_dsl::multi_match::tests::test_multimatch_query_deserialization ... ok
+test elastic_query_dsl::prefix_query::tests::test_prefix_query_convert_to_query_ast ... ok
+test elastic_query_dsl::prefix_query::tests::test_prefix_query_convert_to_query_ast_special_chars ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_no_default_fields ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_with_default_field_non_empty ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_with_both_default_fields_and_field_yield_an_error ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_default_operator ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_with_default_operand_and ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_with_empty_default_field ... ok
+test elastic_query_dsl::query_string_query::tests::test_build_query_string_query_with_fields_non_empty ... ok
+test elastic_query_dsl::range_query::tests::test_range_query_with_from_to_exclusive ... ok
+test elastic_query_dsl::range_query::tests::test_range_query_with_from_to_defaults ... ok
+test elastic_query_dsl::range_query::tests::test_date_range_query_with_strict_date_optional_time_format ... ok
+test elastic_query_dsl::range_query::tests::test_date_range_query_with_format ... ok
+test elastic_query_dsl::regex_query::tests::test_regex_query_full_format_default_case ... ok
+test elastic_query_dsl::regex_query::tests::test_regex_query_shorthand_format ... ok
+test elastic_query_dsl::range_query::tests::test_range_query_with_from_to_inclusive ... ok
+test elastic_query_dsl::regex_query::tests::test_regex_query_full_format ... ok
+test elastic_query_dsl::term_query::tests::test_term_query_deserialization_in_short_format ... ok
+test elastic_query_dsl::term_query::tests::test_term_query_simple ... ok
+test elastic_query_dsl::terms_query::tests::test_terms_query_not_string ... ok
+test elastic_query_dsl::terms_query::tests::test_terms_query_simple ... ok
+test elastic_query_dsl::terms_query::tests::test_terms_query_single_term_boost ... ok
+test elastic_query_dsl::terms_query::tests::test_terms_query_single_term_not_array ... ok
+test elastic_query_dsl::tests::test_query_dsl_deserialize_simple ... ok
+test elastic_query_dsl::wildcard_query::tests::test_wildcard_query_convert_to_query_ast ... ok
+test elastic_query_dsl::wildcard_query::tests::test_boosted_wildcard_query_convert_to_query_ast ... ok
+test json_literal::tests::test_interpret_bytes_base16_lowercase ... ok
+test json_literal::tests::test_interpret_bytes_base16_mixed_casing ... ok
+test json_literal::tests::test_interpret_bytes_base16_uppercase ... ok
+test json_literal::tests::test_interpret_bytes_base64 ... ok
+test json_literal::tests::test_interpret_bytes_invalid ... ok
+test json_literal::tests::test_interpret_datetime_rfc3339_with_no_timezone ... ok
+test json_literal::tests::test_interpret_datetime_fractional_millis ... ok
+test json_literal::tests::test_interpret_datetime_simple_date ... ok
+test json_literal::tests::test_interpret_datetime_unix_timestamp_as_number ... ok
+test json_literal::tests::test_interpret_datetime_unix_timestamp_as_string ... ok
+test json_literal::tests::test_interpret_force_ambiguous_base64 ... ok
+test json_literal::tests::test_interpret_str_u64 ... ok
+test json_literal::tests::test_interpret_with_and_without_padding ... ok
+test query_ast::cache_node::tests::test_cache_preigniter_fills_cache ... ok
+test query_ast::cache_node::tests::test_default_visitor_ignore_cached_node ... ok
+test query_ast::cache_node::tests::test_built_tantivy_ast ... ok
+test query_ast::field_presence::tests::test_field_presence_hash_escaped_dot ... ok
+test query_ast::field_presence::tests::test_field_presence_hash_simple ... ok
+test query_ast::field_presence::tests::test_field_presence_single ... ok
+test query_ast::full_text_query::tests::test_full_text_bool_mode ... ok
+test query_ast::cache_node::tests::test_hit_set_roundtrip ... ok
+test query_ast::full_text_query::tests::test_full_text_datetime ... ok
+test query_ast::full_text_query::tests::test_full_text_specific_tokenizer ... ok
+test query_ast::full_text_query::tests::test_phrase_mode_default_tokenizer ... ok
+test query_ast::full_text_query::tests::test_zero_terms ... ok
+test query_ast::phrase_prefix_query::tests::test_empty_tokenization_matches_none_by_default ... ok
+test query_ast::phrase_prefix_query::tests::test_multi_token_builds_phrase_prefix_query ... ok
+test query_ast::phrase_prefix_query::tests::test_single_token_builds_prefix_only_query ... ok
+test query_ast::phrase_prefix_query::tests::test_multi_token_prefix_max_expansions ... ok
+test query_ast::cache_node::tests::test_cache_hit_returns_correct_docs ... ok
+test query_ast::cache_node::tests::test_cache_miss_returns_correct_docs_and_fill_cache ... ok
+test query_ast::range_query::tests::test_range_dynamic ... ok
+test query_ast::range_query::tests::test_range_dynamic_datetime ... ok
+test query_ast::range_query::tests::test_range_query_missing_field ... ok
+test query_ast::range_query::tests::test_range_query_not_fast_field ... ok
+test query_ast::range_query::tests::test_range_query_typed_field ... ok
+test query_ast::regex_query::tests::test_json_prefix_automaton ... ok
+test query_ast::phrase_prefix_query::tests::test_single_token_prefix_max_expansions ... ok
+test query_ast::regex_query::tests::test_regex_already_case_insensitive_not_doubled ... ok
+test query_ast::regex_query::tests::test_regex_case_insensitive_with_lowercasing_tokenizer ... ok
+test query_ast::phrase_prefix_query::tests::test_single_token_prefix_matches_all_terms_despite_low_max_expansions ... ok
+test query_ast::regex_query::tests::test_regex_has_case_insensitive_flag ... ok
+test query_ast::regex_query::tests::test_regex_combined_flags_not_doubled ... ok
+test query_ast::regex_query::tests::test_regex_json_field ... ok
+test query_ast::regex_query::tests::test_regex_query_json_field ... ok
+test query_ast::regex_query::tests::test_regex_query_text_field ... ok
+test query_ast::regex_query::tests::test_regex_no_case_insensitive_with_raw_tokenizer ... ok
+test query_ast::regex_query::tests::test_regex_without_tokenizer_manager ... ok
+test query_ast::required_terms::tests::test_must_and_filter_are_required ... ok
+test query_ast::required_terms::tests::test_nested_conjunction_collects_recursively ... ok
+test query_ast::required_terms::tests::test_single_indexed_term_is_required ... ok
+test query_ast::required_terms::tests::test_should_and_must_not_are_not_required ... ok
+test query_ast::required_terms::tests::test_term_on_non_indexed_field_is_not_required ... ok
+test query_ast::tantivy_query_ast::tests::test_bool_multiple_negative_query_add_wildcard ... ok
+test query_ast::tantivy_query_ast::tests::test_bool_multiple_negative_query_with_positive ... ok
+test query_ast::tantivy_query_ast::tests::test_bool_negative_query_add_wildcard ... ok
+test query_ast::tantivy_query_ast::tests::test_minimum_should_match_prevent_lift_simplification ... ok
+test query_ast::tantivy_query_ast::tests::test_remove_with_guard ... ok
+test query_ast::tantivy_query_ast::tests::test_should_lift_simplification ... ok
+test query_ast::regex_query::tests::test_json_prefix_automaton_empty_path ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_match_all_must_not_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_match_must_and_other_positive_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_match_must_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_match_none_must_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_match_none_no_positive_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_no_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_bool_query_with_one_clauses ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_empty_bool_query_matches_all ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_never_change_result_simple_corner_case ... ok
+test query_ast::term_query::tests::test_term_query_bytes_with_padding ... ok
+test query_ast::tantivy_query_ast::tests::test_simplify_lift_bool_bool ... ok
+test query_ast::term_query::tests::test_term_query_bytes_without_padding ... ok
+test query_ast::term_query::tests::test_term_query_with_date_nanosecond ... ok
+test query_ast::term_query::tests::test_term_query_with_ipaddr_compressed_ipv6 ... ok
+test query_ast::term_query::tests::test_term_query_with_ipaddr_ipv4 ... ok
+test query_ast::term_set_query::tests::test_term_set_query_with_fast_only_field_returns_bool_query ... ok
+test query_ast::tests::test_query_ast_from_user_text_default_as_and ... ok
+test query_ast::term_set_query::tests::test_term_set_query_with_indexed_field_uses_term_set ... ok
+test query_ast::tests::test_query_parse_default_occur_must ... ok
+test query_ast::tests::test_query_parse_default_occur_should ... ok
+test query_ast::tests::test_user_query_not_parsed ... ok
+test query_ast::tests::test_user_query_parsed ... ok
+test query_ast::tests::test_user_query_parsed_query_ast ... ok
+test query_ast::user_input_query::tests::test_user_input_query_field_specified_in_user_input ... ok
+test query_ast::user_input_query::tests::test_user_input_query_different_delimiter ... ok
+test query_ast::user_input_query::tests::test_user_input_query_not_parsed_error ... ok
+test query_ast::user_input_query::tests::test_user_input_query_missing_fields ... ok
+test query_ast::user_input_query::tests::test_user_input_query_override_default_fields ... ok
+test query_ast::user_input_query::tests::test_user_input_query_phrase_with_prefix ... ok
+test query_ast::user_input_query::tests::test_user_input_query_predefined_default_fields ... ok
+test query_ast::user_input_query::tests::test_user_input_query_regex ... ok
+test query_ast::user_input_query::tests::test_user_input_query_several_default_fields ... ok
+test query_ast::wildcard_query::tests::test_extract_regex_wildcard_missing_field ... ok
+test query_ast::wildcard_query::tests::test_wildcard_query_to_regex_on_escaped_text ... ok
+test query_ast::wildcard_query::tests::test_wildcard_query_to_regex_on_json ... ok
+test query_ast::wildcard_query::tests::test_wildcard_query_to_regex_on_text ... ok
+test query_ast::wildcard_query::tests::test_wildcard_query_to_regex_on_text_case_insensitive ... ok
+test query_ast::phrase_prefix_query::tests::test_single_token_prefix_on_json_field_matches_all_terms ... ok
+test tokenizers::chinese_compatible::tests::test_chinese_tokenizer_no_space ... ok
+test tokenizers::chinese_compatible::tests::test_chinese_tokenizer ... ok
+test tokenizers::code_tokenizer::tests::test_code_tokenizer ... ok
+test tokenizers::code_tokenizer::tests::test_code_tokenizer_hex ... ok
+test tokenizers::code_tokenizer::tests::test_code_tokenizer_hex_scenaris ... ok
+test tokenizers::tests::test_code_tokenizer_in_tokenizer_manager ... ok
+test tokenizers::tests::test_raw_lowercase_tokenizer ... ok
+test tokenizers::tests::test_raw_tokenizer ... ok
+test tokenizers::tests::test_tokenizers_in_manager ... ok
+test tokenizers::tokenizer_manager::tests::test_tokenizer_does_lowercasing ... ok
+test tokenizers::unicode_segmenter_tokenizer::tests::test_unicode_segmenter_tokenizer ... ok
+test tokenizers::chinese_compatible::tests::test_proptest_ascii_default_chinese_equal ... ok
+test query_ast::tantivy_query_ast::tests::test_proptest_simplify_never_change_result ... ok
+
+test result: ok. 160 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.30s
+
+
+running 4 tests
+test all_operator_encodings_and_rejections ... ok
+test quoted_chemistry_preserves_json_escaping_and_rejects_oversize_operands ... ok
+test text_json_equivalent_ast_and_scores_with_nested_descriptor_ranges ... ok
+test graph_text_json_execute_both_directions_and_negation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test graph_and_fingerprint_empty_candidates_require_segment_columns ... ok
+test containment_directions_thresholds_candidates_and_seek ... ok
+test graph_checks_only_distinct_live_candidates_and_never_truncates_before_verification ... ok
+test explicit_score_and_id_order_survives_per_split_top_k ... ok
+test graph_and_fingerprint_errors_are_scoped_to_explicit_candidates ... ok
+test graph_and_fingerprint_ignore_deleted_invalid_values ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+
+running 4 tests
+test packed_bytes_are_fixed_width_and_lsb0 ... ok
+test rejects_invalid_specs_queries_and_schema ... ok
+test threshold_filters_scores_seek_and_count ... ok
+test malformed_missing_and_multivalued_data_fail_closed ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test explicit_rankings_reject_the_wrong_direction ... ok
+test chirality_is_verified_even_when_morgan_fingerprints_are_equal ... ok
+test direction_ranking_and_identity ... ok
+test preserve_tautomer_fragment_parent_initializes_fingerprint_ring_cache ... ok
+test graph_queries_reject_no_heavy_atoms_and_wrong_preparation ... ok
+test canonical_tautomer_stereo_loss_is_explicit_and_preserve_mode_retains_it ... ok
+test normalization_parity_and_explicit_tautomer_contracts ... ok
+test verification_precedes_top_k_and_totals_across_segments ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+
+running 3 tests
+test rejects_invalid_empty_and_incompatible_inputs ... ok
+test preserves_salts_aromaticity_and_stereochemistry_without_chiral_fingerprints ... ok
+test native_mapping_and_query_contract_agree ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s

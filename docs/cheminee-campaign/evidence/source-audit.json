@@ -1,0 +1,28 @@
+{
+  "reviewed_commit": "6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa",
+  "unpublished_commit_not_recovered": "276bd1ab7455d0141bd8d9427d00acb1bb7ad845",
+  "files": {
+    "quickwit/quickwit-serve/src/ingest_api/rest_handler.rs": "cd208f9997c7ca552db2ace71d7e345716fb717443103490a3a6661e39cc2155",
+    "quickwit/quickwit-serve/src/ingest_api/response.rs": "5fab88d2b2b58d5ee22bbea1e01807cc2738407333c3653ecbbc016ff8c44838",
+    "quickwit/quickwit-serve/src/cheminee_api/v1.rs": "8e89049d0e746c22179c242ffa72fbabeef3f592e6df3267b269dccaff95ca2b",
+    "quickwit/quickwit-serve/src/elasticsearch_api/rest_handler.rs": "9efea0d3a05c1965f9160b156ff9bcbbfc3ba103b268ec38130f4aac429c1b36",
+    "quickwit/quickwit-serve/src/openapi.rs": "798ab89e61b459cb0f019eae9e793541d546914e5690917be9a177e67e912106",
+    "docs/internals/cheminee-ingest-timeouts.md": "01dc8c23c5ecccc0d2495cafcddff845ddb4aae7c56bcd0fd926f5c4357686ac"
+  },
+  "checkpoint": {
+    "library_file_id": "libfile_470ec6694a7c8191abbbc7bcb86622c9",
+    "version": 23,
+    "method": "six text-reader chunks; reconstructed valid JSON; appended final newline",
+    "bytes": 248516,
+    "sha256": "63e58fa4f5be28ec0e61f3496d43657171a5a8a463412d0b05507dd3558abbeb",
+    "original_binary_hash_not_supplied": true
+  },
+  "recovery_blocker": {
+    "library_file_id": "libfile_5c71df73a9e08191b0930d55a07d44a5",
+    "expected_bytes": 7569368,
+    "archive_bytes_received": false,
+    "cause": "HTTP CONNECT 403 for download host; helper failed normally, after refreshed URL, with network permission and outside sandbox",
+    "archive_integrity_verified": false
+  },
+  "runtime_tests_performed": false
+}

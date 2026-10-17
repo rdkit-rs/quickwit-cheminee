@@ -1,0 +1,908 @@
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+   Compiling ring v0.17.14
+   Compiling aws-lc-sys v0.42.0
+   Compiling liblzma-sys v0.4.7
+   Compiling tikv-jemalloc-sys v0.6.1+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7
+    Checking liblzma v0.4.7
+   Compiling zstd-safe v7.2.4
+    Checking zstd v0.13.3
+    Checking arrow-ipc v58.3.0
+    Checking compression-codecs v0.4.38
+    Checking async-compression v0.4.42
+    Checking tower-http v0.6.11
+    Checking arrow v58.3.0
+    Checking parquet-variant v58.3.0
+    Checking parquet-variant-json v58.3.0
+    Checking parquet-variant-compute v58.3.0
+    Checking parquet v58.3.0
+   Compiling rustls v0.23.41
+   Compiling openssl-sys v0.9.117
+   Compiling libz-sys v1.1.29
+   Compiling rustls-webpki v0.103.13
+    Checking tantivy-sstable v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking tantivy-columnar v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling zstd-safe v5.0.2+zstd.1.5.2
+   Compiling curl-sys v0.4.91+curl-8.22.0
+   Compiling bzip2-sys v0.1.13+1.0.8
+    Checking tantivy v0.26.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling zstd v0.11.2+zstd.1.5.2
+   Compiling bzip2 v0.4.4
+   Compiling zip v0.6.6
+   Compiling sqlx-core v0.8.6
+   Compiling sqlx-postgres v0.8.6
+   Compiling sqlx-macros-core v0.8.6
+    Checking tantivy-rdkit v0.1.0 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/tantivy-rdkit)
+   Compiling sqlx-macros v0.8.6
+   Compiling rustls v0.21.12
+    Checking sct v0.7.1
+    Checking rustls-webpki v0.101.7
+   Compiling curl v0.4.51
+   Compiling tensorflow-sys v0.24.0
+    Checking tensorflow v0.21.0
+    Checking tokio-rustls v0.24.1
+    Checking hyper-rustls v0.24.2
+    Checking quickwit-datetime v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-datetime)
+   Compiling onig_sys v69.9.3
+   Compiling aws-lc-rs v1.17.1
+    Checking onig v6.5.3
+    Checking grok v2.4.1
+   Compiling psm v0.1.31
+    Checking stacker v0.1.24
+    Checking recursive v0.1.1
+    Checking sqlparser v0.61.0
+    Checking tokio-rustls v0.26.4
+    Checking hyper-rustls v0.27.9
+    Checking tonic v0.14.6
+    Checking tonic-prost v0.14.6
+    Checking reqwest v0.12.28
+    Checking sqlx v0.8.6
+    Checking aws-smithy-http-client v1.2.0
+    Checking tantivy-rdkit-mapper v0.1.0 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/tantivy-rdkit-mapper)
+    Checking reqwest-middleware v0.4.2
+    Checking aws-smithy-runtime v1.12.0
+    Checking reqwest-retry v0.8.0
+    Checking vrl v0.33.1
+    Checking aws-runtime v1.8.1
+    Checking rustls-platform-verifier v0.7.0
+    Checking reqwest v0.13.4
+    Checking azure_core v0.21.0
+    Checking aws-sdk-sts v1.108.0
+    Checking aws-sdk-sso v1.103.0
+    Checking aws-sdk-ssooidc v1.105.0
+    Checking datafusion-common v53.1.0
+    Checking opendal-core v0.57.0
+    Checking aws-config v1.9.0
+    Checking aws-sdk-s3 v1.138.0
+    Checking aws-sdk-kinesis v1.110.0
+    Checking aws-sdk-sqs v1.103.0
+    Checking azure_storage v0.21.0
+    Checking opendal-service-gcs v0.57.0
+    Checking datafusion-expr-common v53.1.0
+    Checking azure_svc_blobstorage v0.21.0
+    Checking azure_identity v0.21.0
+    Checking datafusion-physical-expr-common v53.1.0
+    Checking opendal v0.57.0
+    Checking datafusion-functions-window-common v53.1.0
+    Checking datafusion-functions-aggregate-common v53.1.0
+    Checking datafusion-expr v53.1.0
+    Checking azure_storage_blobs v0.21.0
+   Compiling blake3 v1.8.5
+    Checking datafusion-physical-expr v53.1.0
+    Checking datafusion-execution v53.1.0
+    Checking sea-query-binder v0.7.0
+    Checking datafusion-functions v53.1.0
+    Checking datafusion-physical-plan v53.1.0
+    Checking datafusion-physical-expr-adapter v53.1.0
+    Checking chitchat v0.11.1
+   Compiling krb5-src v0.3.4
+    Checking datafusion-session v53.1.0
+    Checking datafusion-datasource v53.1.0
+   Compiling lz4-sys v1.11.1+lz4-1.10.0
+    Checking tikv-jemallocator v0.6.1
+    Checking quickwit-common v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-common)
+    Checking quickwit-actors v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-actors)
+    Checking quickwit-proto v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-proto)
+    Checking quickwit-query v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-query)
+    Checking quickwit-aws v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-aws)
+    Checking tonic v0.12.3
+    Checking jsonwebtoken v9.3.1
+    Checking datafusion-catalog v53.1.0
+error: failed to run custom build command for `krb5-src v0.3.4`
+
+Caused by:
+  process didn't exit successfully: `/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-738028899b8fb362/build-script-build` (exit status: 101)
+  --- stdout
+  checking for gcc... gcc
+  checking whether the C compiler works... yes
+  checking for C compiler default output file name... a.out
+  checking for suffix of executables... 
+  checking whether we are cross compiling... no
+  checking for suffix of object files... o
+  checking whether the compiler supports GNU C... yes
+  checking whether gcc accepts -g... yes
+  checking for gcc option to enable C11 features... none needed
+  checking for g++... g++
+  checking whether the compiler supports GNU C++... yes
+  checking whether g++ accepts -g... yes
+  checking for g++ option to enable C++11 features... none needed
+  checking if C compiler supports -Werror=unknown-warning-option... no
+  checking how to run the C preprocessor... gcc -E
+  checking for pkg-config... /usr/bin/pkg-config
+  checking pkg-config is at least version 0.9.0... yes
+  checking build system type... x86_64-pc-linux-gnu
+  checking host system type... x86_64-pc-linux-gnu
+  checking for a sed that does not truncate output... /usr/bin/sed
+  checking for grep that handles long lines and -e... /usr/bin/grep
+  checking for egrep... /usr/bin/grep -E
+  checking for GNU linker... yes
+  configure: adding extra warning flags for gcc
+  configure: skipping pedantic warnings on Linux
+  configure: adding extra warning flags for g++
+  checking if C compiler supports -Wno-format-zero-length... yes
+  checking if C compiler supports -Woverflow... yes
+  checking if C compiler supports -Wstrict-overflow... yes
+  checking if C compiler supports -Wmissing-format-attribute... yes
+  checking if C compiler supports -Wmissing-prototypes... yes
+  checking if C compiler supports -Wreturn-type... yes
+  checking if C compiler supports -Wmissing-braces... yes
+  checking if C compiler supports -Wparentheses... yes
+  checking if C compiler supports -Wswitch... yes
+  checking if C compiler supports -Wunused-function... yes
+  checking if C compiler supports -Wunused-label... yes
+  checking if C compiler supports -Wunused-variable... yes
+  checking if C compiler supports -Wunused-value... yes
+  checking if C compiler supports -Wunknown-pragmas... yes
+  checking if C compiler supports -Wsign-compare... yes
+  checking if C compiler supports -Wnewline-eof... no
+  checking if C compiler supports -Werror=uninitialized... yes
+  checking if C compiler supports -Wno-maybe-uninitialized... yes
+  checking if C compiler supports -Werror=pointer-arith... yes
+  checking if C compiler supports -Werror=int-conversion... yes
+  checking if C compiler supports -Werror=incompatible-pointer-types... yes
+  checking if C compiler supports -Werror=discarded-qualifiers... yes
+  checking if C compiler supports -Werror=implicit-int... yes
+  checking if C compiler supports -Werror=declaration-after-statement... yes
+  checking if C compiler supports -Werror-implicit-function-declaration... yes
+  checking which version of com_err to use... krb5
+  checking which version of subsystem package to use... krb5
+  checking for an ANSI C-conforming const... yes
+  checking for gethostbyname... yes
+  checking for socket... yes
+  checking for main in -lresolv... yes
+  checking for res_ninit... yes
+  checking for res_nclose... yes
+  checking for res_ndestroy... no
+  checking for res_nsearch... yes
+  checking for ns_initparse... yes
+  checking for ns_name_uncompress... yes
+  checking for dn_skipname... yes
+  checking for res_search... yes
+  checking whether pragma weak references are supported... yes
+  checking for constructor/destructor attribute support... yes,yes
+  configure: enabling thread support
+  checking whether gcc is Clang... no
+  checking whether pthreads work with -pthread... yes
+  checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+  checking whether more special flags are required for pthreads... no
+  checking for PTHREAD_PRIO_INHERIT... yes
+  configure: PTHREAD_CC = gcc
+  configure: PTHREAD_CFLAGS = -pthread
+  configure: PTHREAD_LIBS = 
+  checking for pthread_once... yes
+  checking for pthread_rwlock_init... yes
+  configure: rechecking with PTHREAD_... options
+  checking for pthread_rwlock_init in -lc... yes
+  checking for library containing dlopen... none required
+  checking for pkg-config... (cached) /usr/bin/pkg-config
+  checking pkg-config is at least version 0.9.0... yes
+  checking for stdio.h... yes
+  checking for stdlib.h... yes
+  checking for string.h... yes
+  checking for inttypes.h... yes
+  checking for stdint.h... yes
+  checking for strings.h... yes
+  checking for sys/stat.h... yes
+  checking for sys/types.h... yes
+  checking for unistd.h... yes
+  checking for sys/time.h... yes
+  checking for stdint.h... (cached) yes
+  checking whether integers are two's complement... yes
+  checking whether CHAR_BIT is 8... yes
+  checking if va_copy is available... yes
+  checking if va_list objects can be copied by assignment... no
+  configure: using static libraries
+  checking for tclConfig.sh... not found
+  checking whether ln -s works... yes
+  checking for ranlib... ranlib
+  checking for a BSD-compatible install... /usr/bin/install -c
+  checking for ar... ar
+  checking for perl... perl
+  checking for working regcomp... yes
+  checking for mode_t... yes
+  checking if daemon needs a prototype provided... no
+  checking if getsockname() takes arguments struct sockaddr * and size_t *... no
+  checking if getsockname() takes arguments struct sockaddr * and int *... no
+  checking if getsockname() takes arguments struct sockaddr * and socklen_t *... yes
+  checking for main in -lutil... yes
+  checking for sys/sockio.h... no
+  checking for ifaddrs.h... yes
+  checking for unistd.h... (cached) yes
+  checking for fnmatch.h... yes
+  checking for vsprintf... yes
+  checking for vasprintf... yes
+  checking for vsnprintf... yes
+  checking for strlcpy... yes
+  checking for fnmatch... yes
+  checking for secure_getenv... yes
+  checking for strlcpy... (cached) yes
+  checking for getopt... yes
+  checking for getopt_long... yes
+  checking for fnmatch... (cached) yes
+  checking for vasprintf... (cached) yes
+  checking if vasprintf needs a prototype provided... no
+  checking if swab needs a prototype provided... no
+  checking for secure_getenv... (cached) yes
+  checking for gawk... no
+  checking for mawk... mawk
+  checking for struct sockaddr.sa_len... no
+  checking for sys/types.h... (cached) yes
+  checking for sys/socket.h... yes
+  checking for netinet/in.h... yes
+  checking for netdb.h... yes
+  checking for inet_ntop... yes
+  checking for inet_pton... yes
+  checking for getnameinfo... yes
+  checking for getaddrinfo... yes
+  checking for IPv6 compile-time support without -DINET6... yes
+  checking for struct sockaddr.sa_len... (cached) no
+  checking for sigprocmask... yes
+  checking for sigset_t and POSIX_SIGNALS... yes
+  checking for SSL_CTX_new in -lssl... yes
+  checking for OpenSSL... yes
+  configure: TLS module will use OpenSSL
+  checking for keyutils.h... no
+  checking for EC_POINT_new in -lcrypto... yes
+  checking for yasm... no
+  checking for cpuid.h... yes
+  checking return type of signal handlers... void
+  checking for flex... no
+  checking for lex... no
+  checking for an ANSI C-conforming const... (cached) yes
+  checking for dirent.h that defines DIR... yes
+  checking for library containing opendir... none required
+  checking for gcc options needed to detect all undeclared functions... none needed
+  checking whether strerror_r is declared... yes
+  checking whether strerror_r returns char *... yes
+  checking for strdup... yes
+  checking for setvbuf... yes
+  checking for seteuid... yes
+  checking for setresuid... yes
+  checking for setreuid... yes
+  checking for setegid... yes
+  checking for setresgid... yes
+  checking for setregid... yes
+  checking for setsid... yes
+  checking for flock... yes
+  checking for fchmod... yes
+  checking for chmod... yes
+  checking for strptime... yes
+  checking for geteuid... yes
+  checking for setenv... yes
+  checking for unsetenv... yes
+  checking for getenv... yes
+  checking for gmtime_r... yes
+  checking for localtime_r... yes
+  checking for bswap16... no
+  checking for bswap64... no
+  checking for mkstemp... yes
+  checking for getusershell... yes
+  checking for access... yes
+  checking for getcwd... yes
+  checking for srand48... yes
+  checking for srand... yes
+  checking for srandom... yes
+  checking for stat... yes
+  checking for strchr... yes
+  checking for strerror... yes
+  checking for timegm... yes
+  checking for explicit_bzero... yes
+  checking for explicit_memset... no
+  checking for getresuid... yes
+  checking for getresgid... yes
+  checking for mkstemp... (cached) yes
+  checking for gettimeofday... yes
+  checking for sys_errlist declaration... no
+  checking for sys_errlist in libc... no
+  checking for unistd.h... (cached) yes
+  checking for paths.h... yes
+  checking for regex.h... yes
+  checking for regexpr.h... no
+  checking for fcntl.h... yes
+  checking for memory.h... yes
+  checking for ifaddrs.h... (cached) yes
+  checking for sys/filio.h... no
+  checking for byteswap.h... yes
+  checking for machine/endian.h... no
+  checking for machine/byte_order.h... no
+  checking for sys/bswap.h... no
+  checking for endian.h... yes
+  checking for pwd.h... yes
+  checking for arpa/inet.h... yes
+  checking for alloca.h... yes
+  checking for dlfcn.h... yes
+  checking for limits.h... yes
+  checking for regexp.h... no
+  checking for struct stat.st_mtimensec... no
+  checking for struct stat.st_mtimespec.tv_nsec... no
+  checking for struct stat.st_mtim.tv_nsec... yes
+  checking for re_comp... yes
+  checking for re_exec... yes
+  checking for regexec... yes
+  checking for off_t... yes
+  checking for perror declaration... no
+  checking if strptime needs a prototype provided... no
+  checking if argument to wait is int *... no
+  checking for use of sigprocmask... yes
+  checking for uid_t in sys/types.h... yes
+  checking type of array argument to getgroups... gid_t
+  checking for sigsetjmp... no
+  checking return type of setrpcent... void
+  checking return type of endrpcent... void
+  checking for bswap_16... yes
+  checking for bswap_64... yes
+  checking for gethostbyname_r... yes
+  checking if gethostbyname_r returns an int... yes
+  checking if gethostbyname_r returns a pointer... no
+  checking for gethostbyaddr_r... yes
+  checking for getpwnam_r... yes
+  checking for getpwuid_r... yes
+  checking return type of getpwnam_r... int
+  checking number of arguments to getpwnam_r... 5
+  checking whether gmtime_r returns int... no
+  checking for getservbyname_r... yes
+  checking if getservbyname_r returns an int... yes
+  checking if getservbyname_r returns a pointer... no
+  checking for getservbyport_r... yes
+  checking for yylineno declaration... no
+  checking for dirent.h... yes
+  checking for uid_t in sys/types.h... (cached) yes
+  checking for termios.h... yes
+  checking for tcsetattr... yes
+  checking POSIX signal handlers... yes
+  checking for poll.h... yes
+  checking for stdlib.h... (cached) yes
+  checking for string.h... (cached) yes
+  checking for stddef.h... yes
+  checking for sys/types.h... (cached) yes
+  checking for sys/file.h... yes
+  checking for sys/param.h... yes
+  checking for sys/stat.h... (cached) yes
+  checking for sys/time.h... (cached) yes
+  checking for netinet/in.h... (cached) yes
+  checking for sys/uio.h... yes
+  checking for sys/filio.h... (cached) no
+  checking for sys/select.h... yes
+  checking for time.h... yes
+  checking for paths.h... (cached) yes
+  checking for errno.h... yes
+  checking for in6addr_any definition in library... yes
+  checking for time_t... yes
+  checking size of time_t... 8
+  checking for replay cache directory... /var/tmp
+  checking for socklen_t... yes
+  checking for struct lifconf... no
+  checking for struct if_laddrconf... no
+  checking for h_errno in netdb.h... yes
+  checking for inline... inline
+  checking for struct cmsghdr... yes
+  checking for struct in_pktinfo... yes
+  checking for struct in6_pktinfo... yes
+  checking for struct sockaddr_storage... yes
+  checking for struct rt_msghdr... no
+  checking size of size_t... 8
+  checking for __int128_t... yes
+  checking for __uint128_t... yes
+  checking for ssize_t... yes
+  checking for u_char... yes
+  checking for u_int... yes
+  checking for u_long... yes
+  checking for u_int8_t... yes
+  checking for u_int16_t... yes
+  checking for u_int32_t... yes
+  checking for int8_t... yes
+  checking for int16_t... yes
+  checking for int32_t... yes
+  checking for sh... /usr/bin/sh
+  checking for sh5... false
+  checking for bash... /bin/bash
+  checking if /usr/bin/sh supports functions... yes
+  checking for POSIX printf positional specification support... yes
+  checking for dig... false
+  checking for nslookup... false
+  checking for bison... no
+  checking for byacc... no
+  checking for runtest... no
+  checking for perl... perl
+  checking for expect... no
+  checking whether to use priocntl hack... no
+  checking for runtest... no
+  checking for perl... (cached) perl
+  checking for xom.h... no
+  checking where struct rpcent is declared... rpc/netdb.h
+  checking for sys/select.h... (cached) yes
+  checking for sys/time.h... (cached) yes
+  checking for unistd.h... (cached) yes
+  checking for MAXHOSTNAMELEN in sys/param.h... yes
+  checking for MAXHOSTNAMELEN in netdb.h... no
+  checking for BSD type aliases... yes
+  checking return type of setrpcent... (cached) void
+  checking return type of endrpcent... (cached) void
+  checking for a recent enough OpenSSL... yes
+  checking for PKCS7_get_signer_info in -lcrypto... yes
+  checking for CMS_get0_content in -lcrypto... yes
+  checking for daemon... yes
+  checking for python3... python3
+  checking for cmocka.h... no
+  checking for _cmocka_run_group_tests in -lcmocka... no
+  checking for gethostbyname_r... (cached) yes
+  checking for getservbyname_r... (cached) yes
+  checking for gmtime_r... (cached) yes
+  checking for localtime_r... (cached) yes
+  checking for SD_Init in -laceclnt... no
+  checking for mdb_env_create in -llmdb... no
+  checking for libedit... no
+  configure: Not using any readline support
+  checking for libverto... no
+  configure: Using built-in libverto
+  checking for groff... no
+  configure: Default ccache name: FILE:/tmp/krb5cc_%{uid}
+  configure: Default keytab name: FILE:/etc/krb5.keytab
+  configure: Default client keytab name: FILE:/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/var/krb5/user/%{euid}/client.keytab
+  configure: creating ./config.status
+  config.status: creating kadmin/testing/scripts/env-setup.sh
+  config.status: creating include/gssrpc/types.h
+  config.status: creating plugins/preauth/pkinit/Makefile
+  config.status: creating tests/softpkcs11/Makefile
+  config.status: creating util/et/Makefile
+  config.status: creating util/ss/Makefile
+  config.status: creating build-tools/krb5-config
+  config.status: creating build-tools/kadm-server.pc
+  config.status: creating build-tools/kadm-client.pc
+  config.status: creating build-tools/kdb.pc
+  config.status: creating build-tools/krb5.pc
+  config.status: creating build-tools/krb5-gssapi.pc
+  config.status: creating build-tools/mit-krb5.pc
+  config.status: creating build-tools/mit-krb5-gssapi.pc
+  config.status: creating build-tools/gssrpc.pc
+  config.status: creating ./Makefile
+  config.status: creating util/Makefile
+  config.status: creating util/support/Makefile
+  config.status: creating util/profile/Makefile
+  config.status: creating util/profile/testmod/Makefile
+  config.status: creating util/verto/Makefile
+  config.status: creating lib/Makefile
+  config.status: creating lib/kdb/Makefile
+  config.status: creating lib/crypto/Makefile
+  config.status: creating lib/crypto/krb/Makefile
+  config.status: creating lib/crypto/builtin/Makefile
+  config.status: creating lib/crypto/builtin/enc_provider/Makefile
+  config.status: creating lib/crypto/builtin/hash_provider/Makefile
+  config.status: creating lib/crypto/builtin/des/Makefile
+  config.status: creating lib/crypto/builtin/md4/Makefile
+  config.status: creating lib/crypto/builtin/md5/Makefile
+  config.status: creating lib/crypto/builtin/sha1/Makefile
+  config.status: creating lib/crypto/builtin/sha2/Makefile
+  config.status: creating lib/crypto/builtin/aes/Makefile
+  config.status: creating lib/crypto/builtin/camellia/Makefile
+  config.status: creating lib/crypto/crypto_tests/Makefile
+  config.status: creating lib/krb5/Makefile
+  config.status: creating lib/krb5/error_tables/Makefile
+  config.status: creating lib/krb5/asn.1/Makefile
+  config.status: creating lib/krb5/ccache/Makefile
+  config.status: creating lib/krb5/keytab/Makefile
+  config.status: creating lib/krb5/krb/Makefile
+  config.status: creating lib/krb5/rcache/Makefile
+  config.status: creating lib/krb5/os/Makefile
+  config.status: creating lib/krb5/unicode/Makefile
+  config.status: creating lib/gssapi/Makefile
+  config.status: creating lib/gssapi/generic/Makefile
+  config.status: creating lib/gssapi/krb5/Makefile
+  config.status: creating lib/gssapi/spnego/Makefile
+  config.status: creating lib/gssapi/mechglue/Makefile
+  config.status: creating lib/rpc/Makefile
+  config.status: creating lib/rpc/unit-test/Makefile
+  config.status: creating lib/kadm5/Makefile
+  config.status: creating lib/kadm5/clnt/Makefile
+  config.status: creating lib/kadm5/srv/Makefile
+  config.status: creating lib/kadm5/unit-test/Makefile
+  config.status: creating lib/krad/Makefile
+  config.status: creating lib/apputils/Makefile
+  config.status: creating kdc/Makefile
+  config.status: creating kprop/Makefile
+  config.status: creating config-files/Makefile
+  config.status: creating build-tools/Makefile
+  config.status: creating man/Makefile
+  config.status: creating doc/Makefile
+  config.status: creating include/Makefile
+  config.status: creating plugins/certauth/test/Makefile
+  config.status: creating plugins/gssapi/negoextest/Makefile
+  config.status: creating plugins/hostrealm/test/Makefile
+  config.status: creating plugins/localauth/test/Makefile
+  config.status: creating plugins/kadm5_hook/test/Makefile
+  config.status: creating plugins/kadm5_auth/test/Makefile
+  config.status: creating plugins/pwqual/test/Makefile
+  config.status: creating plugins/audit/Makefile
+  config.status: creating plugins/audit/test/Makefile
+  config.status: creating plugins/kdb/db2/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/hash/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/btree/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/db/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/mpool/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/recno/Makefile
+  config.status: creating plugins/kdb/db2/libdb2/test/Makefile
+  config.status: creating plugins/kdb/test/Makefile
+  config.status: creating plugins/kdcpolicy/test/Makefile
+  config.status: creating plugins/preauth/otp/Makefile
+  config.status: creating plugins/preauth/spake/Makefile
+  config.status: creating plugins/preauth/test/Makefile
+  config.status: creating plugins/authdata/greet_client/Makefile
+  config.status: creating plugins/authdata/greet_server/Makefile
+  config.status: creating plugins/tls/k5tls/Makefile
+  config.status: creating clients/Makefile
+  config.status: creating clients/klist/Makefile
+  config.status: creating clients/kinit/Makefile
+  config.status: creating clients/kvno/Makefile
+  config.status: creating clients/kdestroy/Makefile
+  config.status: creating clients/kpasswd/Makefile
+  config.status: creating clients/ksu/Makefile
+  config.status: creating clients/kswitch/Makefile
+  config.status: creating kadmin/Makefile
+  config.status: creating kadmin/cli/Makefile
+  config.status: creating kadmin/dbutil/Makefile
+  config.status: creating kadmin/ktutil/Makefile
+  config.status: creating kadmin/server/Makefile
+  config.status: creating kadmin/testing/Makefile
+  config.status: creating kadmin/testing/scripts/Makefile
+  config.status: creating kadmin/testing/util/Makefile
+  config.status: creating appl/Makefile
+  config.status: creating appl/sample/Makefile
+  config.status: creating appl/sample/sclient/Makefile
+  config.status: creating appl/sample/sserver/Makefile
+  config.status: creating appl/simple/Makefile
+  config.status: creating appl/simple/client/Makefile
+  config.status: creating appl/simple/server/Makefile
+  config.status: creating appl/gss-sample/Makefile
+  config.status: creating appl/user_user/Makefile
+  config.status: creating tests/Makefile
+  config.status: creating tests/asn.1/Makefile
+  config.status: creating tests/create/Makefile
+  config.status: creating tests/hammer/Makefile
+  config.status: creating tests/verify/Makefile
+  config.status: creating tests/gssapi/Makefile
+  config.status: creating tests/dejagnu/Makefile
+  config.status: creating tests/threads/Makefile
+  config.status: creating tests/shlib/Makefile
+  config.status: creating tests/gss-threads/Makefile
+  config.status: creating tests/misc/Makefile
+  config.status: creating include/autoconf.h
+  config.status: executing CRYPTO_IMPL commands
+  config.status: executing PRNG_ALG commands
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/threads.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/init-addrinfo.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/plugins.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/errors.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/k5buf.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/gmt_mktime.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/fake-addrinfo.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/utf8.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/utf8_conv.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/zap.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/path.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/base64.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/json.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/hex.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/hashtab.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/bcmp.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/strerror_r.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/support/dir_filenames.c
+  : updated OBJS.ST
+  rm -f libkrb5support.a
+  building static krb5support library
+  set -x; objlist=`set -x && perl -p -e 'BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g;' OBJS.ST` && ar cq libkrb5support.a $objlist
+  ranlib libkrb5support.a
+  rm -f ../../lib/libkrb5support.a
+  (cd ../../lib && ln -s ../util/support/libkrb5support.a .)
+  rm -f /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libkrb5support.a
+  /usr/bin/install -c -m 644 libkrb5support.a /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib
+  ranlib /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libkrb5support.a
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/error_message.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/et_name.c
+  gcc -DHAVE_CONFIG_H  -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.c
+  if cmp /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.h \
+  ../../include/com_err.h >/dev/null 2>&1; then :; \
+  else \
+  	(set -x; rm -f ../../include/com_err.h; \
+  	 cp /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.h \
+  		../../include/com_err.h) ; \
+  fi
+  : updated OBJS.ST
+  rm -f libcom_err.a
+  building static com_err library
+  set -x; objlist=`set -x && perl -p -e 'BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g;' OBJS.ST` && ar cq libcom_err.a $objlist
+  ranlib libcom_err.a
+  rm -f ../../lib/libcom_err.a
+  (cd ../../lib && ln -s ../util/et/libcom_err.a .)
+  rm -f /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libcom_err.a
+  /usr/bin/install -c -m 644 libcom_err.a /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib
+  ranlib /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libcom_err.a
+  /usr/bin/install -c compile_et /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/bin/compile_et
+  test -d /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/share/et || mkdir /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/share/et
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/et_c.awk /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/share/et
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/et_h.awk /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/share/et
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/compile_et.1 /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/share/man/man1/compile_et.1
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.h  /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/com_err.h
+  making all in testmod...
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/util/profile/testmod'
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/util/profile/testmod'
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_tree.c
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_file.c
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_parse.c
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_get.c
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_set.c
+  gcc -DHAVE_CONFIG_H -DHAS_STDARG -DLIBDIR=\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\" -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/profile/prof_init.c
+  : updated OBJS.ST
+  rm -f libprofile.a
+  building static profile library
+  set -x; objlist=`set -x && perl -p -e 'BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g;' OBJS.ST` && ar cq libprofile.a $objlist
+  ranlib libprofile.a
+  making install in testmod...
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/util/profile/testmod'
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/util/profile/testmod'
+  gcc -DHAVE_CONFIG_H -DDEFAULT_LIBRARY=\"k5ev\" -DBUILTIN_MODULE=k5ev -I../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/verto -I. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC  -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/verto/verto-k5ev.c
+  : updated OBJS.ST
+  rm -f libverto.a
+  building static verto library
+  set -x; objlist=`set -x && perl -p -e 'BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g;' OBJS.ST` && ar cq libverto.a $objlist
+  ranlib libverto.a
+  rm -f ../../lib/libverto.a
+  (cd ../../lib && ln -s ../util/verto/libverto.a .)
+  rm -f /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libverto.a
+  /usr/bin/install -c -m 644 libverto.a /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib
+  ranlib /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/libverto.a
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/verto/verto.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/verto.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/verto/verto-module.h \
+  	/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/verto-module.h
+  (cd ../lib/krb5/error_tables && make includes)
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  make[1]: Nothing to be done for 'includes'.
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  : db.h will be installed by util/db2
+  cat /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/osconf.hin | sed -e "s\"@KRB5RCTMPDIR\"/var/tmp\"" -e "s\"@PREFIX\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install\"" -e "s\"@EXEC_PREFIX\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install\"" -e "s\"@BINDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/bin\"" -e "s\"@LIBDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib\"" -e "s\"@SBINDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/sbin\"" -e "s\"@MODULEDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/krb5/plugins\"" -e "s\"@GSSMODULEDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/lib/gss\"" -e "s\"@LOCALSTATEDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/var\"" -e "s\"@RUNSTATEDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/var/run\"" -e "s\"@SYSCONFDIR\"/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/etc\"" -e "s\"@DYNOBJEXT\".so-nobuild\"" -e "s\"@SYSCONFCONF\":/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/etc/krb5.conf\"" > osconf.new
+  /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/config/move-if-changed osconf.new osconf.h
+  osconf.h is unchanged
+  : ../lib/krb5/error_tables/krb5_err.h
+  : ../lib/krb5/error_tables/k5e1_err.h
+  : ../lib/krb5/error_tables/kdb5_err.h
+  : ../lib/krb5/error_tables/kv5m_err.h
+  : ../lib/krb5/error_tables/krb524_err.h
+  : ../lib/krb5/error_tables/asn1_err.h
+  : krb5.h
+  (cd ../lib/krb5/error_tables && make includes)
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  make[1]: Nothing to be done for 'includes'.
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  : ../lib/krb5/error_tables/krb5_err.h
+  : ../lib/krb5/error_tables/k5e1_err.h
+  : ../lib/krb5/error_tables/kdb5_err.h
+  : ../lib/krb5/error_tables/kv5m_err.h
+  : ../lib/krb5/error_tables/krb524_err.h
+  : ../lib/krb5/error_tables/asn1_err.h
+  : krb5.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/kdb.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/kdb.h
+  /usr/bin/install -c -m 644 krb5/krb5.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/krb5.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/certauth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/certauth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/ccselect_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/ccselect_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/clpreauth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/clpreauth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/hostrealm_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/hostrealm_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/kdcpolicy_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/kdcpolicy_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/kdcpreauth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/kdcpreauth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/localauth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/localauth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/locate_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/locate_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/preauth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/preauth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/pwqual_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/pwqual_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/kadm5_auth_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/kadm5_auth_plugin.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krb5/kadm5_hook_plugin.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krb5/kadm5_hook_plugin.h
+  /usr/bin/install -c -m 644 profile.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/profile.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/gssapi.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/gssapi.h
+  /usr/bin/install -c -m 644 /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include/krad.h /workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/install/include/krad.h
+  making all in crypto...
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto'
+  making all in crypto/krb...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/krb'
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/aead.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/block_size.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/cf2.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_dk_cmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_dk_hmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_etm.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_hmac_md5.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_unkeyed.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/checksum_length.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/cksumtype_to_string.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/cksumtypes.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/cmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/coll_proof_cksum.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/crypto_length.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/crypto_libinit.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/default_state.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/decrypt.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/decrypt_iov.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/derive.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/encrypt.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/encrypt_iov.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/encrypt_length.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enctype_util.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enc_dk_cmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enc_dk_hmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enc_etm.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enc_raw.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/enc_rc4.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/etypes.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/key.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/keyblocks.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/keyed_cksum.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/keyed_checksum_types.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/keylengths.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/make_checksum.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/make_checksum_iov.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/make_random_key.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/mandatory_sumtype.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/nfold.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/old_api_glue.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf_aes2.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf_cmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf_des.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf_dk.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prf_rc4.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prng.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/prng_fortuna.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/random_to_key.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/s2k_pbkdf2.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/s2k_rc4.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/state.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/string_to_cksumtype.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/string_to_key.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/valid_cksumtype.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/verify_checksum.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/../builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/krb/verify_checksum_iov.c
+  : updated OBJS.ST
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/krb'
+  making all in crypto/builtin...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin'
+  making all in crypto/builtin/camellia...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/camellia'
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/camellia'
+  making all in crypto/builtin/des...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/des'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/d3_aead.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/d3_kysched.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/des_keys.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/f_aead.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/f_cksum.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/f_parity.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/f_sched.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/f_tables.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/key_sched.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/../../krb -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/des/weak_key.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/des'
+  making all in crypto/builtin/aes...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/aes'
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/aes'
+  making all in crypto/builtin/md4...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/md4'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/md4 -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/md4/md4.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/md4'
+  making all in crypto/builtin/md5...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/md5'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/md5/md5.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/md5'
+  making all in crypto/builtin/sha1...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/sha1'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/sha1/shs.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/sha1'
+  making all in crypto/builtin/sha2...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/sha2'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/sha2/sha256.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/sha2/sha512.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/sha2'
+  making all in crypto/builtin/enc_provider...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/enc_provider'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../des -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../aes -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../camellia -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/.. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/des3.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../des -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../aes -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../camellia -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/.. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/rc4.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../des -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../aes -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../camellia -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/.. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/aes.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../des -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../aes -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../camellia -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/.. -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/enc_provider/camellia.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/enc_provider'
+  making all in crypto/builtin/hash_provider...
+  make[3]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/hash_provider'
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md4 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md5 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha1 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha2 -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/hash_md4.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md4 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md5 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha1 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha2 -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/hash_md5.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md4 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md5 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha1 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha2 -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/hash_sha1.c
+  gcc -DHAVE_CONFIG_H  -I../../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/.. -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md4 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../md5 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha1 -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/../sha2 -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hash_provider/hash_sha2.c
+  : updated OBJS.ST
+  make[3]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin/hash_provider'
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/hmac.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/init.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/../krb -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/crypto/builtin/pbkdf2.c
+  : updated OBJS.ST
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/builtin'
+  making all in crypto/crypto_tests...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/crypto_tests'
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto/crypto_tests'
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/crypto'
+  making all in krb5...
+  make[1]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5'
+  making all in krb5/error_tables...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  : updated OBJS.ST
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/error_tables'
+  making all in krb5/asn.1...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/asn.1'
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/asn.1/asn1_encode.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/asn.1/asn1_k_encode.c
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/asn.1/ldap_key_seq.c
+  : updated OBJS.ST
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/asn.1'
+  making all in krb5/ccache...
+  make[2]: Entering directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/ccache'
+  gcc -DHAVE_CONFIG_H  -I../../../include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/include -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/ccache/ccapi -I/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/ccache -I.  -DKRB5_DEPRECATED=1 -DKRB5_PRIVATE  -std=gnu17 -fPIC -Wall -Wcast-align -Wshadow -Wmissing-prototypes -Wno-format-zero-length -Woverflow -Wstrict-overflow -Wmissing-format-attribute -Wmissing-prototypes -Wreturn-type -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Werror=uninitialized -Wno-maybe-uninitialized -Werror=pointer-arith -Werror=int-conversion -Werror=incompatible-pointer-types -Werror=discarded-qualifiers -Werror=implicit-int -Werror=declaration-after-statement -Werror-implicit-function-declaration -pthread  -c /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/ccache/ccbase.c
+  make[2]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5/ccache'
+  make[1]: Leaving directory '/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/build/krb5-src-e8f4a675ac7e90f5/out/build/lib/krb5'
+
+  --- stderr
+  configure: WARNING: Could not find Tcl which is needed for some tests
+  configure: WARNING: sys_errlist is neither in errno.h nor in libc
+  + set -x
+  + perl -p -e BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g; OBJS.ST
+  + objlist= threads.o init-addrinfo.o plugins.o errors.o k5buf.o gmt_mktime.o fake-addrinfo.o utf8.o utf8_conv.o zap.o path.o base64.o json.o hex.o hashtab.o bcmp.o strerror_r.o dir_filenames.o
+  + ar cq libkrb5support.a threads.o init-addrinfo.o plugins.o errors.o k5buf.o gmt_mktime.o fake-addrinfo.o utf8.o utf8_conv.o zap.o path.o base64.o json.o hex.o hashtab.o bcmp.o strerror_r.o dir_filenames.o
+  /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.c: In function ‘default_com_err_proc’:
+  /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/util/et/com_err.c:88:9: warning: function ‘default_com_err_proc’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+     88 |         vfprintf(stderr, fmt, ap);
+        |         ^~~~~~~~
+  + set -x
+  + perl -p -e BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g; OBJS.ST
+  + objlist= error_message.o et_name.o com_err.o
+  + ar cq libcom_err.a error_message.o et_name.o com_err.o
+  + set -x
+  + perl -p -e BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g; OBJS.ST
+  + objlist= prof_tree.o prof_file.o prof_parse.o prof_get.o prof_set.o prof_err.o prof_init.o
+  + ar cq libprofile.a prof_tree.o prof_file.o prof_parse.o prof_get.o prof_set.o prof_err.o prof_init.o
+  + set -x
+  + perl -p -e BEGIN { $SIG{__WARN__} = sub {die @_} }; $e=$ARGV; $e =~ s/OBJS\...$//; s/^/ /; s/ $//; s/ / $e/g; OBJS.ST
+  + objlist= verto.o module.o verto-k5ev.o
+  + ar cq libverto.a verto.o module.o verto-k5ev.o
+  /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/ccache/ccbase.c: In function ‘krb5_cc_resolve’:
+  /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/krb5/src/lib/krb5/ccache/ccbase.c:207:8: error: assignment discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
+    207 |     cp = strchr (name, ':');
+        |        ^
+  cc1: some warnings being treated as errors
+  make[2]: *** [Makefile:500: ccbase.o] Error 1
+  make[1]: *** [Makefile:1155: all-recurse] Error 1
+  make: *** [Makefile:1005: all-recurse] Error 1
+
+  thread 'main' (114666) panicked at /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/krb5-src-0.3.4/build.rs:200:41:
+  make failed in lib
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...

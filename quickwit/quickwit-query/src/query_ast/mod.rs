@@ -21,6 +21,10 @@ use tantivy::schema::Schema as TantivySchema;
 
 use crate::tokenizers::TokenizerManager;
 
+mod chemistry_candidates;
+pub use chemistry_candidates::narrow_chemistry_candidates;
+mod fingerprint_contains_query;
+pub use fingerprint_contains_query::FingerprintContainsQueryAst;
 mod graph_query;
 pub use graph_query::GraphQueryAst;
 mod tanimoto_query;
@@ -61,6 +65,7 @@ use crate::{BooleanOperand, InvalidQuery, NotNaNf32};
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
 pub enum QueryAst {
+    FingerprintContains(FingerprintContainsQueryAst),
     Graph(GraphQueryAst),
     Tanimoto(TanimotoQueryAst),
     Bool(BoolQuery),
@@ -88,6 +93,11 @@ impl QueryAst {
         default_search_fields: &[String],
     ) -> anyhow::Result<QueryAst> {
         match self {
+            QueryAst::FingerprintContains(mut query) => {
+                query.candidates =
+                    Box::new(query.candidates.parse_user_query(default_search_fields)?);
+                Ok(QueryAst::FingerprintContains(query))
+            }
             QueryAst::Graph(mut query) => {
                 query.candidates =
                     Box::new(query.candidates.parse_user_query(default_search_fields)?);
@@ -193,7 +203,10 @@ impl QueryAst {
 
 /// Context used when building a tantivy ast.
 pub struct BuildTantivyAstContext<'a> {
+    /// Physical split schema for ordinary queries and candidate field IDs.
     pub schema: &'a TantivySchema,
+    /// Current declared schema: chemistry contracts remain eager across old splits.
+    pub chemistry_schema: &'a TantivySchema,
     pub tokenizer_manager: &'a TokenizerManager,
     pub search_fields: &'a [String],
     pub with_validation: bool,
@@ -209,6 +222,7 @@ impl<'a> BuildTantivyAstContext<'a> {
 
         BuildTantivyAstContext {
             schema,
+            chemistry_schema: schema,
             tokenizer_manager: &DEFAULT_TOKENIZER_MANAGER,
             search_fields: &[],
             with_validation: true,
@@ -256,6 +270,7 @@ impl BuildTantivyAst for QueryAst {
         context: &BuildTantivyAstContext,
     ) -> Result<TantivyQueryAst, InvalidQuery> {
         match self {
+            QueryAst::FingerprintContains(query) => query.build_tantivy_ast_call(context),
             QueryAst::Graph(query) => query.build_tantivy_ast_call(context),
             QueryAst::Tanimoto(query) => query.build_tantivy_ast_call(context),
             QueryAst::Bool(bool_query) => bool_query.build_tantivy_ast_call(context),
@@ -367,6 +382,10 @@ pub fn query_ast_from_user_text(user_text: &str, default_fields: Option<Vec<Stri
         lenient: false,
     }
     .into()
+}
+
+fn chemistry_match_all() -> Box<QueryAst> {
+    Box::new(QueryAst::MatchAll)
 }
 
 #[cfg(test)]

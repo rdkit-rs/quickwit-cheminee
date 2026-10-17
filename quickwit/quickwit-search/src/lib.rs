@@ -168,10 +168,16 @@ fn extract_split_and_footer_offsets(split_metadata: &SplitMetadata) -> SplitIdAn
         split_id: split_metadata.split_id.to_string(),
         split_footer_start: split_metadata.footer_offsets.start,
         split_footer_end: split_metadata.footer_offsets.end,
-        timestamp_start: split_metadata
-            .time_range
-            .as_ref()
-            .map(|time_range| *time_range.start()),
+        timestamp_start: split_metadata.time_range.as_ref().map(|time_range| {
+            // Older splits truncated negative fractional timestamps toward
+            // zero. Widen that lower bound when deciding redundant filters.
+            let start = *time_range.start();
+            if start <= 0 {
+                start.saturating_sub(1)
+            } else {
+                start
+            }
+        }),
         timestamp_end: split_metadata
             .time_range
             .as_ref()
@@ -205,7 +211,14 @@ pub async fn list_relevant_splits(
         query = query.with_time_range_start_gte(start_ts);
     }
     if let Some(end_ts) = end_timestamp {
-        query = query.with_time_range_end_lt(end_ts);
+        // Admit old negative-time splits whose stored bounds were truncated
+        // toward zero. Widen only pruning; request/AST bounds remain precise.
+        let pruning_end = if end_ts <= 0 {
+            end_ts.saturating_add(1)
+        } else {
+            end_ts
+        };
+        query = query.with_time_range_end_lt(pruning_end);
     }
     if let Some(tags_filter) = tags_filter_opt {
         query = query.with_tags_filter(tags_filter);

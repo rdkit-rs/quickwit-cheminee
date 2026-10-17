@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-16",
+  "scope": "Preparation documentation and recovered text provenance only",
+  "checks": {
+    "pr3_head_exact": "6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa",
+    "six_reviewed_source_sha256_matches": "passed",
+    "checkpoint_json_parse": "passed",
+    "checkpoint_reconstructed_bytes_match_library_metadata": 248516,
+    "checkpoint_local_sha256_matches_source_audit": "passed",
+    "embedded_report_text_matches_checkpoint": "passed",
+    "manifest_part_count": 7,
+    "manifest_sum_bytes": 2884674095,
+    "manifest_sum_matches_declared_total": "passed",
+    "git_diff_check": "passed"
+  },
+  "not_performed": [
+    "DSL archive byte recovery or integrity verification",
+    "Recovered Git bundle or final DSL commit verification",
+    "Verification of seven actual benchmark archive parts",
+    "Rust compilation, tests, clippy or workspace CI",
+    "Ruby schema export, generation, installation or wire tests",
+    "Compose, catalog refresh, profiling, scale or HA tests"
+  ],
+  "publication_hold": true
+}

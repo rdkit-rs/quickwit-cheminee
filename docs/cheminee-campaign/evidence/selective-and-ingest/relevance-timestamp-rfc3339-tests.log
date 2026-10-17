@@ -1,0 +1,32 @@
+   Compiling quickwit-proto v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-proto)
+   Compiling quickwit-doc-mapper v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-doc-mapper)
+   Compiling quickwit-parquet-engine v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-parquet-engine)
+   Compiling quickwit-config v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-config)
+   Compiling quickwit-transport v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-transport)
+   Compiling quickwit-storage v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-storage)
+   Compiling quickwit-cluster v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-cluster)
+   Compiling quickwit-ingest v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-ingest)
+   Compiling quickwit-directories v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-directories)
+   Compiling quickwit-metastore v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-metastore)
+   Compiling quickwit-opentelemetry v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-opentelemetry)
+   Compiling quickwit-indexing v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-indexing)
+   Compiling quickwit-search v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-search)
+    Finished `test` profile [unoptimized] target(s) in 1m 04s
+     Running unittests src/lib.rs (target/debug/deps/quickwit_search-0a7964530c51794f)
+
+running 12 tests
+test leaf::tests::timestamp_literals_roundtrip_before_epoch_and_at_nanosecond_extremes ... ok
+test leaf::tests::test_remove_timestamp_range_keep_should ... ok
+test leaf::tests::test_remove_timestamp_range ... ok
+test leaf::tests::test_remove_timestamp_range_multiple_bounds ... ok
+test root::tests::test_extract_timestamp_range_from_ast ... ok
+test leaf::tests::timestamp_rewrite_preserves_chemistry_candidate_domains ... ok
+test root::tests::timestamp_pruning_leaves_extreme_nanoseconds_in_exact_ast ... ok
+test leaf_cache::tests::test_leaf_search_cache_no_timestamp ... ok
+test leaf_cache::tests::test_leaf_search_cache_timestamp ... ok
+test root::tests::timestamp_pruning_preserves_exclusive_subseconds_across_epoch ... ok
+test root::tests::test_validate_request_and_build_metadatas_fail_with_different_timestamps ... ok
+test tests::test_single_node_without_timestamp_with_query_start_timestamp_enabled ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 192 filtered out; finished in 0.07s
+

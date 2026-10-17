@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "checks": {
+    "combined_schema_sha256": true,
+    "sdk_schema_sha256": true,
+    "generator_config_sha256": true,
+    "projection_script_sha256": true,
+    "ruby_dependency_lock_sha256": true,
+    "generator_sha256": true,
+    "templates": true,
+    "support_source_and_generated": true,
+    "recomputed_projection": true,
+    "three_generated_trees_equal": true,
+    "safe_package_members": true,
+    "package_allowlist_exact": true,
+    "package_bytes_match_generated": true,
+    "packaged_provenance_matches": true,
+    "installed_files_match_package": true
+  },
+  "generated_trees": [
+    "/workspace/recovery/sdk-contract1-reviewed",
+    "/workspace/recovery/sdk-contract1-reviewed-repeat",
+    "/workspace/quickwit-cheminee-pr3-inspection/sdk/ruby/generated"
+  ],
+  "generated_file_counts": [
+    452,
+    452,
+    452
+  ],
+  "packaged_file_count": 296,
+  "gem_sha256": "43208077f9e1907390e306cff34cd901970c964557d4c6119516f4a4319036a9",
+  "gem_bytes": 99328,
+  "installed_path": "/workspace/recovery/ruby-dependencies/ruby/3.3.0/gems/quickwit-cheminee-0.9.1.pre.contract1",
+  "server_revision": "8009925c6b9757edc77ef8e6111309503028e7c5",
+  "gem_version": "0.9.1.pre.contract1",
+  "schema_sha256": "cd6c8a497e622472fe8667871dae6a3efd922c95ed3238fa8e0e433d1c5c20d1",
+  "support_sha256": {
+    "quickwit-cheminee/exact_search.rb": "d9051923d5ed71fe0b8a9156fadb15f672b148f9b5003937f7f917e5f89afa31"
+  },
+  "provenance_sha256": "f6d51b82ebfaaac0fe8af2dc2f0b8cdf2bb3aa8a78bf7853f319bd849673751d"
+}

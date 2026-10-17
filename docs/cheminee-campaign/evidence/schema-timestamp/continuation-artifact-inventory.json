@@ -1,0 +1,13 @@
+{
+  "time_utc": "2026-10-16T14:54:17.282965+00:00",
+  "free_bytes": 1354063872,
+  "reproducible_roots": [
+    "/workspace/quickwit-cheminee-pr3-inspection/quickwit/target",
+    "/workspace/recovery/cargo-native",
+    "/workspace/recovery/compose-runtime-reviewed"
+  ],
+  "preserve_checkpoint": "/workspace/recovery/quickwit-ruby-native-campaign-2026-10-16.tar.gz",
+  "du": "5899712\t/workspace/quickwit-cheminee-pr3-inspection/quickwit/target\n1216240\t/workspace/recovery/cargo-native\n203652\t/workspace/recovery/compose-runtime-reviewed\n8164\t/workspace/recovery/quickwit-ruby-native-campaign-2026-10-16.tar.gz\n",
+  "docker_images": "{\"Containers\":\"1\",\"CreatedAt\":\"2026-10-16 06:27:49 +0000 UTC\",\"CreatedSince\":\"8 hours ago\",\"Digest\":\"\\u003cnone\\u003e\",\"ID\":\"sha256:abfc41123e9f25f8d4f8815dc625e73e896ab773a12ad79cce2a12c7d82d1866\",\"Repository\":\"cheminee-native-builder\",\"SharedSize\":\"N/A\",\"Size\":\"2.01GB\",\"Tag\":\"local\",\"UniqueSize\":\"N/A\",\"VirtualSize\":\"2.005GB\"}\n{\"Containers\":\"0\",\"CreatedAt\":\"2026-09-27 10:24:08 +0000 UTC\",\"CreatedSince\":\"2 weeks ago\",\"Digest\":\"\\u003cnone\\u003e\",\"ID\":\"sha256:6e92c4fd8dfdf7276d56743a65002a91c9eb35dbe7af327e6c85bd204b646156\",\"Repository\":\"ubuntu\",\"SharedSize\":\"N/A\",\"Size\":\"101MB\",\"Tag\":\"26.04\",\"UniqueSize\":\"N/A\",\"VirtualSize\":\"100.9MB\"}\n{\"Containers\":\"0\",\"CreatedAt\":\"2025-01-14 19:28:22 +0000 UTC\",\"CreatedSince\":\"21 months ago\",\"Digest\":\"\\u003cnone\\u003e\",\"ID\":\"sha256:d137b8bbe716b1c11e1d330c5670a3e640943c1556665c9858b39a01dcb7ae81\",\"Repository\":\"ruby\",\"SharedSize\":\"N/A\",\"Size\":\"996MB\",\"Tag\":\"3.3.6-bookworm\",\"UniqueSize\":\"N/A\",\"VirtualSize\":\"995.7MB\"}\n",
+  "docker_driver": "vfs\n"
+}

@@ -1,0 +1,16 @@
+{
+  "binary_sha256": "5943eedc612af1e732852222cc4796411b73b052230c2266231c8cd5f766652e",
+  "binary_bytes": 262834288,
+  "build_checkout_revision": "3782bfebf7fc5eee99b396b7c96fbe7939dfb697",
+  "profile": "dev, debuginfo=0, incremental=0",
+  "features": [
+    "native-chemistry"
+  ],
+  "rust": "1.96.1",
+  "restarted_process_ids": [
+    17091,
+    17092,
+    17093
+  ],
+  "scope": "binary provenance and graceful restart, not reproducible binary proof"
+}

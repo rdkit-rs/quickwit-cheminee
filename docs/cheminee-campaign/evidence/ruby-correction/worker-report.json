@@ -1,0 +1,79 @@
+{
+  "correction": "Earlier seed 704 result passed with JSON 2.7.2 from RUBYLIB despite activated gem spec 3.1.0. The old dependency check inspected Gem.loaded_specs, not loaded code; its pinned-JSON claim is withdrawn. New run explicitly prepends activated gem require paths and asserts JSON::VERSION 3.1.0.",
+  "verified_run": {
+    "commit": "f6e64991dec0c3690b4c6b2324bca084330b28f1",
+    "ruby": "ruby 3.3.8 (2025-04-09 revision b200bad6cd) [x86_64-linux-gnu]",
+    "json": "3.1.0",
+    "seed": 10109,
+    "tests": 20,
+    "assertions": 392,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 0.639246
+  },
+  "platform": {
+    "os": "Debian GNU/Linux 13 (trixie) 13.6",
+    "glibc": "2.41-12+deb13u3",
+    "arch": "x86_64-linux-gnu",
+    "ruby_abi_directory": "3.3.0",
+    "RUBY_SO_NAME": "ruby-3.3",
+    "LIBRUBY_SO": "libruby-3.3.so.3.3.8",
+    "elf_soname": "libruby-3.3.so.3.3",
+    "configure_flags_relevant": [
+      "--enable-multiarch",
+      "--with-soname=ruby-3.3",
+      "--enable-shared",
+      "--disable-rpath"
+    ]
+  },
+  "extension_requirements": {
+    "DT_NEEDED": [
+      "libruby-3.3.so.3.3",
+      "libm.so.6",
+      "libc.so.6"
+    ],
+    "glibc_symbol_versions_max_direct_extension": "GLIBC_2.14 (not a minimum for the entire Ruby runtime)",
+    "runtime_transitive_dependencies": [
+      "libz.so.1",
+      "libgmp.so.10",
+      "libcrypt.so.1",
+      "libm.so.6",
+      "libc.so.6",
+      "ld-linux-x86-64.so.2"
+    ],
+    "gem_lib": "/workspace/ruby-v5-task/deps/ruby/3.3.0/gems/json-3.1.0/lib",
+    "extension_directory": "/workspace/ruby-v5-task/deps/ruby/3.3.0/extensions/x86_64-linux-gnu/3.3.0/json-3.1.0",
+    "loaded_extensions": "Both loaded from gems/json-3.1.0/lib/json/ext in corrected run."
+  },
+  "portability": "No binary payload: destination ABI/runtime has not been verified compatible. Do not alias libruby.so names or mix two Ruby runtimes in a process. Same Ruby version string or extension-directory rename alone does not establish compatibility. Use an existing matching Debian Ruby runtime with its genuine SONAME and standard library, or retain runtime mismatch as blocked. No installation/build/lock change performed in this task.",
+  "environment_script": "export CARGO_HOME=/workspace/.onboarding/cargo\nexport RUSTUP_HOME=/workspace/.onboarding/rustup\nexport PATH=/workspace/.onboarding/bin:/workspace/.onboarding/cargo/bin:/workspace/.onboarding/sysroot/usr/bin:$PATH\nexport CARGO_BUILD_JOBS=5\nexport CARGO_TARGET_DIR=/workspace/.onboarding/target\nexport CXXFLAGS='-I/workspace/.onboarding/sysroot/usr/include -I/workspace/.onboarding/sysroot/usr/include/rdkit'\nexport LIBRARY_PATH=/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu:/workspace/.onboarding/sysroot/usr/lib\nexport LD_LIBRARY_PATH=/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu:/workspace/.onboarding/sysroot/usr/lib\nexport LIBCLANG_PATH=/usr/lib/llvm-19/lib\nexport BINDGEN_EXTRA_CLANG_ARGS='-I/workspace/.onboarding/sysroot/usr/include -I/workspace/.onboarding/sysroot/usr/include/rdkit -resource-dir=/workspace/.onboarding/sysroot/usr/lib/llvm-19/lib/clang/19'\nexport PKG_CONFIG_PATH=/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/pkgconfig:/workspace/.onboarding/sysroot/usr/lib/pkgconfig\nexport RUBYLIB=/workspace/.onboarding/sysroot/usr/lib/ruby/3.3.0:/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/ruby/3.3.0:/workspace/.onboarding/sysroot/usr/lib/ruby/vendor_ruby:/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/ruby/vendor_ruby\nexport GEM_HOME=/workspace/.onboarding/gems\nexport GEM_PATH=/workspace/.onboarding/gems:/workspace/.onboarding/sysroot/usr/share/rubygems-integration/all\nexport PATH=/workspace/.onboarding/gems/bin:$PATH\n",
+  "reproduction_script": "#!/bin/bash\nset -euo pipefail\nsource /workspace/.onboarding/env.sh\nexport GEM_HOME=/workspace/ruby-v5-task/gems\nexport GEM_PATH=$GEM_HOME:/workspace/ruby-v5-task/deps/ruby/3.3.0:/workspace/.onboarding/sysroot/usr/share/rubygems-integration/all\nexport SDK_INSTALL_ROOT=/workspace/ruby-v5-task/gems\nexport LEGACY_CHEMINEE_LIB=/workspace/cheminee-ruby/lib\ncd /workspace/ruby-v5-task/repo\n# Explicit gem activation alone is insufficient when RUBYLIB shadows gem files.\n# Put activated gem paths first and assert actual JSON code version before tests.\nruby -e 'gem \"json\", \"3.1.0\"; gem \"logger\", \"1.7.0\"; gem \"timeout\", \"0.6.1\"; gem \"uri\", \"1.1.2\"; gem \"net-protocol\", \"0.4.0\"; gem \"net-http\", \"0.10.0\"; $LOAD_PATH.unshift(*Gem.loaded_specs.values.flat_map(&:full_require_paths)); require \"json\"; abort \"wrong JSON\" unless JSON::VERSION == \"3.1.0\"; puts \"JSON=#{JSON::VERSION}\"; puts $LOADED_FEATURES.grep(/json.*\\.(so|rb)$/); load \"sdk/ruby/wire_test.rb\"'\n",
+  "hashes": [
+    {
+      "path": "/workspace/.onboarding/sysroot/usr/bin/ruby3.3",
+      "sha256": "d23057791401d5687392c05b258a7e4fe1ebf85a447372ce11169b5e27cc3e2f"
+    },
+    {
+      "path": "/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/libruby-3.3.so.3.3.8",
+      "sha256": "7c2d9793682780a5103814ec2401a4672479d3cb63bf2d52e3d0c9c4273d1e69"
+    },
+    {
+      "path": "/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/ruby/3.3.0/json/ext/parser.so",
+      "sha256": "db306f819ee6021abeda5d1017ee5ea7214ad3b100416506139cfbd6593b383a"
+    },
+    {
+      "path": "/workspace/.onboarding/sysroot/usr/lib/x86_64-linux-gnu/ruby/3.3.0/json/ext/generator.so",
+      "sha256": "5100ef4f431384f8cded45d9a6afa729eeae5bb5ae77e5d3f2fb0a566cb4ea0d"
+    },
+    {
+      "path": "/workspace/ruby-v5-task/deps/ruby/3.3.0/gems/json-3.1.0/lib/json/ext/parser.so",
+      "sha256": "200e4547caec32da36c3cbf9d1bf11d23bff76945299dbfa10ffcd3025f2e4a2"
+    },
+    {
+      "path": "/workspace/ruby-v5-task/deps/ruby/3.3.0/gems/json-3.1.0/lib/json/ext/generator.so",
+      "sha256": "9bc25029518d78dba2f1761e4408222931ee026325f7016133b8aa292e86c010"
+    }
+  ],
+  "integrator_note": "The verified rerun is on Ruby task commit f6e64991, not integrator commit 7a87a0bd. Re-run there after matching runtime. Harden future dependency checks using actual loaded-feature provenance and JSON::VERSION, not only Gem.loaded_specs. No test source changed during this inspection."
+}
