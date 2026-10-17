@@ -11,8 +11,9 @@ and is created with restrictive permissions; do not attach it to routine logs.
 
 ```ruby
 require_relative 'catalog_generation'
-store = CatalogGeneration.new(api: api, directory: '/data/catalog-journal',
+store = CatalogGeneration.create(api: api, directory: '/data/catalog-journal',
                               expected_suppliers: %w[Acme Beta])
+# On restart use CatalogGeneration.new with the same arguments; never create again.
 # Read a frozen complete snapshot, never a partially successful scraper run.
 generation = store.stage(JSON.parse(File.read('complete-snapshot.json')))
 store.ingest(generation, batch_id: 'batch-0001', record_ids: [1, 2, 3])
@@ -39,8 +40,12 @@ Manifest shape:
 Supplier coverage is trusted configuration, persisted separately and checked on
 restart. **Every supplier must advance its sequence on each complete refresh**;
 this example deliberately does not implement independent supplier patch updates.
-An empty offers list withdraws that supplier's previous offers only as part of an
-explicitly complete snapshot. Availability remains dated catalog information.
+An empty offers list is rejected even when marked complete. After separately
+reviewing the scrape, explicitly opt in with `stage(manifest,
+allow_empty_suppliers: ['Acme'])` to withdraw that supplier's previous offers.
+Large nonempty shrink thresholds need supplier-specific review; no measured shrink
+policy or automated anomaly detection is implemented. Conflicting offer-level
+supplier or observation times are rejected; observation times retain nanoseconds. Availability remains dated catalog information.
 Two suppliers can offer the same structure; supplier/offer identity stays separate
 from structure data. The durable identity registry prevents changing or recycling
 record IDs, including after withdrawal or rollback. It grows with all identities
@@ -108,3 +113,16 @@ revision check blocks their promotion. Cooperating callers must retain uncertain
 indexes for reconciliation and must not bypass this journal to rewrite published
 content. An uncertain create outcome is quarantined; recovery uses a fresh random
 generation ID rather than assuming the previous create failed.
+
+Initialization is explicit and exclusive: `CatalogGeneration.create` requires a
+nonexistent directory. Opening with `.new` and every subsequent operation require
+the lock, scope, active pointer and identity registry; missing files never reset
+high-water marks or ID reservations. Restore a verified journal backup and reconcile
+server generations after loss; do not reinitialize the same catalog. Content
+corruption and replacement of intact-looking files are not detected by checksums.
+Audits enumerate by `record_id` only, avoiding merge-sensitive BM25 score ordering.
+
+Scraper JSON strings must be valid UTF-8. JSON 3.1 rejects multibyte UTF-8 bytes
+still tagged `ASCII-8BIT`, before staging creates a server index. Explicitly decode
+using the known source encoding and validate first; never silently replace or drop
+invalid bytes. See the SDK README for safe conversion examples.

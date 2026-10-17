@@ -15,42 +15,52 @@ class CatalogGeneration
   class Unsafe < StandardError; end
   MAX_AUDIT_DOCS = 10_000 # Current ExactSearch offset safety bound, not a tuning recommendation.
 
-  def initialize(api:, directory:, expected_suppliers:)
+  def self.create(**options)
+    new(**options, create: true)
+  end
+
+  def initialize(api:, directory:, expected_suppliers:, create: false)
     @api = api
     @directory = File.expand_path(directory)
     raise Unsafe, 'invalid supplier scope' unless expected_suppliers.is_a?(Array) && !expected_suppliers.empty? && expected_suppliers.all? { |s| s.is_a?(String) && !s.empty? }
     @suppliers = expected_suppliers.map { |name| name.dup.freeze }.sort.freeze
     raise Unsafe, 'duplicate supplier scope' unless @suppliers.uniq == @suppliers
-    unless File.directory?(@directory)
-      Dir.mkdir(@directory, 0o700) # Parent must already exist.
+    if create
+      Dir.mkdir(@directory, 0o700) # Exclusive: never initialize over a lost/partial journal.
       File.open(File.dirname(@directory), File::RDONLY) { |parent| parent.fsync }
+      File.open(File.join(@directory, 'writer.lock'), File::WRONLY | File::CREAT | File::EXCL, 0o600) { |f| f.fsync }
+      save('scope.json', { 'suppliers' => @suppliers })
+      save('active.json', { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} })
+      save('identities.json', { 'offers' => {}, 'records' => {} })
     end
-    locked do
-      scope = read('scope.json')
-      raise Unsafe, 'supplier scope changed' if scope && scope['suppliers'] != @suppliers
-      save('scope.json', { 'suppliers' => @suppliers }) unless scope
-    end
+    locked { } # Opening an existing journal never repairs missing state.
   end
 
   def pointer
-    locked { read('active.json') || { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} } }
+    locked { read('active.json') }
   end
 
   # manifest: {suppliers: [names], snapshots: [{supplier:, sequence:, complete:,
   # observed_at:, offers: [{offer_id:, record_id:, smiles:, ...}]}]}
   # Do not manufacture `complete: true` from a successful HTTP scrape request.
-  def stage(manifest)
+  def stage(manifest, allow_empty_suppliers: [])
     normalized = JSON.parse(JSON.generate(manifest))
     suppliers = normalized.fetch('suppliers').sort
     snapshots = normalized.fetch('snapshots')
     raise Unsafe, 'supplier coverage mismatch' unless suppliers == @suppliers && snapshots.map { |s| s.fetch('supplier') }.sort == suppliers
     raise Unsafe, 'incomplete snapshot' unless snapshots.all? { |s| s['complete'] == true && s['sequence'].is_a?(Integer) && s['sequence'] >= 0 }
+    raise Unsafe, 'invalid empty-supplier override' unless allow_empty_suppliers.is_a?(Array) && (allow_empty_suppliers - @suppliers).empty?
     records = snapshots.flat_map do |snapshot|
-      observed = Time.iso8601(snapshot.fetch('observed_at')).utc.iso8601
+      observed = Time.iso8601(snapshot.fetch('observed_at')).utc.iso8601(9)
+      raise Unsafe, 'empty supplier snapshot requires reviewed override' if snapshot.fetch('offers').empty? && !allow_empty_suppliers.include?(snapshot['supplier'])
       snapshot.fetch('offers').map do |offer|
         raise Unsafe, 'invalid offer identity' unless offer['offer_id'].is_a?(String) && !offer['offer_id'].empty?
         raise Unsafe, 'invalid structure' unless offer['smiles'].is_a?(String) && !offer['smiles'].empty?
         raise Unsafe, 'invalid record_id' unless offer['record_id'].is_a?(Integer) && (0..((1 << 64) - 1)).cover?(offer['record_id'])
+        raise Unsafe, 'conflicting offer supplier' if offer.key?('supplier') && offer['supplier'] != snapshot['supplier']
+        if offer.key?('observed_at') && Time.iso8601(offer['observed_at']).utc.iso8601(9) != observed
+          raise Unsafe, 'conflicting offer observed_at'
+        end
         offer.merge('supplier' => snapshot['supplier'], 'observed_at' => observed)
       end
     end
@@ -59,9 +69,9 @@ class CatalogGeneration
     raise Unsafe, 'duplicate offer identity' unless records.map { |r| r.values_at('supplier', 'offer_id') }.uniq.length == records.length
     sequences = snapshots.to_h { |s| [s['supplier'], s['sequence']] }
     locked do
-      active = read('active.json') || { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} }
+      active = read('active.json')
       raise Unsafe, 'stale source sequence' if sequences.any? { |supplier, sequence| sequence <= active['high_water'].fetch(supplier, -1) }
-      identities = read('identities.json') || { 'offers' => {}, 'records' => {} }
+      identities = read('identities.json')
       records.each do |record|
         key = JSON.generate(record.values_at('supplier', 'offer_id'))
         id = record['record_id']
@@ -137,7 +147,7 @@ class CatalogGeneration
   def promote(generation)
     locked do
       state = generation_state(generation)
-      active = read('active.json') || { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} }
+      active = read('active.json')
       # The fsynced pointer is authoritative after an interrupted publication.
       if active['active'] == generation && %w[sealed promoted].include?(state['status'])
         state['status'] = 'promoted'
@@ -154,7 +164,7 @@ class CatalogGeneration
       rescue StandardError
         quarantine(state, 'generation audit failed')
       end
-      active = read('active.json') || { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} }
+      active = read('active.json')
       raise Unsafe, 'activation revision changed; build a fresh generation' unless active['revision'] == state['base_revision']
       raise Unsafe, 'stale source sequence' if state['sequences'].any? { |s, n| n <= active['high_water'].fetch(s, -1) }
       state['status'] = 'sealed'
@@ -192,7 +202,7 @@ class CatalogGeneration
     query = { match_all: {} }
     raise Unsafe, 'published count mismatch' unless exact.count(query: query) == state['records'].length
     actual = (0...state['records'].length).step(100).flat_map do |offset|
-      exact.search(query: query, limit: [100, state['records'].length - offset].min, offset: offset)[:hits][:hits].map { |hit| JSON.parse(JSON.generate(hit[:_source])) }
+      exact.search(query: query, limit: [100, state['records'].length - offset].min, offset: offset, order: :record_id)[:hits][:hits].map { |hit| JSON.parse(JSON.generate(hit[:_source])) }
     end
     raise Unsafe, 'offer membership or contents differ' unless actual == state['records']
   end
@@ -210,8 +220,14 @@ class CatalogGeneration
   end
 
   def locked
-    File.open(File.join(@directory, 'writer.lock'), File::RDWR | File::CREAT, 0o600) do |lock|
+    File.open(File.join(@directory, 'writer.lock'), File::RDWR) do |lock|
       lock.flock(File::LOCK_EX)
+      %w[scope.json active.json identities.json].each do |name|
+        raise Unsafe, "missing journal file: #{name}" unless File.file?(File.join(@directory, name))
+      end
+      raise Unsafe, 'supplier scope changed' unless read('scope.json').fetch('suppliers') == @suppliers
+      active = read('active.json')
+      [active['active'], active['previous']].compact.each { |generation| generation_state(generation) }
       yield
     end
   end

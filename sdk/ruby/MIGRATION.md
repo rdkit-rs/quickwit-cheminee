@@ -80,3 +80,7 @@ including offset boundaries, terminal pages, lossless IDs, invalid page order,
 short pages and HTTP errors. Fixtures verify client behavior, not chemistry,
 server pagination stability, scale or durability. Live integration with the v5
 server remains pending; this checkpoint supplies no native runtime.
+
+Use `order: :record_id` with `ExactSearch#search` for catalog enumeration. Score
+order can shift across merges because BM25 statistics change. Unique record IDs
+and a pinned, unchanged generation remain required; no snapshot API is implied.

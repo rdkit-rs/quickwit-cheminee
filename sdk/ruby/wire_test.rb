@@ -25,7 +25,7 @@ LoadedJsonCheck.verify!(spec: Gem.loaded_specs.fetch('json'), version: JSON::VER
 # These are real HTTP transport tests against a controlled fixture peer. They
 # establish installed-gem wire behavior, not chemistry truth or storage durability.
 class InstalledGemWireTest < Minitest::Test
-  def exchange(response, status: 200, timeout: nil, delay: 0)
+  def exchange(response, status: 200, timeout: nil, delay: 0, raw: false)
     listener = TCPServer.new('127.0.0.1', 0)
     captured = nil
     thread = Thread.new do
@@ -39,7 +39,7 @@ class InstalledGemWireTest < Minitest::Test
       body = socket.read(Integer(headers.fetch('content-length', '0')))
       captured = { line: line, headers: headers, body: body }
       sleep(delay)
-      payload = JSON.generate(response)
+      payload = raw ? response : JSON.generate(response)
       socket.write("HTTP/1.1 #{status} Fixture\r\nContent-Type: application/json\r\n" \
                    "Content-Length: #{payload.bytesize}\r\nX-Request-Id: fixture-42\r\n" \
                    "Connection: close\r\n\r\n#{payload}")
@@ -222,6 +222,53 @@ class InstalledGemWireTest < Minitest::Test
                sort: [2.5, 18_446_744_073_709_551_615]}]
     {timed_out: false, terminated_early: nil, _shards: {total: 1, successful: 1, skipped: 0, failed: 0},
      hits: {total: {value: total, relation: 'eq'}, hits: hits}}
+  end
+
+  def test_binary_encoded_utf8_query_is_rejected_before_http
+    listener = TCPServer.new('127.0.0.1', 0)
+    config = QuickwitCheminee::Configuration.new
+    config.scheme = 'http'
+    config.host = "127.0.0.1:#{listener.addr[1]}"
+    config.base_path = ''
+    api = QuickwitCheminee::DefaultApi.new(QuickwitCheminee::ApiClient.new(config))
+    label = '東京'.b # Valid UTF-8 bytes, but deliberately tagged ASCII-8BIT.
+    assert_equal Encoding::ASCII_8BIT, label.encoding
+    assert_raises(JSON::GeneratorError) do
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {term: {supplier: label}})
+    end
+    assert_nil IO.select([listener], nil, nil, 0), 'binary query must not reach HTTP'
+  ensure
+    listener&.close
+  end
+
+  def test_duplicate_response_keys_fail_closed
+    payload = JSON.generate(exact_fixture).sub('"timed_out":false', '"timed_out":true,"timed_out":false')
+    exchange(payload, raw: true) do |api|
+      assert_raises(JSON::ParserError) do
+        QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {match_all: {}})
+      end
+    end
+  end
+
+  def test_record_id_enumeration_ignores_scores
+    fixture = exact_fixture
+    fixture[:hits][:hits][0][:sort] = [18_446_744_073_709_551_615]
+    result, captured = exchange(fixture) do |api|
+      QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {match_all: {}}, order: :record_id)
+    end
+    assert_equal fixture, result
+    assert_equal [{record_id: 'asc'}], JSON.parse(captured[:body], symbolize_names: true)[:sort]
+  end
+
+  def test_record_id_order_rejects_malformed_and_unordered_pages
+    [ [[2], [1]], [[1], [1]], [[1.0], [2]], [[1, 1], [2, 2]] ].each do |tuples|
+      hits = tuples.map { |tuple| {_index: 'offers-001', _source: {record_id: tuple[0]}, sort: tuple} }
+      exchange(exact_fixture(total: 2, hits: hits)) do |api|
+        assert_raises(QuickwitCheminee::ExactSearch::IncompleteResponse) do
+          QuickwitCheminee::ExactSearch.new(api: api, generation: 'offers-001').search(query: {match_all: {}}, order: :record_id)
+        end
+      end
+    end
   end
 
   def test_exact_search_sends_strict_policy_and_lossless_sort_values

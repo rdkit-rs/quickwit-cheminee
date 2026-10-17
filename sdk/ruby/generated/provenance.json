@@ -12,12 +12,12 @@
   "server_revision": "8009925c6b9757edc77ef8e6111309503028e7c5",
   "server_version": "0.9.1",
   "support_sha256": {
-    "quickwit-cheminee/exact_search.rb": "d9051923d5ed71fe0b8a9156fadb15f672b148f9b5003937f7f917e5f89afa31"
+    "quickwit-cheminee/exact_search.rb": "ad7d96717ec653ae7864a8d0e4f0c7d6c324157ca93928fa4f25a26ffdc67874"
   },
   "template_sha256": {
-    "README.mustache": "1b5c91dff2c914bb3c66a9456ed644a2421757f8bd6f65aa827dd527036ad661",
+    "README.mustache": "71ebf6b1778893037411dff971c90ab33d9f2d96646005b30fddb109c0856899",
     "base_object.mustache": "ac9d01d2c4eeaed7fed355f9f2c52b07298f9113267bca790f94199a47ac92bf",
-    "gemspec.mustache": "c403de99258f20cc03f47b8096e885ffa2d5cfad91d36e53911acb7aec6f40b0",
+    "gemspec.mustache": "b8925a9dc4f5adfa3aaa7bda560e9c2962b4577fe1d60735fd610afa7c3e1a69",
     "partial_model_generic.mustache": "656d8c6c40b61bdc1f158bcf38caadbf0078af2c5f38b76957c4f010ddc02eae",
     "partial_oneof_module.mustache": "d385e6c632372e9dd36a2514d84594fcd7563972bc48a86c0941a1c8bc275b16"
   }

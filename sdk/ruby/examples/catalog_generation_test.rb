@@ -42,7 +42,7 @@ class JournalPeer
   def search_composable_unchecked_with_http_info(index, body, **)
     rows = self.rows.fetch(index).sort_by { |r| r.fetch(:record_id) }
     hits = rows.drop(body.fetch(:from)).first(body.fetch(:size)).map do |r|
-      {_index: index, _source: r, sort: [1.0, r.fetch(:record_id)]}
+      {_index: index, _source: r, sort: body[:sort] == [{record_id: 'asc'}] ? [r.fetch(:record_id)] : [1.0, r.fetch(:record_id)]}
     end
     [{timed_out: false, _shards: {total: 1, successful: 1, failed: 0, skipped: 0},
       hits: {total: {value: rows.length, relation: 'eq'}, hits: hits}}, 200, {}]
@@ -76,10 +76,11 @@ class CatalogRecoveryTest < Minitest::Test
   def setup
     @directory = Dir.mktmpdir('catalog-recovery-')
     @api = JournalPeer.new(File.join(@directory, 'peer.json'))
-    @store = reopen
+    @directory = File.join(@directory, "journal")
+    @store = CatalogGeneration.create(api: @api, directory: @directory, expected_suppliers: ["Acme"])
   end
   def teardown
-    FileUtils.remove_entry(@directory)
+    FileUtils.remove_entry(File.dirname(@directory))
   end
   def reopen(klass = CatalogGeneration)
     klass.new(api: @api, directory: @directory, expected_suppliers: ['Acme'])
@@ -114,6 +115,52 @@ class CatalogRecoveryTest < Minitest::Test
   def state(generation)
     JSON.parse(File.read(File.join(@directory, "#{generation}.json")))
   end
+  def test_binary_encoded_utf8_offer_is_rejected_before_index_creation
+    manifest = snapshot(1)
+    manifest[:snapshots][0][:offers][0][:label] = '東京'.b
+    assert_raises(JSON::GeneratorError) { @store.stage(manifest) }
+    assert_empty @api.rows
+    assert_empty Dir.glob(File.join(@directory, 'offers-*.json'))
+  end
+
+  def test_missing_journal_files_never_reset_state
+    generation = ready(4)
+    @store.promote(generation)
+    %w[scope.json active.json identities.json].each do |name|
+      path = File.join(@directory, name)
+      bytes = File.binread(path)
+      File.unlink(path)
+      assert_raises(CatalogGeneration::Unsafe) { reopen }
+      assert_raises(CatalogGeneration::Unsafe) { @store.pointer }
+      assert_raises(CatalogGeneration::Unsafe) { @store.stage(snapshot(1)) }
+      File.binwrite(path, bytes)
+    end
+    assert_raises(Errno::EEXIST) { CatalogGeneration.create(api: @api, directory: @directory, expected_suppliers: ['Acme']) }
+    assert_raises(CatalogGeneration::Unsafe) { @store.stage(snapshot(1)) }
+  end
+
+  def test_conflicting_provenance_and_nanoseconds
+    manifest = snapshot(1)
+    manifest[:snapshots][0][:observed_at] = '2026-10-16T12:00:00.123456789Z'
+    offer = manifest[:snapshots][0][:offers][0]
+    offer[:supplier] = 'Other'
+    assert_raises(CatalogGeneration::Unsafe) { @store.stage(manifest) }
+    offer[:supplier] = 'Acme'
+    offer[:observed_at] = '2026-10-16T12:00:00.123456788Z'
+    assert_raises(CatalogGeneration::Unsafe) { @store.stage(manifest) }
+    offer[:observed_at] = '2026-10-16T14:00:00.123456789+02:00'
+    generation = @store.stage(manifest)
+    assert_equal '2026-10-16T12:00:00.123456789Z', state(generation)['records'][0]['observed_at']
+  end
+
+  def test_empty_supplier_requires_explicit_override
+    manifest = snapshot(1)
+    manifest[:snapshots][0][:offers] = []
+    assert_raises(CatalogGeneration::Unsafe) { @store.stage(manifest) }
+    generation = @store.stage(manifest, allow_empty_suppliers: ['Acme'])
+    assert_equal generation, @store.promote(generation)
+  end
+
   def test_interrupted_before_pointer_can_finish_without_reingest
     generation = ready(1)
     initial = @store.pointer

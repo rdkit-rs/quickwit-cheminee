@@ -30,17 +30,19 @@ module QuickwitCheminee
 
     # Offsets are bounded API requests, not snapshots or performance guidance.
     # Do not modify or delete/recreate the generation between page requests.
-    def search(query:, limit: 20, offset: 0)
+    def search(query:, limit: 20, offset: 0, order: :score)
       raise ArgumentError, 'query must be a JSON object' unless query.is_a?(Hash)
       unless [limit, offset].all? { |v| v.is_a?(Integer) && v.between?(0, 10_000) } && limit + offset <= 10_000
         raise ArgumentError, 'limit and offset must be nonnegative integers with sum <= 10000'
       end
+      raise ArgumentError, 'order must be :score or :record_id' unless %i[score record_id].include?(order)
+      sorting = order == :record_id ? [{record_id: 'asc'}] : [{_score: 'desc'}, {record_id: 'asc'}]
       # Round-trip to isolate input and reject non-JSON values before HTTP.
       body = JSON.parse(JSON.generate({query: json_value(query), size: limit, from: offset,
                                       track_total_hits: true,
-                                      sort: [{_score: 'desc'}, {record_id: 'asc'}]}), symbolize_names: true)
+                                      sort: sorting}), symbolize_names: true)
       response, status, headers = @api.search_composable_unchecked_with_http_info(generation, body, allow_partial_search_results: false)
-      validate_response!(response, limit, offset, status, headers)
+      validate_response!(response, limit, offset, status, headers, order)
       response
     end
 
@@ -83,7 +85,7 @@ module QuickwitCheminee
       value.is_a?(Integer) && value >= 0
     end
 
-    def validate_response!(response, limit, offset, status, headers)
+    def validate_response!(response, limit, offset, status, headers, order)
       request_id = headers['x-request-id']
       request_id = nil unless request_id.is_a?(String) && /\A[a-zA-Z0-9._:-]{1,128}\z/.match?(request_id)
       check = lambda do |condition, reason|
@@ -110,15 +112,15 @@ module QuickwitCheminee
       hits[:hits].each do |hit|
         check.call(hit.is_a?(Hash) && hit[:_index] == generation, :hit_index)
         tuple = hit[:sort]
-        check.call(tuple.is_a?(Array) && tuple.length == 2, :sort_shape)
-        score, id = tuple
+        check.call(tuple.is_a?(Array) && tuple.length == (order == :record_id ? 1 : 2), :sort_shape)
+        score, id = order == :record_id ? [0, tuple[0]] : tuple
         check.call(score.is_a?(Numeric) && score.finite? && nonnegative_integer?(id) && id < 2**64, :sort_values)
         check.call(hit[:_source].is_a?(Hash) && hit[:_source][:record_id].is_a?(Integer) && hit[:_source][:record_id] == id, :record_id)
         check.call(ids.add?(id), :duplicate_id)
         if previous
           check.call(previous[0] > score || (previous[0] == score && previous[1] < id), :sort_order)
         end
-        previous = tuple
+        previous = [score, id]
       end
     end
   end

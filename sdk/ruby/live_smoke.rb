@@ -3,7 +3,7 @@
 # Run only against a disposable local server. This creates and deletes its own index.
 # This smoke deliberately uses a non-native server; chemistry requests must reject
 # absent native capability rather than returning empty successful results.
-gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.dsl')
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 require 'json'

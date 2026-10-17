@@ -32,6 +32,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'httpx', '~> 1.0', '>= 1.0.0'
   {{/isHttpx}}
 
+  s.add_runtime_dependency 'json', '>= 3.1', '< 4'
+
   s.add_development_dependency 'rspec', '~> 3.6', '>= 3.6.0'
 
   s.files         = Dir["lib/**/*.rb", "docs/**/*.md", "README.md", "LICENSE", "openapi.json", "provenance.json"].sort

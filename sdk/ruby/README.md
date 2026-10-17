@@ -14,7 +14,7 @@ there is no global monkeypatch.
 
 - Actual server schema export, four OpenAPI regression tests, six non-native
   chemistry-route tests and thirteen ingestion tests passed.
-- Sixteen installed-gem tests / 319 assertions passed against a controlled real
+- Twenty-four installed-gem tests / 420 assertions passed against a controlled real
   HTTP peer: exact Unicode NDJSON bytes and Content-Length, false query options,
   mixed rejection counts, unknown counts as nil, metadata/discriminator handling,
   five search request shapes, full u64 document IDs, error status/request IDs,
@@ -40,9 +40,10 @@ Selective candidate equivalence and precise timestamp tests passed on the contin
 server: 68 HTTP cases, plus 105 assertions in the existing 109-request probe (4 cases
 remain observation-only). See the campaign evidence for exact binary hashes and
 source-review scope. The new candidate preserves the unchanged exported API schema,
-updates server provenance and documents uncertain acknowledgement handling.
-Broader OR relevance, old-schema compilation/warmup, timestamp-sort pruning, Compose
-coexistence, durability and HA remain open. Fixture response tests do not establish
+retains the exported schema provenance at `8009925c…` and documents uncertain acknowledgement handling.
+The current SDK was regenerated from that retained schema; no newer server export is claimed.
+Scoped old-schema and timestamp-pruning checks subsequently passed (39 and 18 HTTP checks).
+Broader OR relevance, Compose coexistence, durability and HA remain open. Fixture response tests do not establish
 chemistry truth. The manual CI preparation workflow is committed for review but has
 not been run in GitHub.
 
@@ -50,6 +51,11 @@ Fresh core/query tests on recovered code passed (174 tests without native chemis
 185 across core/query/native-mapper suites with native chemistry). These overlap
 and must not be added as independent cases. Broader native document-mapper/server
 validation is recorded separately in the campaign evidence.
+
+The current Ruby-only review validation also passed 20 journal tests / 107 assertions
+using actual JSON 3.1.0. Runtime JSON is constrained to >= 3.1 and < 4 because
+older parsers can silently accept duplicate response keys. These are fixture/local
+journal results, not a new native runtime validation.
 
 ## Import and filtered search
 
@@ -238,3 +244,20 @@ checks actual `JSON::VERSION` plus the real paths of loaded JSON Ruby/native cod
 An activated gem specification alone does not prove which code `RUBYLIB` loaded.
 See [corrected worker evidence](../../docs/cheminee-campaign/evidence/ruby-correction/README.md);
 the corrected worker result is separate from the still-blocked local pinned rerun.
+
+For catalog enumeration use `search(query: ..., order: :record_id)`. Audits use this
+single-field order. The default score order can change when segments merge and BM25
+statistics change, even with unchanged documents; its tie-breaker does not provide
+a cross-request snapshot. Record-ID order still requires unique IDs, unchanged
+contents and a pinned generation; it is not a server snapshot/cursor contract.
+
+Scraper strings passed as JSON values must be valid UTF-8 text. JSON 3.1 rejects
+multibyte UTF-8 bytes tagged `ASCII-8BIT` (for example, `'東京'.b`) before dispatch
+when the adapter serializes a query. The catalog example likewise rejects them
+before creating an index. Callers must explicitly decode from the known source
+encoding and validate before constructing a request. For known UTF-8 bytes, use
+`text = bytes.dup.force_encoding(Encoding::UTF_8)` and reject unless
+`text.valid_encoding?`; for another known encoding, transcode with `encode('UTF-8')`
+and let invalid/undefined conversion errors fail the scrape. Do not silently drop
+or replace invalid bytes. Raw NDJSON ingestion accepts a caller-serialized body:
+perform this validation before serialization; it is not a universal transport filter.

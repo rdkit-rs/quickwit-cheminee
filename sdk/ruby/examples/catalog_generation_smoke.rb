@@ -71,7 +71,8 @@ api = QuickwitCheminee::DefaultApi.new(QuickwitCheminee::ApiClient.new(config))
 client = InjectedClient.new(api)
 checks = []
 Dir.mktmpdir('catalog-generation-') do |directory|
-  store = CatalogGeneration.new(api: client, directory: directory, expected_suppliers: %w[Acme Beta])
+  directory = File.join(directory, "journal")
+  store = CatalogGeneration.create(api: client, directory: directory, expected_suppliers: %w[Acme Beta])
   begin
     first = store.stage(manifest(1))
     ack = store.ingest(first, batch_id: 'batch-1', record_ids: [1, 2, 3])
@@ -161,7 +162,8 @@ Dir.mktmpdir('catalog-generation-') do |directory|
     checks << 'content audit traverses multiple 100-document pages'
     empty = manifest(7)
     empty[:snapshots].each { |snapshot| snapshot[:offers] = [] }
-    zero = store.stage(empty)
+    checks << rejected('empty suppliers require reviewed override') { store.stage(empty) }
+    zero = store.stage(empty, allow_empty_suppliers: %w[Acme Beta])
     store.promote(zero)
     raise 'empty snapshot rollback failed' unless store.rollback(expected_revision: store.pointer['revision']) == large
     checks << 'explicit complete empty catalog promotes and rolls back'

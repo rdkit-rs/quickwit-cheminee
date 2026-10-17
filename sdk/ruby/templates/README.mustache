@@ -70,3 +70,9 @@ unproven. Limits do not
 provide stable pagination. No arbitrary Searchkick/Elasticsearch compatibility or
 correlated arrays-of-offers support is claimed. Consult the repository's `sdk/ruby/README.md`
 and campaign decision log for exact evidence and remaining release gates.
+
+Runtime JSON is constrained to >= 3.1 and < 4 so duplicate response keys fail parsing.
+For catalog enumeration choose `search(query: ..., order: :record_id)` to request
+only the unique numeric record-ID order. Default score ordering can shift across
+segment merges as BM25 statistics change, even with unchanged documents. Neither
+mode creates a server snapshot; pin the generation and prevent writes/deletion.
