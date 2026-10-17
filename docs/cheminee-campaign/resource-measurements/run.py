@@ -13,6 +13,8 @@ import time
 
 ROOT = Path(__file__).resolve().parents[3]
 SMOKE = ROOT / 'distribution/cheminee-local/smoke.py'
+sys.path.insert(0, str(SMOKE.parent))
+from readiness import container_incarnation, assert_incarnation
 
 
 def inspect_container(name):
@@ -29,11 +31,14 @@ def check_container(info, image):
     if (not state.get('Running') or state.get('OOMKilled') is not False
             or state.get('Health', {}).get('Status') != 'healthy'):
         raise ValueError('container must already be running and healthy without OOMKilled')
+    incarnation = container_incarnation(info)
     limits = info['HostConfig']
     if limits.get('Memory', 0) <= 0 or limits.get('NanoCpus', 0) <= 0:
         raise ValueError('explicit container memory and CPU limits required')
+    if limits.get('MemorySwap') != limits['Memory']:
+        raise ValueError('memory-plus-swap limit must equal memory limit during measurement')
     return {'id': info['Id'], 'image': image, 'memory_limit_bytes': limits['Memory'],
-            'cpu_limit': limits['NanoCpus'] / 1e9}
+            'cpu_limit': limits['NanoCpus'] / 1e9, 'incarnation': incarnation}
 
 
 def require_local_docker():
@@ -68,6 +73,7 @@ def main():
     p.add_argument('--min-free-bytes', type=positive, required=True)
     p.add_argument('--memory-budget-bytes', type=positive, required=True)
     p.add_argument('--cpu-budget', type=positive, required=True)
+    p.add_argument('--source-commit', required=True, help='expected full source revision of the verified runtime')
     p.add_argument('--runtime-provenance', type=Path, required=True)
     p.add_argument('--runtime-provenance-sha256', required=True)
     p.add_argument('--execute', action='store_true', help='owner-authorized disposable import and graceful restart')
@@ -83,6 +89,9 @@ def main():
               'smoke_sha256': hashlib.sha256(SMOKE.read_bytes()).hexdigest(),
               'coexistence': 'idle neighbor only' if a.elasticsearch_container else 'none'}
     try:
+        report['expected_source_commit'] = a.source_commit
+        if not re.fullmatch(r'[0-9a-f]{40}', a.source_commit):
+            raise ValueError('source-commit must be a full 40-hex commit ID')
         provenance = a.runtime_provenance.read_bytes()
         digest = hashlib.sha256(provenance).hexdigest()
         if digest != a.runtime_provenance_sha256:
@@ -90,8 +99,8 @@ def main():
         evidence = json.loads(provenance)
         if evidence.get('image_id') != a.image:
             raise ValueError('provenance image_id must match admitted primary image')
-        if evidence.get('source_commit') != 'a90687162c9037e159781b76e97ec43e0bb3a436':
-            raise ValueError('provenance must attribute the exact v5 source commit')
+        if evidence.get('source_commit') != a.source_commit:
+            raise ValueError('provenance source_commit must match the expected source revision exactly')
         if not re.fullmatch(r'[0-9a-f]{64}', evidence.get('binary_sha256', '')):
             raise ValueError('provenance binary_sha256 is required')
         report['provenance_sha256'] = digest
@@ -139,6 +148,10 @@ def main():
             smoke = json.loads((a.output / 'smoke.json').read_text())
             if result.returncode or smoke.get('status') != 'passed':
                 raise RuntimeError('smoke failed; inspect retained smoke report')
+            for container in containers:
+                cid = container['id']
+                assert_incarnation(container['incarnation'], smoke['initial_incarnations'][cid])
+                assert_incarnation(smoke['final_incarnations'][cid], container_incarnation(inspect_container(cid)))
             report['live_measurements'] = 'completed bounded synthetic smoke only'
         report['status'] = 'passed' if a.execute else 'admitted_not_executed'
     except Exception as error:

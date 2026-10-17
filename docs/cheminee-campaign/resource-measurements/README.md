@@ -5,6 +5,8 @@ optionally an already-running Elasticsearch neighbor before invoking the existin
 1,000-offer synthetic native smoke. It never builds, pulls or starts containers.
 Execution creates/deletes its own disposable index and gracefully restarts the
 primary container; obtain the sole runtime owner's admission before `--execute`.
+The historical Compose smoke used unoptimized source
+`8009925c6b9757edc77ef8e6111309503028e7c5`; it is not evidence for the latest harness.
 No live run of this revision has occurred. Lightweight tests are not runtime evidence.
 
 ## Prerequisites
@@ -14,8 +16,15 @@ host's network and filesystem namespaces. A host socket mounted into a separate
 container is unsupported: its local loopback may refer to another host namespace. The primary container must publish
 only `127.0.0.1:7280:7280`, have a working healthcheck and bounded CPU/memory. Both
 containers must have independently verified compatible runtime/image provenance.
-Supply full local image IDs, not tags. The provenance file is JSON with `image_id`, exact v5 `source_commit`
-(`a90687162c9037e159781b76e97ec43e0bb3a436`) and a 64-hex `binary_sha256`.
+Both must use restart policy `no` for the entire measurement and memory-plus-swap
+limits equal to memory limits. The admission and smoke records link container IDs,
+RestartCount and StartedAt from admission to completion. Only the primary explicit
+restart may change StartedAt; any automatic restart or observed-container
+incarnation change fails the run. This closes the gap where recovered OOM state
+and reset cgroup counters could look healthy. Concurrent workload and PID-limit
+validation remain unrun.
+Supply full local image IDs, not tags. The provenance file is JSON with `image_id`, `source_commit`
+matching the full 40-hex revision supplied in `--source-commit` exactly and a 64-hex `binary_sha256`.
 The supplied provenance SHA verifies the retained evidence file bytes; it does not independently establish source-to-binary
 provenance or compatibility. The owner must establish those before admission.
 V5 excludes the native runtime. Do not rebuild Rust to run this harness.
@@ -54,6 +63,7 @@ python3 docs/cheminee-campaign/resource-measurements/run.py \
   --min-free-bytes "$ADMITTED_DISK_RESERVE_BYTES" \
   --memory-budget-bytes "$ADMITTED_MEMORY_BYTES" \
   --cpu-budget "$ADMITTED_CPU_COUNT" \
+  --source-commit "$VERIFIED_SOURCE_COMMIT" \
   --runtime-provenance "$VERIFIED_PROVENANCE_FILE" \
   --runtime-provenance-sha256 "$VERIFIED_PROVENANCE_SHA256"
 ```

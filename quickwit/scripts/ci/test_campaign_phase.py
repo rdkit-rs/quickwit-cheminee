@@ -22,6 +22,9 @@ m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 class RunnerTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
+        self.addCleanup(patch.stopall)
+        patch.object(m, 'unmanaged_builds', return_value=[]).start()
+        patch.object(m, 'filesystem_paths', return_value={'test': {'path': str(self.root), 'device': self.root.stat().st_dev}}).start()
         self.policy={'reserve_mib':1,'emergency_floor_mib':1,'lock_path':str(self.root/'lock'),
           'phases':{'tiny':{'growth_budget_mib':2,'timeout_seconds':5,'command':[sys.executable,'-c','pass']}}}
         self.policy_path=self.root/'policy.json';self.save_policy()
@@ -31,7 +34,8 @@ class RunnerTests(unittest.TestCase):
         return types.SimpleNamespace(policy=self.policy_path,phase='tiny',state=self.root/(name+'.json'),
           log=self.root/(name+'.log'),filesystem=self.root,admit_only=dry,preflight=None,reviewed_prior_state_sha256=None)
     def command(self,name='job'):
-        return [sys.executable,str(SCRIPT),'run','--phase','tiny','--policy',str(self.policy_path),
+        bootstrap = "import sys; sys.path.insert(0, sys.argv.pop(1)); import campaign_phase as m; m.unmanaged_builds=lambda: []; m.filesystem_paths=lambda *args: {}; sys.exit(m.main())"
+        return [sys.executable,'-c',bootstrap,str(SCRIPT.parent),'run','--phase','tiny','--policy',str(self.policy_path),
           '--state',str(self.root/(name+'.json')),'--log',str(self.root/(name+'.log')),'--filesystem',str(self.root)]
     def wait_running(self,name='job'):
         path=self.root/(name+'.json');deadline=time.monotonic()+5
@@ -94,6 +98,40 @@ class RunnerTests(unittest.TestCase):
         with patch.object(m,'write_state',side_effect=OSError('injected')),patch.object(m.subprocess,'Popen') as spawn:
             with self.assertRaises(OSError):m.run(self.args(dry=False))
             spawn.assert_not_called()
+            self.assertEqual((self.root/'lock').read_text(), '')
+    def test_missing_prior_state_requires_explicit_review(self):
+        lock=self.root/'lock';lock.write_text(str(self.root/'missing.json'))
+        with lock.open() as stream:
+            with self.assertRaisesRegex(ValueError, 'explicit operator review'):
+                m.inspect_previous(stream, None)
+
+    def test_final_growth_budget_enforced(self):
+        args=self.args(dry=False)
+        with patch.object(m.shutil,'disk_usage',side_effect=[types.SimpleNamespace(free=9*m.MIB),types.SimpleNamespace(free=6*m.MIB)]), patch.object(m,'group_members',return_value=[]):
+            child=types.SimpleNamespace(pid=999999,poll=lambda:0,wait=lambda:0)
+            with patch.object(m.subprocess,'Popen',return_value=child),patch.object(m,'identity',return_value={'start_ticks':'1'}):
+                self.assertEqual(m.run(args),1)
+        self.assertEqual(json.loads(args.state.read_text())['status'],'stopped_for_growth_budget')
+
+    def test_sampled_growth_stops_child(self):
+        args=self.args(dry=False)
+        child=types.SimpleNamespace(pid=999999,poll=lambda:None,wait=lambda:0)
+        with patch.object(m.shutil,'disk_usage',side_effect=[types.SimpleNamespace(free=n*m.MIB) for n in (9,6,8)]), patch.object(m,'group_members',return_value=[]), patch.object(m,'stop_group') as stop, patch.object(m.subprocess,'Popen',return_value=child), patch.object(m,'identity',return_value={'start_ticks':'1'}):
+            self.assertEqual(m.run(args),1)
+            stop.assert_called_once_with(child.pid)
+        self.assertEqual(json.loads(args.state.read_text())['status'],'stopped_for_growth_budget')
+
+    def test_live_growth_budget_boundary(self):
+        state={'initial_free_bytes':9*m.MIB,'growth_budget_mib':2,'emergency_floor_bytes':m.MIB}
+        self.assertIsNone(m.disk_stop_reason(state,7*m.MIB))
+        self.assertEqual(m.disk_stop_reason(state,7*m.MIB-1),'stopped_for_growth_budget')
+
+    def test_unmanaged_build_refuses_launch(self):
+        with patch.object(m,'unmanaged_builds',return_value=[{'pid':123,'name':'cargo'}]), patch.object(m.subprocess,'Popen') as spawn:
+            with self.assertRaisesRegex(ValueError,'existing compiler'):
+                m.run(self.args(dry=False))
+            spawn.assert_not_called()
+
     def test_preflight_future_or_incomplete_refused(self):
         report={'status':'passed','cwd':str(self.root),'created_unix':time.time()+100,'file_hashes':{}}
         path=self.root/'preflight.json';path.write_text(json.dumps(report))
@@ -135,5 +173,42 @@ class RunnerTests(unittest.TestCase):
         with self.assertRaises(ValueError):m.run(args)
         self.assertTrue(temporary.is_symlink())
 
+
+class StorageAndDetectionTests(unittest.TestCase):
+    def test_cargo_config_target_resolved_from_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            (root/'Cargo.toml').write_text('[workspace]\n')
+            with patch.object(m.Path,'cwd',return_value=root), patch.dict(os.environ,{'CARGO_HOME':str(root/'home')}), patch.object(m.subprocess,'check_output',return_value=json.dumps({'target_directory':str(root/'configured-target')})) as metadata:
+                paths=m.filesystem_paths(root,{'command':['cargo','build']})
+                self.assertEqual(paths['cargo_target']['path'],str(root/'configured-target'))
+                self.assertIn('--offline',metadata.call_args.args[0])
+
+    def test_actual_unmanaged_detection(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            proc=Path(temporary)
+            for pid,name in [('101','cargo'),('102','python'),('103','rustc')]:
+                (proc/pid).mkdir();(proc/pid/'comm').write_text(name)
+            with patch.object(m.Path,'iterdir',return_value=iter(proc.iterdir())), patch.object(m,'identity',side_effect=lambda pid: {'state':'Z' if pid==103 else 'S'}):
+                self.assertEqual(m.unmanaged_builds(),[{'pid':101,'name':'cargo'}])
+
+    def test_storage_paths_and_different_device(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            with patch.dict(os.environ,{'CARGO_HOME':str(root/'home'),'CARGO_TARGET_DIR':str(root/'target')}), patch.object(m.Path,'cwd',return_value=root):
+                records=m.filesystem_paths(root,{})
+                self.assertEqual(records['cargo_target']['path'],str(root/'target'))
+                self.assertEqual(records['cargo_home']['device'],root.stat().st_dev)
+                original=Path.stat
+                def stat(path,*args,**kwargs):
+                    value=original(path,*args,**kwargs)
+                    if str(path)==str(root/'home'):
+                        fields=list(value);fields[2]=-1
+                        return os.stat_result(fields)
+                    return value
+                (root/'home').mkdir()
+                with patch.object(Path,'stat',stat):
+                    with self.assertRaisesRegex(ValueError,'cargo_home is on a different device'):
+                        m.filesystem_paths(root,{})
 
 if __name__=='__main__':unittest.main()

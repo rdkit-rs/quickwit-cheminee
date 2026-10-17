@@ -29,6 +29,9 @@ def write_state(path, value):
         stream.flush()
         os.fsync(stream.fileno())
     os.replace(temporary, path)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try: os.fsync(directory)
+    finally: os.close(directory)
 
 
 def identity(pid):
@@ -125,11 +128,13 @@ def inspect_previous(lock, reviewed_digest):
     prior = lock.read().strip()
     if not prior: return
     path = Path(prior)
+    if not path.is_file():
+        raise ValueError('prior state is missing; explicit operator review/recovery of lock and original job required: ' + str(path))
     value = json.loads(path.read_text())
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     reviewed = reviewed_digest == digest
     terminal = {'completed', 'process_failed', 'stopped_for_disk', 'timed_out', 'interrupted',
-                'orphaned_child_processes', 'refused_uncalibrated', 'refused_budget',
+                'orphaned_child_processes', 'stopped_for_growth_budget', 'refused_uncalibrated', 'refused_budget',
                 'refused_headroom', 'refused_dependency',
                 'admitted_dry_run; dependency checks and command not executed'}
     if 'child_pid' in value:
@@ -194,6 +199,38 @@ def validate_paths(args, lock_path):
         raise ValueError('fresh state, log and temporary paths required')
 
 
+def filesystem_paths(filesystem, phase):
+    """Conservatively require all build storage on the admitted device."""
+    cwd = Path.cwd().resolve()
+    target = Path(os.environ.get('CARGO_TARGET_DIR', cwd / 'target')).resolve()
+    if phase.get('requires_preflight') or (cwd / 'Cargo.toml').is_file():
+        # Cargo applies workspace/config target-dir overrides; do not guess them.
+        metadata = json.loads(subprocess.check_output(
+            ['cargo', 'metadata', '--offline', '--locked', '--no-deps', '--format-version', '1'],
+            text=True, timeout=30))
+        target = Path(metadata['target_directory']).resolve()
+    paths = {'admitted': filesystem.resolve(strict=True), 'cwd': cwd,
+             'cargo_target': target,
+             'cargo_home': Path(os.environ.get('CARGO_HOME', Path.home() / '.cargo')).resolve()}
+    admitted_device = paths['admitted'].stat().st_dev
+    records = {}
+    for label, path in paths.items():
+        ancestor = path
+        while not ancestor.exists(): ancestor = ancestor.parent
+        device = ancestor.stat().st_dev
+        records[label] = {'path': str(path), 'existing_ancestor': str(ancestor), 'device': device}
+        if device != admitted_device:
+            raise ValueError(label + ' is on a different device; require separate measured admission before running')
+    return records
+
+
+def disk_stop_reason(state, free):
+    if free < state['emergency_floor_bytes']: return 'stopped_for_disk'
+    if state['initial_free_bytes'] - free > state['growth_budget_mib'] * MIB:
+        return 'stopped_for_growth_budget'
+    return None
+
+
 def run(args):
     policy = json.loads(args.policy.read_text())
     phase = policy['phases'][args.phase]
@@ -214,6 +251,7 @@ def run(args):
         inspect_previous(lock, args.reviewed_prior_state_sha256)
         if unmanaged_builds():
             raise ValueError('existing compiler/build processes found; inspect surviving jobs before retry')
+        storage = filesystem_paths(args.filesystem, phase)
         free = shutil.disk_usage(args.filesystem).free
         budget = phase.get('growth_budget_mib')
         reserve = policy['reserve_mib'] * MIB
@@ -227,8 +265,12 @@ def run(args):
                  'cwd': str(Path.cwd()), 'lock_path': str(lock_path.resolve()), 'policy_sha256': hashlib.sha256(args.policy.read_bytes()).hexdigest(),
                  'command': phase['command'], 'environment': {k: os.environ.get(k) for k in ENV_KEYS},
                  'initial_free_bytes': free, 'reserve_bytes': reserve, 'emergency_floor_bytes': floor,
-                 'growth_budget_mib': budget, 'samples': [], 'status': 'checking_admission'}
+                 'storage_paths': storage, 'growth_budget_mib': budget, 'samples': [], 'status': 'checking_admission'}
+        # Persist the intent before publishing its pointer. A crash can leave an
+        # unreferenced intent, never a lock pointing at an unwritten record.
+        write_state(args.state, state)
         lock.seek(0); lock.truncate(); lock.write(str(args.state.resolve()) + '\n'); lock.flush()
+        os.fsync(lock.fileno())
         if budget is None or not phase['command']:
             state.update(status='refused_uncalibrated', reason='no approved phase budget/command; do not create/export images by default')
         elif budget <= phase.get('observed_growth_lower_bound_mib', 0):
@@ -277,7 +319,7 @@ def execute(args, phase, state, lock):
                     write_state(args.state, state)
                     last_checkpoint = time.monotonic()
                 if interrupted: stop_reason = 'interrupted'
-                elif free < state['emergency_floor_bytes']: stop_reason = 'stopped_for_disk'
+                elif disk_stop_reason(state, free): stop_reason = disk_stop_reason(state, free)
                 elif time.monotonic()-start > phase.get('timeout_seconds', 1800): stop_reason = 'timed_out'
                 if stop_reason:
                     stop_group(child.pid)
@@ -297,6 +339,8 @@ def execute(args, phase, state, lock):
     finally:
         for signum, handler in previous.items(): signal.signal(signum, handler)
         final = shutil.disk_usage(args.filesystem).free
+        if state.get('status') == 'completed' and disk_stop_reason(state, final):
+            state['status'] = disk_stop_reason(state, final)
         state.update(final_free_bytes=final, elapsed_seconds=time.monotonic()-start)
         state['minimum_observed_free_bytes'] = min([state['initial_free_bytes'], final] + [s['free_bytes'] for s in state['samples']])
         state['maximum_observed_drawdown_bytes'] = state['initial_free_bytes'] - state['minimum_observed_free_bytes']

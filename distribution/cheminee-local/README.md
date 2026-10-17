@@ -1,6 +1,9 @@
 # Local native Compose experiment
 
-This is a tested local experiment, not a published image or a production deployment.
+The recorded local Compose smoke used the unoptimized native build at
+`8009925c6b9757edc77ef8e6111309503028e7c5` (historical evidence). The current
+harness and revised resource/restart bounds have not been run live. This is not
+a published image or a production deployment.
 It uses a source-attributed native executable, a pinned Ubuntu base, UID 10001,
 a read-only root filesystem, a persistent data volume, bounded caches/queues and
 container resources. New indexes must also set `indexing_settings.resources.heap_size`
@@ -9,7 +12,13 @@ default is 2 GB per indexing heap, which is unsuitable for this container ceilin
 The catalog-generation Ruby example omits that setting and has not been exercised
 under this ceiling. Only Linux amd64 has been exercised. The 768 MiB ceiling,
 2 CPUs and individual cache limits are experimental bounds, not workload sizing
-recommendations. Elasticsearch coexistence has not been measured.
+recommendations. Elasticsearch coexistence has not been measured. The examples
+set total memory-plus-swap equal to the memory ceiling, disabling container swap.
+Restart policy is `no` throughout measurements so crashes/OOM cannot be hidden
+by recovery, including during the one explicit smoke restart. Container ID,
+RestartCount and StartedAt are checked before and after that restart and at the
+end, including observed Elasticsearch containers. These are functional checks;
+concurrent workload and PID-limit behavior have not been validated.
 
 ## Prepare and start
 

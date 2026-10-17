@@ -11,7 +11,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
-from readiness import wait_ready, assert_container_state
+from readiness import wait_ready, assert_container_state, container_incarnation, assert_incarnation
 
 if not __debug__:
     raise SystemExit('Run without Python optimization: correctness assertions are required')
@@ -42,6 +42,14 @@ for container in a.observe_container:
         ['docker', 'inspect', container, '--format', '{{.Image}}'], text=True, timeout=5).strip(), 'samples': [], 'counter_scope': 'container lifetime; peaks and OOM counts are not run deltas'}
 if a.observe_container:
     report['scope'] = '1000 synthetic offers with additional containers observed; no workload generated in observed containers; graceful restart only'
+def inspect_incarnation(container):
+    info = json.loads(subprocess.check_output(['docker', 'inspect', container], text=True, timeout=5))[0]
+    return container_incarnation(info)
+
+# Record identities before any import. Automatic restart must be disabled for
+# the whole measurement, including the one explicitly requested restart window.
+report['initial_incarnations'] = {name: inspect_incarnation(name) for name in [a.container, *a.observe_container]}
+expected_incarnations = dict(report['initial_incarnations'])
 phase = 'idle'
 stop = threading.Event()
 def sample_impl():
@@ -141,8 +149,14 @@ try:
     phase = 'query_controls'
     search(chirality=False)
     search(supplier=False)
+    for name, expected in expected_incarnations.items():
+        assert_incarnation(expected, inspect_incarnation(name))
     phase = 'restart'
     subprocess.run(['docker', 'restart', '--time', '60', a.container], check=True, capture_output=True, timeout=75)
+    restarted = inspect_incarnation(a.container)
+    assert_incarnation(expected_incarnations[a.container], restarted, explicit_restart=True)
+    expected_incarnations[a.container] = restarted
+    report['explicit_restart_incarnation'] = restarted
     wait_ready(lambda timeout: request('GET', '/health/readyz', timeout=timeout))
     deadline = time.monotonic() + 90
     phase = 'searcher_membership'
@@ -228,6 +242,13 @@ finally:
     if thread.is_alive():
         report['status']='failed'
         report['error']='resource sampler did not stop within its deadline'
+    try:
+        report['final_incarnations'] = {name: inspect_incarnation(name) for name in expected_incarnations}
+        for name, expected in expected_incarnations.items():
+            assert_incarnation(expected, report['final_incarnations'][name])
+    except Exception as error:
+        report['status'] = 'failed'
+        report['incarnation_error'] = str(error)
     a.output.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({k:report[k] for k in ('status','scope')}))
 

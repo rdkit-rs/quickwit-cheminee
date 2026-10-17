@@ -91,7 +91,15 @@ python3 scripts/ci/campaign_phase.py run --phase workspace-check \
 
 The runner fixes the workspace command to the repository compatibility wrapper,
 checks fresh output paths, validates finite integer budgets and fresh preflight
-hashes/environment, and writes durable launch intent before spawning. It samples
+hashes/environment, and writes/fsyncs durable intent before publishing its lock
+pointer or spawning. Missing prior state is an explicit operator recovery/review
+condition; do not clear the lock without investigating the original job. Admission
+records resolved cwd, Cargo target (from offline Cargo metadata for workspace
+phases and any working directory with Cargo.toml), CARGO_HOME and their filesystem devices. A path on another device is
+refused until separately measured admission is supported; `--filesystem` cannot
+substitute an unrelated high-capacity mount. The runner stops when sampled growth
+exceeds the approved budget as well as at the emergency floor. The final sample
+can turn an otherwise successful process exit into a failed budget outcome. It samples
 filesystem-wide free space and retains initial, periodic and final minima. Samples
 can miss subsecond peaks and include unrelated writes; they are not per-crate
 allocation measurements. PID/group cleanup excludes zombies, escalates when live
