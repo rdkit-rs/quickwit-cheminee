@@ -436,7 +436,11 @@ impl IngestSubworkbench {
     fn last_failure_is_transient(&self) -> bool {
         match self.last_failure_opt {
             None | Some(SubworkbenchFailure::NoShardsAvailable) => true,
-            Some(SubworkbenchFailure::Persist(PersistFailureReason::WalFull)) => true,
+            Some(SubworkbenchFailure::Persist(
+                PersistFailureReason::WalFull
+                | PersistFailureReason::NoShardsAvailableBeforeAppend
+                | PersistFailureReason::NodeUnavailableBeforeAppend,
+            )) => true,
             Some(SubworkbenchFailure::RateLimited(
                 RateLimitingCause::CircuitBreaker
                 | RateLimitingCause::LoadShedding
@@ -588,11 +592,52 @@ mod tests {
         assert!(!subworkbench.is_pending());
         assert!(!subworkbench.last_failure_is_transient());
 
+        for reason in [
+            PersistFailureReason::NoShardsAvailableBeforeAppend,
+            PersistFailureReason::NodeUnavailableBeforeAppend,
+        ] {
+            let failure = SubworkbenchFailure::Persist(reason);
+            assert_eq!(failure.reason(), IngestFailureReason::NoShardsAvailable);
+            subworkbench.last_failure_opt = Some(failure);
+            assert!(subworkbench.is_pending());
+        }
+
         let persist_success = PersistSuccess {
             ..Default::default()
         };
         subworkbench.persist_success_opt = Some(persist_success);
         assert!(!subworkbench.is_pending());
+    }
+
+    #[test]
+    fn safe_refusal_then_unknown_ack_is_terminal() {
+        let mut workbench = IngestWorkbench::new(
+            vec![IngestSubrequest {
+                subrequest_id: 7,
+                ..Default::default()
+            }],
+            5,
+        );
+        workbench.record_persist_failure(&PersistFailure {
+            subrequest_id: 7,
+            reason: PersistFailureReason::NoShardsAvailableBeforeAppend as i32,
+            ..Default::default()
+        });
+        assert!(workbench.subworkbenches[&7].is_pending());
+        workbench.record_persist_error(
+            IngestV2Error::Unavailable("lost ack".to_string()),
+            PersistRequestSummary {
+                leader_id: NodeId::from_str("leader"),
+                subrequest_ids: vec![7],
+            },
+        );
+        let subrequest = &workbench.subworkbenches[&7];
+        assert_eq!(subrequest.num_attempts, 2);
+        assert!(!subrequest.is_pending());
+        assert_eq!(
+            subrequest.last_failure_opt.as_ref().unwrap().reason(),
+            IngestFailureReason::Internal
+        );
     }
 
     #[test]

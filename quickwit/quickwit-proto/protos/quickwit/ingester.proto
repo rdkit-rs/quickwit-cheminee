@@ -113,6 +113,10 @@ enum PersistFailureReason {
   PERSIST_FAILURE_REASON_TIMEOUT = 5;
   PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE = 6;
   PERSIST_FAILURE_REASON_NODE_UNAVAILABLE = 7;
+  // This subrequest/attempt initiated no append on either leader or follower.
+  // Legacy reasons above do not carry this guarantee; never infer it from transport errors.
+  PERSIST_FAILURE_REASON_NO_SHARDS_AVAILABLE_BEFORE_APPEND = 8;
+  PERSIST_FAILURE_REASON_NODE_UNAVAILABLE_BEFORE_APPEND = 9;
   reserved 1;
   reserved 2;
   reserved 3;

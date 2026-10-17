@@ -577,6 +577,55 @@ pub(crate) mod tests {
     }
 
     #[tokio::test]
+    async fn test_ingest_v2_detailed_invalid_utf8_response() {
+        use quickwit_proto::ingest::router::{
+            IngestResponseV2, IngestSuccess, MockIngestRouterService,
+        };
+        use quickwit_proto::ingest::{ParseFailure, ParseFailureReason};
+
+        let mut backend = MockIngestRouterService::new();
+        backend.expect_ingest().once().returning(|request| {
+            let batch = request.subrequests[0].doc_batch.as_ref().unwrap();
+            let docs: Vec<_> = batch.docs().collect();
+            assert_eq!(docs.len(), 2);
+            assert_eq!(docs[0].1.as_ref(), b"\xff");
+            assert_eq!(docs[1].1.as_ref(), b"{}");
+            Ok(IngestResponseV2 {
+                successes: vec![IngestSuccess {
+                    subrequest_id: 0,
+                    num_ingested_docs: 1,
+                    parse_failures: vec![ParseFailure {
+                        doc_uid: Some(docs[0].0),
+                        reason: ParseFailureReason::InvalidJson as i32,
+                        message: "invalid UTF-8".to_string(),
+                    }],
+                    ..Default::default()
+                }],
+                failures: Vec::new(),
+            })
+        });
+        let handlers = ingest_api_handlers(
+            IngestRouterServiceClient::from_mock(backend),
+            IngestServiceClient::mocked(),
+            IngestApiConfig::default(),
+            false,
+            true,
+        );
+        let response = warp::test::request()
+            .path("/my-index/ingest?detailed_response=true")
+            .method("POST")
+            .body(&b"\xff\n{}"[..])
+            .reply(&handlers)
+            .await;
+        assert_eq!(response.status(), 200);
+        let body: RestIngestResponse = serde_json::from_slice(response.body()).unwrap();
+        assert_eq!(body.num_docs_for_processing, 2);
+        assert_eq!(body.num_ingested_docs, Some(1));
+        assert_eq!(body.num_rejected_docs, Some(1));
+        assert_eq!(body.parse_failures.unwrap()[0].document, "\u{fffd}");
+    }
+
+    #[tokio::test]
     async fn test_ingest_api_unsupported_detailed_errors() {
         let (universe, _temp_dir, ingest_service, _) =
             setup_ingest_v1_service(&["my-index"], &IngestApiConfig::default()).await;

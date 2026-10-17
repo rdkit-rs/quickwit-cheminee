@@ -464,7 +464,7 @@ impl Ingester {
                     subrequest_id: subrequest.subrequest_id,
                     index_uid: subrequest.index_uid,
                     source_id: subrequest.source_id,
-                    reason: PersistFailureReason::NodeUnavailable as i32,
+                    reason: PersistFailureReason::NodeUnavailableBeforeAppend as i32,
                 };
                 persist_failures.push(persist_failure);
             }
@@ -494,7 +494,7 @@ impl Ingester {
                         subrequest_id: subrequest.subrequest_id,
                         index_uid: subrequest.index_uid,
                         source_id: subrequest.source_id,
-                        reason: PersistFailureReason::NoShardsAvailable as i32,
+                        reason: PersistFailureReason::NoShardsAvailableBeforeAppend as i32,
                     };
                     persist_failures.push(persist_failure);
                     continue;
@@ -551,7 +551,7 @@ impl Ingester {
                         subrequest_id: subrequest.subrequest_id,
                         index_uid: subrequest.index_uid,
                         source_id: subrequest.source_id,
-                        reason: PersistFailureReason::NoShardsAvailable as i32,
+                        reason: PersistFailureReason::NoShardsAvailableBeforeAppend as i32,
                     };
                     persist_failures.push(persist_failure);
                     continue;
@@ -1962,6 +1962,37 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_ingester_not_ready_rejects_before_append() {
+        let (context, ingester) = IngesterForTest::default().build().await;
+        ingester
+            .state
+            .lock_partially("test")
+            .await
+            .unwrap()
+            .set_status(IngesterStatus::Decommissioning)
+            .await;
+        let response = ingester
+            .persist(PersistRequest {
+                leader_id: context.node_id.to_string(),
+                subrequests: vec![PersistSubrequest {
+                    subrequest_id: 42,
+                    index_uid: Some(IndexUid::for_test("test-index", 0)),
+                    source_id: "test-source".to_string(),
+                    doc_batch: Some(DocBatchV2::for_test(["{}"])),
+                }],
+                ..Default::default()
+            })
+            .await
+            .unwrap();
+        assert!(response.successes.is_empty());
+        assert_eq!(response.failures.len(), 1);
+        assert_eq!(
+            response.failures[0].reason(),
+            PersistFailureReason::NodeUnavailableBeforeAppend
+        );
+    }
+
+    #[tokio::test]
     async fn test_ingester_persist_empty() {
         let (ingester_ctx, ingester) = IngesterForTest::default().build().await;
 
@@ -2281,7 +2312,7 @@ mod tests {
         let persist_failure = &persist_response.failures[0];
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
     }
 
@@ -2923,7 +2954,7 @@ mod tests {
         assert_eq!(persist_failure.source_id, "test-source");
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
 
         let state_guard = ingester.state.lock_fully("test").await.unwrap();
@@ -3001,7 +3032,7 @@ mod tests {
         assert_eq!(persist_failure.source_id, "test-source");
         assert_eq!(
             persist_failure.reason(),
-            PersistFailureReason::NoShardsAvailable
+            PersistFailureReason::NoShardsAvailableBeforeAppend
         );
 
         let state_guard = ingester.state.lock_fully("test").await.unwrap();

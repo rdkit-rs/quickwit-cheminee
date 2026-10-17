@@ -138,9 +138,10 @@ fn rewrite(
 
 #[cfg(test)]
 mod tests {
+    use tantivy_rdkit::{FingerprintFormat, FingerprintSpec};
+
     use super::super::{TanimotoQueryAst, TermQuery};
     use super::*;
-    use tantivy_rdkit::{FingerprintFormat, FingerprintSpec};
 
     fn term(value: &str) -> QueryAst {
         TermQuery::from_field_value("supplier", value).into()

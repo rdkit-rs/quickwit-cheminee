@@ -24,6 +24,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq, utoipa::ToSchema)]
 pub struct RestParseFailure {
     pub message: String,
+    /// Original document with invalid UTF-8 replaced by U+FFFD for JSON diagnostics.
     pub document: String,
     pub reason: ParseFailureReason,
 }
@@ -91,7 +92,7 @@ impl RestIngestResponse {
                 parse_failures.push(RestParseFailure {
                     reason: failure.reason(),
                     message: failure.message,
-                    document: String::from_utf8(doc.to_vec()).unwrap(),
+                    document: String::from_utf8_lossy(doc).into_owned(),
                 });
             }
             resp.parse_failures = Some(parse_failures);
