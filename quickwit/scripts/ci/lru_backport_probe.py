@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an isolated, exact LRU pop backport from checksum-verified cached crates.
+"""Build isolated LRU panic and lifetime backports from checksum-verified crates.
 
 Does not modify the workspace dependency graph or claim advisory clearance.
 Run with an offline Cargo cache and a work directory on a spacious filesystem.
@@ -34,6 +34,8 @@ NEW = """                let node_ptr: *mut LruEntry<K, V> = old_node.as_ptr();
                 unsafe {
                     ptr::drop_in_place(old_node.key.as_mut_ptr());
                 }"""
+LIFETIME_OLD = "pub fn get_or_insert_mut_ref<'a, Q, F>(&mut self, k: &'_ Q, f: F) -> &'a mut V"
+LIFETIME_NEW = LIFETIME_OLD.replace("&mut self", "&'a mut self")
 
 
 def main():
@@ -78,9 +80,9 @@ def main():
                 target.write_bytes(tf.extractfile(member).read())
         source = destination / "src/lib.rs"
         original = source.read_text()
-        if original.count(OLD) != 1:
-            raise SystemExit("Expected exactly one upstream pop implementation")
-        source.write_text(original.replace(OLD, NEW))
+        if original.count(OLD) != 1 or original.count(LIFETIME_OLD) != 1:
+            raise SystemExit("Expected exactly one upstream pop and lifetime signature")
+        source.write_text(original.replace(OLD, NEW).replace(LIFETIME_OLD, LIFETIME_NEW))
         record = {"version": version, "archive_sha256": actual,
                   "original_source_sha256": hashlib.sha256(original.encode()).hexdigest(),
                   "patched_source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),

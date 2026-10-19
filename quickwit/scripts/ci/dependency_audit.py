@@ -73,7 +73,7 @@ def run(args):
                                    ('head', args.head_ref, args.head_lock)):
         raw = lock.read_bytes()
         tree = GitTree(args.repository.resolve(), reference)
-        projected, provenance = validate_and_project(tree, raw)
+        projected, provenance = validate_and_project(tree, raw, role=label)
         (output / f'{label}.raw.lock').write_bytes(raw)
         (output / f'{label}.registry-identity.lock').write_bytes(projected)
         inputs[label] = {'raw_lock_sha256': sha256(raw),

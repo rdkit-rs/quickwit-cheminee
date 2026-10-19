@@ -183,3 +183,24 @@ Rhino 1.7.15.1, but independent bytecode identity remains to be established.
 Installer 0.7.0's six comparable Windows launchers differ from cached distlib
 0.3.9 and 0.4.2; their exact native provenance remains open. Absence of package
 advisory matches does not clear bundled native code or embedded libraries.
+
+## Separate LRU lifetime follow-up
+
+The pop-only integration at f4039cb8 is followed by a one-line receiver-lifetime
+repair in each vendor copy. The returned mutable borrow now belongs to the cache
+borrow. This closes independently reproduced static escape and same-key mutable
+aliasing; neither pinned parent uses the method. No dependency, format, protocol
+or function body changes accompany this repair.
+
+Both repaired versions pass 206 upstream library test executions and eight
+panic/eviction regression executions across the two feature configurations.
+Twelve compile-only checks require the specific borrow-checker errors and retain
+valid temporary-key behavior; eight old-signature negative controls compile but
+are never executed. The 28 audit policy tests distinguish historical comparison
+bases from release heads and reject rollback to either the pop-only profile or
+the original affected registry packages. Registry-identity advisory rows remain
+visible; these checks do not clear the eleven-match dependency preflight.
+
+Independent Astra max source and provenance reviews accompany the evidence.
+Parent compatibility, native tests and fresh-environment admission remain open.
+Benchmark trials remain zero.

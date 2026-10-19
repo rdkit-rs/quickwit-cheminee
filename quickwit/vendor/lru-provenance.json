@@ -14,7 +14,7 @@
         "Cargo.toml.orig": "3c11db1eb7e94817cad5ba9f3ff5a7c85aa3b7a276d3a721ab93f18dcfed3455",
         "LICENSE": "061dc50af2cd9340703daf61978af3200cf681b12ea67a323c33ba109a23a45e",
         "README.md": "f5f875a17f1bcc84b7bb3e14df0a14e4fcc13d2dd3713965f16256629b094484",
-        "src/lib.rs": "b1b82f43d3998db4c3c9906ed6f80ba4b886a9cac793b30dca60ec239d1a21bc"
+        "src/lib.rs": "4ce853683e519cffde995758984b19d2548fe4bb98fca566ed4069cce7ec6299"
       }
     },
     {
@@ -30,7 +30,7 @@
         "Cargo.toml.orig": "17bef53fa045006f20e04252072b728c39a7e1456888b129dea6a8629365edbf",
         "LICENSE": "061dc50af2cd9340703daf61978af3200cf681b12ea67a323c33ba109a23a45e",
         "README.md": "2b2de17fdd9c5da775b0b7e6934b46b4675f9036afd5712a485cdd3ffe4b515e",
-        "src/lib.rs": "b1b82f43d3998db4c3c9906ed6f80ba4b886a9cac793b30dca60ec239d1a21bc"
+        "src/lib.rs": "4ce853683e519cffde995758984b19d2548fe4bb98fca566ed4069cce7ec6299"
       }
     }
   ]

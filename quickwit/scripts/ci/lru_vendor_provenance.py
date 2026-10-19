@@ -14,7 +14,11 @@ import tomllib
 
 REGISTRY = 'registry+https://github.com/rust-lang/crates.io-index'
 MANIFEST = 'quickwit/vendor/lru-provenance.json'
-MANIFEST_SHA256 = 'd0e37c16e82b5d5ec57d235b1f18f999f8b74d14f8265c1d2cbafca9aef62488'
+MANIFEST_SHA256 = '2eb2d29502ea9bbd17959e2eb4631272fa610089abc0792380d81bb01cdbaa6a'
+# The earlier reviewed tree remains auditable as history, but cannot be a new head.
+HISTORICAL_MANIFEST_SHA256 = 'd0e37c16e82b5d5ec57d235b1f18f999f8b74d14f8265c1d2cbafca9aef62488'
+CURRENT_PROFILE = 'pop-and-mutable-borrow-lifetime'
+HISTORICAL_PROFILE = 'pop-only'
 # These independently pinned identities are from the original Cargo.lock/crate archives.
 BACKPORTS = {
     '0.16.4': ('7f66e8d5d03f609abc3a39e6f08e4164ebf1447a732906d39eb9b99b7919ef39',
@@ -110,13 +114,22 @@ def validate_overrides(tree, vendored):
     return input_hashes
 
 
-def validate_vendor(tree):
+def validate_vendor(tree, *, role):
+    if role not in ('base', 'head'):
+        raise ValueError('explicit base or head role is required for LRU validation')
     if MANIFEST not in tree.files:
         if any(path.startswith('quickwit/vendor/lru-') for path in tree.files):
             raise ValueError('LRU vendor tree is missing its pinned provenance manifest')
-        return []
+        return [], None, None
     manifest = tree.read(MANIFEST)
-    if sha256(manifest) != MANIFEST_SHA256:
+    digest = sha256(manifest)
+    if digest == MANIFEST_SHA256:
+        profile = CURRENT_PROFILE
+    elif digest == HISTORICAL_MANIFEST_SHA256:
+        if role != 'base':
+            raise ValueError('historical pop-only LRU provenance is permitted only for the base')
+        profile = HISTORICAL_PROFILE
+    else:
         raise ValueError('LRU provenance manifest differs from independently pinned SHA256')
     document = json.loads(manifest)
     if set(document) != {'schema_version', 'packages'} or document['schema_version'] != 1:
@@ -134,19 +147,21 @@ def validate_vendor(tree):
         actual_files = {path[len(prefix):] for path in tree.files if path.startswith(prefix)}
         if actual_files != set(package['files']):
             raise ValueError(f'LRU vendor file inventory differs: {version}')
-        for path, digest in package['files'].items():
+        for path, file_digest in package['files'].items():
             relative = PurePosixPath(path)
             if relative.is_absolute() or '..' in relative.parts or relative.as_posix() != path:
                 raise ValueError('invalid LRU provenance file path')
-            if sha256(tree.read(prefix + path)) != digest:
+            if sha256(tree.read(prefix + path)) != file_digest:
                 raise ValueError(f'LRU vendor file hash differs: {version}/{path}')
-    return packages
+    return packages, digest, profile
 
 
-def validate_and_project(tree, raw):
+def validate_and_project(tree, raw, *, role):
+    if role not in ('base', 'head'):
+        raise ValueError('explicit base or head role is required for LRU validation')
     if raw != tree.read('quickwit/Cargo.lock'):
         raise ValueError('supplied lockfile does not match its audited Git revision')
-    packages = validate_vendor(tree)
+    packages, manifest_digest, profile = validate_vendor(tree, role=role)
     inputs = validate_overrides(tree, bool(packages))
     document = tomllib.loads(raw.decode())
     projected_document = copy.deepcopy(document)
@@ -163,6 +178,8 @@ def validate_and_project(tree, raw):
         if source is not None and source != REGISTRY:
             raise ValueError(f'unregistered LRU source: {version}')
         if version in BACKPORTS:
+            if role == 'head' and source == REGISTRY:
+                raise ValueError(f'head cannot restore unpatched registry LRU: {version}')
             checksum, dependencies, _ = BACKPORTS[version]
             if package.get('dependencies', []) != dependencies:
                 raise ValueError(f'LRU dependencies differ from pinned original: {version}')
@@ -190,6 +207,7 @@ def validate_and_project(tree, raw):
     projected = b''.join(blocks)
     if tomllib.loads(projected.decode()) != projected_document:
         raise ValueError('projection changed fields other than verified registry identities')
-    return projected, {'revision': tree.revision, 'manifest_sha256': MANIFEST_SHA256 if packages else None,
+    return projected, {'revision': tree.revision, 'role': role, 'manifest_sha256': manifest_digest,
+                       'vendor_profile': profile,
                        'verified_vendor_packages': packages, 'cargo_input_sha256': inputs,
                        'projected_lru_versions': projected_versions}

@@ -60,6 +60,23 @@ def fixture_tree(vendored=False):
     return MemoryTree(files)
 
 
+def historical_fixture_tree():
+    tree = fixture_tree(True)
+    manifest = json.loads(tree.files[provenance.MANIFEST])
+    for package in manifest['packages']:
+        path = f"quickwit/{package['path']}/src/lib.rs"
+        corrected = b"pub fn get_or_insert_mut_ref<'a, Q, F>(&'a mut self,"
+        original = b"pub fn get_or_insert_mut_ref<'a, Q, F>(&mut self,"
+        if tree.files[path].count(corrected) != 1:
+            raise AssertionError('expected exactly one corrected mutable-borrow signature')
+        tree.files[path] = tree.files[path].replace(corrected, original)
+        package['files']['src/lib.rs'] = provenance.sha256(tree.files[path])
+    tree.files[provenance.MANIFEST] = (json.dumps(manifest, indent=2) + '\n').encode()
+    if provenance.sha256(tree.files[provenance.MANIFEST]) != provenance.HISTORICAL_MANIFEST_SHA256:
+        raise AssertionError('historical fixture must match the pinned pop-only manifest')
+    return tree
+
+
 def fixture_args(root, base, head):
     (root / 'base.lock').write_bytes(base.read('quickwit/Cargo.lock'))
     (root / 'head.lock').write_bytes(head.read('quickwit/Cargo.lock'))
@@ -117,7 +134,7 @@ class AuditTests(unittest.TestCase):
         for introduced in (False, True):
             with tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                tree = fixture_tree()
+                tree = fixture_tree(True)
                 args = fixture_args(root, tree, tree)
                 keys = audit.findings(report(), 1)
                 baseline = (report(), set() if introduced else keys)
@@ -135,7 +152,7 @@ class AuditTests(unittest.TestCase):
     def test_database_change_and_wrong_scanner_fail(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            tree = fixture_tree()
+            tree = fixture_tree(True)
             args = fixture_args(root, tree, tree)
             for versions in (['wrong'], ['cargo-audit 0.22.2', 'before', 'after']):
                 with patch.object(audit.subprocess, 'check_output', side_effect=versions), \
@@ -241,20 +258,87 @@ class AuditTests(unittest.TestCase):
             reader.assert_called_once_with(root, 'base-ref')
             scanner.assert_not_called()
 
+    def test_old_and_current_bases_accept_only_current_head_and_record_profiles(self):
+        for historical in (True, False):
+            base = historical_fixture_tree() if historical else fixture_tree(True)
+            head = fixture_tree(True)
+            with self.subTest(historical_base=historical), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                args = fixture_args(root, base, head)
+                matches = audit.findings(report(), 1)
+                with patch.object(audit.subprocess, 'check_output',
+                                  side_effect=['cargo-audit 0.22.2', 'db-sha', 'db-sha']), \
+                     patch.object(audit, 'GitTree', side_effect=[base, head]), \
+                     patch.object(audit, 'scan', side_effect=fake_scan([(report(), matches)] * 4)):
+                    self.assertEqual(audit.run(args), 0)
+                evidence = json.loads((root / 'comparison.json').read_text())['scan_inputs']
+                expected_base = provenance.HISTORICAL_PROFILE if historical else provenance.CURRENT_PROFILE
+                self.assertEqual(evidence['base']['provenance']['vendor_profile'], expected_base)
+                self.assertEqual(evidence['head']['provenance']['vendor_profile'], provenance.CURRENT_PROFILE)
+                for side, tree in (('base', base), ('head', head)):
+                    self.assertEqual(evidence[side]['provenance']['role'], side)
+                    self.assertEqual(evidence[side]['provenance']['manifest_sha256'],
+                                     provenance.sha256(tree.read(provenance.MANIFEST)))
+
 
 class ProvenanceTests(unittest.TestCase):
-    def project(self, tree):
-        return provenance.validate_and_project(tree, tree.read('quickwit/Cargo.lock'))
+    def project(self, tree, role):
+        return provenance.validate_and_project(tree, tree.read('quickwit/Cargo.lock'), role=role)
 
     def test_original_registry_lock_is_unchanged(self):
         tree = fixture_tree()
-        projected, evidence = self.project(tree)
+        projected, evidence = self.project(tree, 'base')
         self.assertEqual(projected, tree.read('quickwit/Cargo.lock'))
+        self.assertEqual(evidence['projected_lru_versions'], [])
+
+    def test_validation_requires_an_explicit_valid_role(self):
+        tree = fixture_tree(True)
+        with self.assertRaises(TypeError):
+            provenance.validate_and_project(tree, tree.read('quickwit/Cargo.lock'))
+        for role in (None, '', 'unknown'):
+            with self.subTest(role=role), self.assertRaisesRegex(ValueError, 'explicit base or head'):
+                self.project(tree, role)
+
+    def test_historical_profile_is_base_only_and_still_verifies_every_file(self):
+        tree = historical_fixture_tree()
+        _, evidence = self.project(tree, 'base')
+        self.assertEqual(evidence['manifest_sha256'], provenance.HISTORICAL_MANIFEST_SHA256)
+        self.assertEqual(evidence['vendor_profile'], provenance.HISTORICAL_PROFILE)
+        with self.assertRaisesRegex(ValueError, 'permitted only for the base'):
+            self.project(tree, 'head')
+        tree.files['quickwit/vendor/lru-0.16.4/src/lib.rs'] += b'// changed old base\n'
+        with self.assertRaisesRegex(ValueError, 'vendor file hash differs'):
+            self.project(tree, 'base')
+
+    def test_unknown_manifest_is_rejected_for_both_roles(self):
+        for role in ('base', 'head'):
+            tree = fixture_tree(True)
+            tree.files[provenance.MANIFEST] += b'\n'
+            with self.subTest(role=role), self.assertRaisesRegex(ValueError, 'independently pinned'):
+                self.project(tree, role)
+
+    def test_removing_vendor_inputs_cannot_restore_old_registry_versions_at_head(self):
+        tree = fixture_tree()
+        self.project(tree, 'base')
+        with self.assertRaisesRegex(ValueError, 'head cannot restore unpatched registry LRU'):
+            self.project(tree, 'head')
+
+    def test_fully_upgraded_registry_head_needs_no_backport_profile(self):
+        tree = fixture_tree()
+        tree.files['quickwit/Cargo.lock'] = (
+            f'version = 4\n\n[[package]]\nname = "lru"\nversion = "0.18.5"\n'
+            f'source = "{provenance.REGISTRY}"\n'
+            'checksum = "ef9ac18847474e638e3702b76c65d4eb93428471a74778ef0f1be711717f89b5"\n'
+            'dependencies = ["hashbrown 0.17.1"]\n').encode()
+        projected, evidence = self.project(tree, 'head')
+        self.assertEqual(projected, tree.read('quickwit/Cargo.lock'))
+        self.assertIsNone(evidence['manifest_sha256'])
+        self.assertIsNone(evidence['vendor_profile'])
         self.assertEqual(evidence['projected_lru_versions'], [])
 
     def test_verified_vendors_restore_only_original_identity_fields(self):
         tree = fixture_tree(True)
-        projected, evidence = self.project(tree)
+        projected, evidence = self.project(tree, 'head')
         self.assertEqual(evidence['projected_lru_versions'], list(provenance.BACKPORTS))
         raw = tree.read('quickwit/Cargo.lock')
         for version, (checksum, _, _) in provenance.BACKPORTS.items():
@@ -277,7 +361,7 @@ class ProvenanceTests(unittest.TestCase):
             else:
                 tree.files[path] = None
             with self.subTest(change=change), self.assertRaises(ValueError):
-                self.project(tree)
+                self.project(tree, 'head')
 
     def test_self_edited_manifest_cannot_bless_changed_files(self):
         tree = fixture_tree(True)
@@ -287,7 +371,7 @@ class ProvenanceTests(unittest.TestCase):
         manifest['packages'][0]['files']['src/lib.rs'] = provenance.sha256(tree.files[source])
         tree.files[provenance.MANIFEST] = json.dumps(manifest).encode()
         with self.assertRaisesRegex(ValueError, 'independently pinned'):
-            self.project(tree)
+            self.project(tree, 'head')
 
     def test_manifest_original_registry_identity_is_independently_pinned(self):
         tree = fixture_tree(True)
@@ -297,7 +381,7 @@ class ProvenanceTests(unittest.TestCase):
         # Even an intentional manifest repin cannot silently change the original registry identity.
         with patch.object(provenance, 'MANIFEST_SHA256', provenance.sha256(tree.files[provenance.MANIFEST])), \
              self.assertRaisesRegex(ValueError, 'registry identity'):
-            self.project(tree)
+            self.project(tree, 'head')
 
     def test_missing_provenance_and_unknown_local_or_git_lru_fail(self):
         for change in ('manifest', 'source-less', 'new-version', 'git', 'direct-current'):
@@ -316,7 +400,7 @@ class ProvenanceTests(unittest.TestCase):
             else:
                 tree.files['quickwit/Cargo.lock'] = lock.replace(b'0.16.4', b'0.18.5')
             with self.subTest(change=change), self.assertRaises(ValueError):
-                self.project(tree)
+                self.project(tree, 'head')
 
     def test_unknown_patch_direct_dependency_and_config_overrides_fail(self):
         cases = [
@@ -333,7 +417,7 @@ class ProvenanceTests(unittest.TestCase):
             tree = fixture_tree(True)
             tree.files[path] = replacement
             with self.subTest(path=path, replacement=replacement), self.assertRaises(ValueError):
-                self.project(tree)
+                self.project(tree, 'head')
 
     def test_duplicate_identity_dependency_and_checksum_mutations_fail(self):
         for change in ('duplicate', 'dependencies', 'checksum'):
@@ -348,7 +432,7 @@ class ProvenanceTests(unittest.TestCase):
                 lock = lock.replace(provenance.BACKPORTS['0.16.4'][0].encode(), b'f' * 64)
             tree.files['quickwit/Cargo.lock'] = lock
             with self.subTest(change=change), self.assertRaises(ValueError):
-                self.project(tree)
+                self.project(tree, 'base' if change == 'checksum' else 'head')
 
     def test_verified_patch_cannot_be_unused_or_missing_from_lock(self):
         for change in ('registry', 'missing'):
@@ -363,17 +447,17 @@ class ProvenanceTests(unittest.TestCase):
                                     b'name = "renamed"\nversion = "0.16.4"')
             tree.files['quickwit/Cargo.lock'] = lock
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'must resolve both'):
-                self.project(tree)
+                self.project(tree, 'base')
 
     def test_each_revision_uses_its_own_vendor_files_and_lock(self):
         base, head = fixture_tree(True), fixture_tree(True)
-        self.assertEqual(self.project(base)[0], self.project(head)[0])
+        self.assertEqual(self.project(base, 'base')[0], self.project(head, 'head')[0])
         base.files['quickwit/vendor/lru-0.16.4/src/lib.rs'] += b'// changed base\n'
         with self.assertRaises(ValueError):
-            self.project(base)
-        self.project(head)
+            self.project(base, 'base')
+        self.project(head, 'head')
         with self.assertRaisesRegex(ValueError, 'does not match'):
-            provenance.validate_and_project(head, fixture_tree().read('quickwit/Cargo.lock'))
+            provenance.validate_and_project(head, fixture_tree().read('quickwit/Cargo.lock'), role='head')
 
     def test_git_reader_uses_commit_bytes_and_rejects_symlinks(self):
         with tempfile.TemporaryDirectory() as directory:
