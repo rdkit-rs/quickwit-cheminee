@@ -17,6 +17,9 @@ use std::sync::LazyLock;
 use regex::Regex;
 use warp::Filter;
 
+#[path = "flamegraph.rs"]
+mod flamegraph;
+
 fn remove_trailing_numbers(thread_name: &mut String) {
     static REMOVE_TRAILING_NUMBER_PTN: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"^(.*?)[-\d]+$").unwrap());
@@ -133,7 +136,7 @@ pub fn pprof_handlers() -> impl Filter<Extract = impl warp::Reply, Error = warp:
                     .build()
             {
                 let mut buffer = Vec::new();
-                if report.flamegraph(&mut buffer).is_ok() {
+                if flamegraph::render(&report, &mut buffer).is_ok() {
                     state.flamegraph_data = Some(buffer);
                 }
             }

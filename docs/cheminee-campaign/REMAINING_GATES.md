@@ -3,7 +3,12 @@
 Continuation base: `c15204119d29285511ac1a5563732a6a714a3315`.
 The original history is preserved in draft PR #6. Merge, package release and
 deployment remain held; scoped passing evidence is not approval of the whole release.
-See [Opus integration](OPUS_REVIEW_INTEGRATION.md) for the latest review disposition.
+See [Opus integration](OPUS_REVIEW_INTEGRATION.md) for the earlier review disposition.
+The 2026-10-19 [dependency preflight](DEPENDENCY_PREFLIGHT.md) now precedes any
+benchmark trial. Head `618e70c8` completed all four PR workflows successfully,
+including 2,908 workspace tests (6 skipped, no retry); this does not certify the
+new dependency-remediation candidate, whose full CI remains pending. Resource
+admission remains blocked. No optimization trial has started.
 
 | Gate | Objective acceptance criteria | Current state |
 | --- | --- | --- |

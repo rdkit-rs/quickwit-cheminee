@@ -175,6 +175,7 @@ hyper-util = { version = "0.1", default-features = false, features = [
 indexmap = { version = "2.14", features = ["serde"] }
 indicatif = "0.18"
 inventory = "0.3"
+inferno = { version = "0.12.8", default-features = false }
 itertools = "0.15"
 lambda_runtime = "1.2"
 json_comments = "0.2"
@@ -219,7 +220,7 @@ pnet = { version = "0.35", features = ["std"] }
 postcard = { version = "1.1", features = [
   "use-std",
 ], default-features = false }
-pprof = { version = "0.15", features = ["flamegraph"] }
+pprof = "0.15"
 predicates = "3"
 prettyplease = "0.2"
 proc-macro2 = "1.0"
@@ -365,17 +366,19 @@ zstd = { version = "0.13", default-features = false }
 aws-config = "1.9"
 aws-credential-types = { version = "1.3", features = ["hardcoded-credentials"] }
 aws-runtime = "1.8"
-aws-sdk-kinesis = "1.110"
-aws-sdk-lambda = "1"
-aws-sdk-s3 = "1.138"
-aws-sdk-sqs = "1.103"
+aws-sdk-kinesis = { version = "1.110", default-features = false, features = ["default-https-client", "rt-tokio"] }
+aws-sdk-lambda = { version = "1.151", default-features = false, features = ["default-https-client", "rt-tokio"] }
+# Keep HTTPS, runtime and SigV4a support on the modern AWS-LC client. The SDK's
+# deprecated `rustls` default also pulls in the vulnerable legacy TLS/HTTP stack.
+aws-sdk-s3 = { version = "1.152", default-features = false, features = ["default-https-client", "rt-tokio", "sigv4a", "http-1x"] }
+aws-sdk-sqs = { version = "1.103", default-features = false, features = ["default-https-client", "rt-tokio"] }
 aws-smithy-async = "1.3"
 aws-smithy-http-client = { version = "1.2", features = [
   "default-client",
   "rustls-aws-lc",
 ] }
 aws-smithy-mocks = "0.2"
-aws-smithy-runtime = "1.12"
+aws-smithy-runtime = "1.16"
 aws-smithy-runtime-api = "1.13"
 aws-smithy-types = { version = "1.6", features = [
   "byte-stream-poll-next",
@@ -392,7 +395,8 @@ azure_storage_blobs = { version = "0.21", default-features = false, features = [
   "enable_reqwest_rustls",
 ] }
 
-opendal = { version = "0.57", default-features = false, features = ["reqwest-rustls-tls"] }
+opendal = { version = "0.59.5", default-features = false, features = ["reqwest-rustls-tls"] }
+opendal-http-transport-reqwest = { version = "0.59.5", default-features = false, features = ["rustls"] }
 reqsign = { version = "0.18", default-features = false, features = ["google", "default-context"] }
 
 quickwit-actors = { path = "quickwit-actors" }

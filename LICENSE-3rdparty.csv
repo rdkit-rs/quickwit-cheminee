@@ -56,6 +56,7 @@ async-stream,https://github.com/tokio-rs/async-stream,MIT,Carl Lerche <me@carlle
 async-stream-impl,https://github.com/tokio-rs/async-stream,MIT,Carl Lerche <me@carllerche.com>
 async-task,https://github.com/smol-rs/async-task,Apache-2.0 OR MIT,Stjepan Glavina <stjepang@gmail.com>
 async-trait,https://github.com/dtolnay/async-trait,MIT OR Apache-2.0,David Tolnay <dtolnay@gmail.com>
+asyncband,https://github.com/apache/asyncband,Apache-2.0,The asyncband Authors
 atoi,https://github.com/pacman82/atoi-rs,MIT,Markus Klein
 atomic-waker,https://github.com/smol-rs/atomic-waker,Apache-2.0 OR MIT,"Stjepan Glavina <stjepang@gmail.com>, Contributors to futures-rs"
 atomic_float,https://github.com/thomcc/atomic_float,Apache-2.0 OR MIT OR Unlicense,Thom Chiovoloni <chiovolonit@gmail.com>
@@ -479,7 +480,6 @@ matchers,https://github.com/hawkw/matchers,MIT,Eliza Weisman <eliza@buoyant.io>
 matchit,https://github.com/ibraheemdev/matchit,MIT AND BSD-3-Clause,Ibraheem Ahmed <ibraheem@ibraheem.ca>
 md-5,https://github.com/RustCrypto/hashes,MIT OR Apache-2.0,RustCrypto Developers
 md5,https://github.com/stainless-steel/md5,Apache-2.0 OR MIT,"Ivan Ukhov <ivan.ukhov@gmail.com>, Kamal Ahmad <shibe@openmailbox.org>, Konstantin Stepanov <milezv@gmail.com>, Lukas Kalbertodt <lukas.kalbertodt@gmail.com>, Nathan Musoke <nathan.musoke@gmail.com>, Scott Mabin <scott@mabez.dev>, Tony Arcieri <bascule@gmail.com>, Wim de With <register@dewith.io>, Yosef Dinerstein <yosefdi@gmail.com>"
-mea,https://github.com/fast/mea,Apache-2.0,The mea Authors
 measure_time,https://github.com/PSeitz/rust_measure_time,MIT,Pascal Seitz <pascal.seitz@gmail.com>
 memchr,https://github.com/BurntSushi/memchr,Unlicense OR MIT,"Andrew Gallant <jamslam@gmail.com>, bluss"
 memmap2,https://github.com/RazrFalcon/memmap2-rs,MIT OR Apache-2.0,"Dan Burkert <dan@danburkert.com>, Yevhenii Reizner <razrfalcon@gmail.com>, The Contributors"
@@ -545,6 +545,7 @@ oorandom,https://hg.sr.ht/~icefox/oorandom,MIT,Simon Heath <icefox@dreamquest.io
 opaque-debug,https://github.com/RustCrypto/utils,MIT OR Apache-2.0,RustCrypto Developers
 opendal,https://github.com/apache/opendal,Apache-2.0,Apache OpenDAL <dev@opendal.apache.org>
 opendal-core,https://github.com/apache/opendal,Apache-2.0,Apache OpenDAL <dev@opendal.apache.org>
+opendal-http-transport-reqwest,https://github.com/apache/opendal,Apache-2.0,Apache OpenDAL <dev@opendal.apache.org>
 opendal-service-gcs,https://github.com/apache/opendal,Apache-2.0,Apache OpenDAL <dev@opendal.apache.org>
 openidconnect,https://github.com/ramosbugs/openidconnect-rs,MIT,David A. Ramos <ramos@cs.stanford.edu>
 openssl,https://github.com/rust-openssl/rust-openssl,Apache-2.0,Steven Fackler <sfackler@gmail.com>
@@ -699,6 +700,7 @@ regex-lite,https://github.com/rust-lang/regex,MIT OR Apache-2.0,"The Rust Projec
 regex-syntax,https://github.com/rust-lang/regex,MIT OR Apache-2.0,"The Rust Project Developers, Andrew Gallant <jamslam@gmail.com>"
 regress,https://github.com/ridiculousfish/regress,MIT OR Apache-2.0,ridiculousfish <corydoras@ridiculousfish.com>
 relative-path,https://github.com/udoprog/relative-path,MIT OR Apache-2.0,John-John Tedro <udoprog@tedro.se>
+reqsign-aws-core,https://github.com/apache/opendal-reqsign,Apache-2.0,The reqsign-aws-core Authors
 reqsign-aws-v4,https://github.com/apache/opendal-reqsign,Apache-2.0,The reqsign-aws-v4 Authors
 reqsign-core,https://github.com/apache/opendal-reqsign,Apache-2.0,The reqsign-core Authors
 reqsign-file-read-tokio,https://github.com/apache/opendal-reqsign,Apache-2.0,The reqsign-file-read-tokio Authors
@@ -742,7 +744,6 @@ scoped-tls,https://github.com/alexcrichton/scoped-tls,MIT OR Apache-2.0,Alex Cri
 scopeguard,https://github.com/bluss/scopeguard,MIT OR Apache-2.0,bluss
 scratch,https://github.com/dtolnay/scratch,MIT OR Apache-2.0,David Tolnay <dtolnay@gmail.com>
 scrypt,https://github.com/RustCrypto/password-hashes/tree/master/scrypt,MIT OR Apache-2.0,RustCrypto Developers
-sct,https://github.com/rustls/sct.rs,Apache-2.0 OR ISC OR MIT,Joseph Birr-Pixton <jpixton@gmail.com>
 sea-query,https://github.com/SeaQL/sea-query,MIT OR Apache-2.0,"Chris Tsang <chris.2y3@outlook.com>, Billy Chan <ccw.billy.123@gmail.com>, Ivan Krivosheev <py.krivosheev@gmail.com>"
 sea-query-binder,https://github.com/SeaQL/sea-query,MIT OR Apache-2.0,"Valentin Tolmer <valentin@tolmer.fr>, Ivan Krivosheev <py.krivosheev@gmail.com>"
 sea-query-derive,https://github.com/SeaQL/sea-query,MIT OR Apache-2.0,"Follpvosten <wolfi@karpador.xyz>, Rene Leveille <rene@nestingsafe.com>"

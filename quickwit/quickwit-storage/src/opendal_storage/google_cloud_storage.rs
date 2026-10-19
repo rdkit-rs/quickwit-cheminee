@@ -118,7 +118,6 @@ mod tests {
     use std::sync::Arc;
 
     use base64::Engine;
-    use opendal::raw::HttpClient;
     use quickwit_common::uri::Uri;
     use rustls::pki_types::{CertificateDer, PrivateKeyDer, PrivateSec1KeyDer};
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
@@ -206,12 +205,56 @@ mod tests {
         let storage = OpendalStorage::new_google_cloud_storage_with_http_client_for_test(
             Uri::for_test("gs://quickwit-test-bucket"),
             cfg,
-            HttpClient::with(reqwest_client),
+            reqwest_client,
         )?;
 
         let bytes = storage.get_slice(Path::new("hello.txt"), 0..2).await?;
         assert_eq!(bytes.as_slice(), b"ok");
         server_task.await??;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_gcs_production_constructor_has_http_transport() -> anyhow::Result<()> {
+        let listener = TcpListener::bind("127.0.0.1:0").await?;
+        let endpoint = format!("http://{}", listener.local_addr()?);
+        let server = tokio::spawn(async move {
+            let (mut stream, _) = listener.accept().await?;
+            let mut request = Vec::new();
+            while !request.windows(4).any(|part| part == b"\r\n\r\n") {
+                let mut chunk = [0; 1024];
+                let count = stream.read(&mut chunk).await?;
+                anyhow::ensure!(
+                    count > 0 && request.len() < 8192,
+                    "incomplete request headers"
+                );
+                request.extend_from_slice(&chunk[..count]);
+            }
+            let request = String::from_utf8(request)?.to_ascii_lowercase();
+            anyhow::ensure!(
+                request.contains("range: bytes=0-1"),
+                "range read was not preserved"
+            );
+            stream.write_all(b"HTTP/1.1 206 Partial Content\r\nContent-Length: 2\r\nContent-Range: bytes 0-1/2\r\nConnection: close\r\n\r\nok").await?;
+            Ok::<_, anyhow::Error>(())
+        });
+        let cfg = opendal::services::Gcs::default()
+            .bucket("quickwit-test-bucket")
+            .endpoint(&endpoint)
+            .skip_signature()
+            .disable_config_load()
+            .disable_vm_metadata();
+        let storage = OpendalStorage::new_google_cloud_storage(
+            Uri::for_test("gs://quickwit-test-bucket"),
+            cfg,
+        )?;
+        let bytes = tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            storage.get_slice(Path::new("hello.txt"), 0..2),
+        )
+        .await??;
+        assert_eq!(bytes.as_slice(), b"ok");
+        server.await??;
         Ok(())
     }
 

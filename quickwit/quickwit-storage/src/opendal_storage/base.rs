@@ -18,7 +18,8 @@ use std::{fmt, io};
 
 use async_trait::async_trait;
 use futures::AsyncWriteExt as FuturesAsyncWriteExt;
-use opendal::{DeleteInput, IntoDeleteInput, Operator};
+use opendal::{DeleteInput, HttpTransporter, IntoDeleteInput, OperationContext, Operator};
+use opendal_http_transport_reqwest::ReqwestTransport;
 use quickwit_common::uri::Uri;
 use quickwit_metrics::HistogramTimer;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWriteExt as TokioAsyncWriteExt};
@@ -59,7 +60,10 @@ impl OpendalStorage {
         uri: Uri,
         cfg: opendal::services::Gcs,
     ) -> Result<Self, StorageResolverError> {
-        let op = Operator::new(cfg)?.finish();
+        // Set transport on this operator: no process-global registration or trust mutation.
+        let context = OperationContext::new()
+            .with_http_transport(HttpTransporter::new(ReqwestTransport::default()));
+        let op = Operator::new(cfg)?.with_context(context);
         Ok(Self::from_operator(uri, op))
     }
 
@@ -78,11 +82,11 @@ impl OpendalStorage {
     pub(super) fn new_google_cloud_storage_with_http_client_for_test(
         uri: Uri,
         cfg: opendal::services::Gcs,
-        http_client: opendal::raw::HttpClient,
+        http_client: reqwest_013::Client,
     ) -> Result<Self, StorageResolverError> {
-        let op = Operator::new(cfg)?
-            .layer(opendal::layers::HttpClientLayer::new(http_client))
-            .finish();
+        let context = OperationContext::new()
+            .with_http_transport(HttpTransporter::new(ReqwestTransport::new(http_client)));
+        let op = Operator::new(cfg)?.with_context(context);
         Ok(Self::from_operator(uri, op))
     }
 

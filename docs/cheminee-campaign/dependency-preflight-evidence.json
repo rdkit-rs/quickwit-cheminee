@@ -1,0 +1,268 @@
+{
+  "date": "2026-10-19",
+  "status": "blocked",
+  "baseline_commit": "618e70c8ab8485d0143f25a92a622d8e88da5c6c",
+  "rust_audit": {
+    "scanner": "cargo-audit 0.22.2",
+    "database_commit": "999ec89d5d3f10f20be14750ec8c2d8b44e0ac9b",
+    "base_lock_sha256": "99358e532b6726b6c99bc6b84ac8f32ec29339bfe3891bea5a0f70e2296a1349",
+    "head_lock_sha256": "89837d57a8d24665130f37a0e54d66b0dc2dddedb12f1b0a5009b08a67c99023",
+    "introduced": [],
+    "current": [
+      [
+        "RUSTSEC-2023-0071",
+        "rsa",
+        "0.9.10",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2024-0437",
+        "protobuf",
+        "2.27.1",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0097",
+        "rand",
+        "0.7.3",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0194",
+        "quick-xml",
+        "0.31.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0195",
+        "quick-xml",
+        "0.31.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0253",
+        "lru",
+        "0.16.4",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0253",
+        "lru",
+        "0.17.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0275",
+        "azure_core",
+        "0.21.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0367",
+        "zip",
+        "0.6.6",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0368",
+        "zip",
+        "0.6.6",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0369",
+        "zip",
+        "0.6.6",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ]
+    ],
+    "no_longer_reported": [
+      [
+        "RUSTSEC-2026-0098",
+        "rustls-webpki",
+        "0.101.7",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0099",
+        "rustls-webpki",
+        "0.101.7",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0104",
+        "rustls-webpki",
+        "0.101.7",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0194",
+        "quick-xml",
+        "0.26.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0194",
+        "quick-xml",
+        "0.39.4",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0194",
+        "quick-xml",
+        "0.40.1",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0195",
+        "quick-xml",
+        "0.26.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0195",
+        "quick-xml",
+        "0.39.4",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0195",
+        "quick-xml",
+        "0.40.1",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0221",
+        "event-listener",
+        "5.4.1",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0253",
+        "lru",
+        "0.18.0",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0258",
+        "h2",
+        "0.3.27",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0258",
+        "h2",
+        "0.4.15",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0285",
+        "rustls",
+        "0.23.41",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0310",
+        "domain",
+        "0.12.1",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0338",
+        "quinn-proto",
+        "0.11.16",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0339",
+        "quinn-proto",
+        "0.11.16",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0340",
+        "quinn-proto",
+        "0.11.16",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0341",
+        "quinn-proto",
+        "0.11.16",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0342",
+        "quinn-proto",
+        "0.11.16",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0346",
+        "rustls",
+        "0.21.12",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0346",
+        "rustls",
+        "0.23.41",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0348",
+        "rustls",
+        "0.23.41",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0349",
+        "rustls",
+        "0.21.12",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ],
+      [
+        "RUSTSEC-2026-0349",
+        "rustls",
+        "0.23.41",
+        "registry+https://github.com/rust-lang/crates.io-index"
+      ]
+    ]
+  },
+  "local_checks": {
+    "flamegraph": {
+      "passed": 3
+    },
+    "isolated_opendal_range_transport": {
+      "passed": 1,
+      "limitation": "Not the repository GCS or private-CA tests"
+    },
+    "ruby_wire": {
+      "tests": 24,
+      "assertions": 420,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "ruby_loaded_json_guard": {
+      "tests": 9,
+      "assertions": 10,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "dependency_delta_policy": {
+      "passed": 7
+    },
+    "license_inventory": "passed",
+    "changed_rust_format": "passed"
+  },
+  "current_candidate_full_ci": "pending",
+  "benchmark_trials": 0,
+  "log_sha256": {
+    "flamegraph-test.log": "9da6802dead59abb38f417516ecf230ffee4f5731309ee79b2f10fe41bf62756",
+    "ruby-loaded-guard.log": "eb6856d5a771e3ed6601c6fd29d28969d4ed461379b6f0100df2497c397bf1fb",
+    "ruby-wire.log": "eef84aa3409bc1a6f272f2ff6bb71db860a7f67857ecb48c002f04d23dbe5306",
+    "transport-test.log": "fb5b72d0dde0bed458683c81d1166af40471e499626c8f3212c1a0267d111f00"
+  }
+}
