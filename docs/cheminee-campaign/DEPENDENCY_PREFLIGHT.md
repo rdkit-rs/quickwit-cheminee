@@ -120,3 +120,19 @@ passes three botocore-stub tests. Real LocalStack execution remains a CI check.
 The 15 distinct package versions across both locks and bootstrap had no advisory
 records in the queried live PyPI metadata; this is scoped database evidence, not
 a certification of native libraries, OS packages or other campaign tooling.
+
+## CI follow-up
+
+All-features Clippy on b7294152 exposed a missed OpenDAL migration: DeleteInput
+was removed in 0.59. Bulk deletion now supplies owned String paths, preserving
+lossy path conversion and default unversioned options. The isolated transport/
+delete-iterator tests pass 2/2 with 204/404/403 outcomes; the repository GCS test
+now covers these through Storage::bulk_delete. This is single-item iterator
+coverage, not qualification of multipart multi-object deletion. Final-head CI
+remains required. The earlier source review missed the removed type.
+
+A read-only generator feasibility check found that official 7.25.0 and 7.26.0
+still contain 18 advisory matches across Logback, Handlebars and Jackson. Class
+identity checks corrected stale Commons Lang shaded metadata; a top-level version
+bump would not clear this gate. Custom Ruby model templates also need reconciliation
+before a generator upgrade. No generator change was made.

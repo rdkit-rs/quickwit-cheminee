@@ -258,6 +258,55 @@ mod tests {
         Ok(())
     }
 
+    #[tokio::test]
+    async fn test_gcs_bulk_delete_preserves_missing_and_denied_results() -> anyhow::Result<()> {
+        for (status, succeeds) in [
+            ("204 No Content", true),
+            ("404 Not Found", true),
+            ("403 Forbidden", false),
+        ] {
+            let listener = TcpListener::bind("127.0.0.1:0").await?;
+            let endpoint = format!("http://{}", listener.local_addr()?);
+            let server = tokio::spawn(async move {
+                let (mut stream, _) = listener.accept().await?;
+                let mut request = Vec::new();
+                while !request.windows(4).any(|part| part == b"\r\n\r\n") {
+                    let mut chunk = [0; 1024];
+                    let count = stream.read(&mut chunk).await?;
+                    anyhow::ensure!(
+                        count > 0 && request.len() < 8192,
+                        "incomplete request headers"
+                    );
+                    request.extend_from_slice(&chunk[..count]);
+                }
+                anyhow::ensure!(request.starts_with(b"DELETE "), "expected object deletion");
+                let response =
+                    format!("HTTP/1.1 {status}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
+                stream.write_all(response.as_bytes()).await?;
+                Ok::<_, anyhow::Error>(())
+            });
+            let cfg = opendal::services::Gcs::default()
+                .bucket("quickwit-test-bucket")
+                .endpoint(&endpoint)
+                .skip_signature()
+                .disable_config_load()
+                .disable_vm_metadata();
+            let storage = OpendalStorage::new_google_cloud_storage(
+                Uri::for_test("gs://quickwit-test-bucket"),
+                cfg,
+            )?;
+            let paths = [Path::new("hello.txt")];
+            let result = tokio::time::timeout(
+                std::time::Duration::from_secs(5),
+                storage.bulk_delete(&paths),
+            )
+            .await?;
+            assert_eq!(result.is_ok(), succeeds, "status {status}: {result:?}");
+            server.await??;
+        }
+        Ok(())
+    }
+
     async fn start_local_https_gcs_server() -> anyhow::Result<LocalHttpsGcsServer> {
         let cert_chain = vec![CertificateDer::from(decode_test_der(
             TEST_SERVER_CERT_DER_BASE64,

@@ -18,7 +18,7 @@ use std::{fmt, io};
 
 use async_trait::async_trait;
 use futures::AsyncWriteExt as FuturesAsyncWriteExt;
-use opendal::{DeleteInput, HttpTransporter, IntoDeleteInput, OperationContext, Operator};
+use opendal::{HttpTransporter, OperationContext, Operator};
 use opendal_http_transport_reqwest::ReqwestTransport;
 use quickwit_common::uri::Uri;
 use quickwit_metrics::HistogramTimer;
@@ -265,9 +265,9 @@ impl Storage for OpendalStorage {
                 };
             }
         }
-        let delete_inputs: Vec<DeleteInput> = paths
+        let delete_inputs: Vec<String> = paths
             .iter()
-            .map(|path| path.as_os_str().to_string_lossy().into_delete_input())
+            .map(|path| path.as_os_str().to_string_lossy().into_owned())
             .collect();
 
         self.op

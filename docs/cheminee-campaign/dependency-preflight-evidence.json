@@ -263,6 +263,11 @@
     "cli_bucket_preparation": {
       "passed": 3,
       "limitation": "botocore stubs; not live LocalStack"
+    },
+    "isolated_opendal_range_transport_and_delete": {
+      "passed": 2,
+      "scope": "range read plus single-item delete_iter 204/404/403; not repository or multipart qualification",
+      "command": "cargo test --locked --lib --manifest-path /tmp/cheminee-remediation/transport-test/Cargo.toml"
     }
   },
   "current_candidate_full_ci": "pending",
@@ -271,7 +276,8 @@
     "flamegraph-test.log": "9da6802dead59abb38f417516ecf230ffee4f5731309ee79b2f10fe41bf62756",
     "ruby-loaded-guard.log": "eb6856d5a771e3ed6601c6fd29d28969d4ed461379b6f0100df2497c397bf1fb",
     "ruby-wire.log": "eef84aa3409bc1a6f272f2ff6bb71db860a7f67857ecb48c002f04d23dbe5306",
-    "transport-test.log": "fb5b72d0dde0bed458683c81d1166af40471e499626c8f3212c1a0267d111f00"
+    "transport-test.log": "fb5b72d0dde0bed458683c81d1166af40471e499626c8f3212c1a0267d111f00",
+    "transport-delete-lib-test.log": "b1bd7bc3e1fe854c5ea198f4ce4cd70bce5972dcdbd35ac97ca66810f7c8d84f"
   },
   "python_install_manifests": {
     "rest": {
@@ -378,5 +384,8 @@
     }
   },
   "python_advisory_inventory_sha256": "344ee900554564167fbbf09db90acc60b9e33f8a16717aee63395d0f6eb79b49",
-  "bootstrap_bundled_code_audit": "open: installer Windows launchers and distlib-derived script code"
+  "bootstrap_bundled_code_audit": "open: installer Windows launchers and distlib-derived script code",
+  "ci_followup": {
+    "b7294152": "all-features Clippy found removed opendal::DeleteInput; fixed by owned String inputs; final-head CI pending"
+  }
 }
