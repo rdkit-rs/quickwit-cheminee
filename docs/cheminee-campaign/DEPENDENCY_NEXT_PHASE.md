@@ -4,6 +4,38 @@ Source baseline: c774b166e0bcffa9eadbcda48d4d657d797ca639. This is a design
 and source-inspection checkpoint, not dependency clearance. Existing authorization
 covers behavior-preserving fixes and reviews. No residual finding is accepted.
 
+## Subsequent LRU vendor integration
+
+The earlier probe checkpoint below is retained as history. The subsequent change
+integrates both exact backports under quickwit/vendor, preserving original
+versions, manifests, dependencies and MIT attribution. Locked all-feature metadata
+has no dependency-edge or feature changes after normalizing only the two source
+identities. Tantivy/Chitchat pins and registry LRU 0.18.5 remain unchanged.
+
+The audit now validates each base/head revision's vendor inventory, original
+checksums, pinned provenance digest, Cargo overrides and lockfile correspondence.
+It retains raw and registry-identity locks and scans separately, and takes the
+union of findings. The original two LRU advisory rows remain visible; source
+hash validation and test results are separate evidence, not finding exemptions.
+Unknown contents, symlinks or unregistered LRU overrides fail validation.
+
+Bounded tests against actual vendor paths passed eight scoped test executions.
+Isolated copies additionally passed 52 upstream library tests with default
+features and 51 with std-map for each version, plus two backport tests in each
+configuration (214 executions total across overlapping configurations). CI uses
+retained test locks. Its copy alone registers the additional test target because
+0.17 disables auto-discovery; shipped manifests remain byte-identical upstream.
+The initial offline run lacked two dev dependencies; ordinary permitted crates.io
+access fetched scoped_threadpool, stats_alloc and equivalent. No denied endpoint
+was bypassed. Later runs were locked/offline. No parent/native build was run here.
+
+Independent Astra MAX review caught and corrected a missing pipe in the license
+header exclusion and a missing CI path trigger for test locks. The header check
+now fails on file-list errors, checks 800 existing files and excludes exactly the
+two MIT vendor source files. Negative command-failure and bad-header checks pass.
+Full nightly formatting and license inventory checks pass. Application-level
+index/cluster compatibility and full preflight remain pending.
+
 The six exact domains and standard domain rules are approved, but publication of
 the v2 environment configuration remains pending. These rules are not effective
 egress permission in the running environment. Do not bypass proxy denials.
@@ -51,6 +83,15 @@ fixture and old/new Chitchat peers for convergence/restart validation.
   native loading path, not this dependency. First investigate regeneration of
   binding protocol types against a repaired protobuf library; retain SavedModel
   loading and error behavior. A small C API bridge is a fallback, not yet selected.
+- Further cached-source inspection confirms SavedModelBundle::load always parses
+  MetaGraphDef. There are unguarded recursion cycles through StructuredValue maps
+  and AttrValue/NameAttrList; central merge_message recursion accounting is a
+  possible narrow backport, but needs tests and reconciliation with two existing
+  helper guards. Do not blindly copy a modern skip_group change: the old helper
+  has different behavior. A retained 32-descriptor snapshot exposes a regeneration
+  mismatch: config.proto imports tensorflow/core/protobuf/rpc_options.proto while
+  the bundled descriptor names tensorflow/tsl/protobuf/rpc_options.proto. Resolve
+  upstream schema provenance before choosing regeneration. No parser was changed.
 - tensorflow-sys 0.24.0's build script uses ZipArchive::by_index, enclosed_name,
   File::create and io::copy. It does not call the advisory-named bulk extract
   methods in this helper. This narrows reachability analysis but does not clear
@@ -73,6 +114,10 @@ fixture and old/new Chitchat peers for convergence/restart validation.
   Prove the edge unused across supported features before removal. Workspace
   consumers inspected request PostgreSQL; all-features resolution alone cannot
   prove safe removal of the MySQL lockfile entry.
+- A subsequent locked/offline cargo tree with workspace, all-features and all
+  targets finds no active sqlx-mysql path. It remains in lock/metadata scope;
+  do not describe that row as an active private-key authentication path. This
+  evidence does not remove the RSA finding or justify disabling authentication.
 
 ## Azure compatibility matrix before replacing the SDK
 

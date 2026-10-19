@@ -22,8 +22,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Test comparison and fail-closed behavior
-        run: python3 -m unittest discover -s quickwit/scripts/ci -p test_dependency_audit.py
+      - name: Test comparison, vendor provenance and fail-closed behavior
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s quickwit/scripts/ci -p test_dependency_audit.py
       - name: Install checksum-pinned cargo-audit and fetch current RustSec database
         shell: bash
         run: |
@@ -37,7 +37,7 @@ jobs:
           tar -xzf cargo-audit.tgz --strip-components=1 \
             cargo-audit-x86_64-unknown-linux-musl-v0.22.2/cargo-audit
           git clone --depth 1 https://github.com/RustSec/advisory-db.git advisory-db
-      - name: Fail on newly introduced RustSec vulnerabilities or unsoundness
+      - name: Verify vendor provenance and compare raw and registry-identity RustSec scans
         shell: bash
         run: |
           set -euo pipefail
@@ -50,7 +50,9 @@ jobs:
           cd "$RUNNER_TEMP/dependency-audit"
           python3 "$GITHUB_WORKSPACE/quickwit/scripts/ci/dependency_audit.py" \
             --scanner "$PWD/cargo-audit" --database "$PWD/advisory-db" \
-            --base-lock "$PWD/base.lock" --head-lock "$PWD/head.lock" --output "$PWD/report"
+            --base-lock "$PWD/base.lock" --head-lock "$PWD/head.lock" --output "$PWD/report" \
+            --repository "$GITHUB_WORKSPACE" \
+            --base-ref "$(cat "$PWD/report/base-sha.txt")" --head-ref "$HEAD_SHA"
       - name: Publish complete findings and coverage summary
         if: always()
         shell: bash
@@ -58,7 +60,7 @@ jobs:
           if test -f "$RUNNER_TEMP/dependency-audit/report/summary.md"; then
             cat "$RUNNER_TEMP/dependency-audit/report/summary.md" >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Retain audit reports, database revision and lockfile hashes
+      - name: Retain raw and projected locks, reports, hashes and validated vendor provenance
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

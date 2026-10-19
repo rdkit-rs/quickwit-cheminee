@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """PR lockfile advisory delta; full reports remain visible, inherited debt is not a clean audit."""
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import subprocess
 import sys
+
+from lru_vendor_provenance import GitTree, sha256, validate_and_project
 
 
 def findings(report, returncode):
@@ -57,6 +58,8 @@ def scan(scanner, database, lockfile, output, label):
 
 
 def run(args):
+    if any(not getattr(args, field, None) for field in ('repository', 'base_ref', 'head_ref')):
+        raise ValueError('repository, base-ref and head-ref are required for source validation')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     scanner, database = args.scanner.resolve(), args.database.resolve()
@@ -65,16 +68,42 @@ def run(args):
         raise ValueError(f'unexpected scanner version: {version}')
     revision = subprocess.check_output(
         ['git', '-C', str(database), 'rev-parse', 'HEAD'], text=True, timeout=10).strip()
-    base, base_keys = scan(scanner, database, args.base_lock.resolve(), output, 'base')
-    head, head_keys = scan(scanner, database, args.head_lock.resolve(), output, 'head')
+    inputs = {}
+    for label, reference, lock in (('base', args.base_ref, args.base_lock),
+                                   ('head', args.head_ref, args.head_lock)):
+        raw = lock.read_bytes()
+        tree = GitTree(args.repository.resolve(), reference)
+        projected, provenance = validate_and_project(tree, raw)
+        (output / f'{label}.raw.lock').write_bytes(raw)
+        (output / f'{label}.registry-identity.lock').write_bytes(projected)
+        inputs[label] = {'raw_lock_sha256': sha256(raw),
+                         'registry_identity_lock_sha256': sha256(projected),
+                         'provenance': provenance}
+    (output / 'validated-inputs.json').write_text(json.dumps(inputs, indent=2) + '\n')
+    reports, keys = {}, {}
+    for label in ('base', 'head'):
+        reports[label], keys[label] = {}, {}
+        for kind in ('raw', 'registry-identity'):
+            scan_label = f'{label}.{kind}'
+            report, matches = scan(scanner, database, output / f'{scan_label}.lock', output, scan_label)
+            reports[label][kind], keys[label][kind] = report, matches
+            inputs[label][f'{kind}_report_sha256'] = sha256((output / f'{scan_label}.json').read_bytes())
+    base_keys = keys['base']['raw'] | keys['base']['registry-identity']
+    head_keys = keys['head']['raw'] | keys['head']['registry-identity']
     after = subprocess.check_output(
         ['git', '-C', str(database), 'rev-parse', 'HEAD'], text=True, timeout=10).strip()
     if revision != after:
         raise ValueError('advisory database changed between scans')
     introduced = sorted(head_keys - base_keys)
     evidence = {'scanner': version, 'database_commit': revision,
-                'base_lock_sha256': hashlib.sha256(args.base_lock.read_bytes()).hexdigest(),
-                'head_lock_sha256': hashlib.sha256(args.head_lock.read_bytes()).hexdigest(),
+                'base_lock_sha256': inputs['base']['raw_lock_sha256'],
+                'head_lock_sha256': inputs['head']['raw_lock_sha256'],
+                'scan_inputs': inputs,
+                'coverage': 'Union of raw lock and verified original registry-identity matches. '
+                            'The projected lock is an advisory-matching input, not the built vendor bytes; '
+                            'no findings are exempted or subtracted for backports.',
+                'raw_current': sorted(keys['head']['raw']),
+                'registry_identity_current': sorted(keys['head']['registry-identity']),
                 'introduced': introduced, 'current': sorted(head_keys),
                 'no_longer_reported': sorted(base_keys - head_keys)}
     (output / 'comparison.json').write_text(json.dumps(evidence, indent=2) + '\n')
@@ -84,17 +113,26 @@ def run(args):
              f'All current vulnerability/unsoundness matches: **{len(head_keys)}**.', '',
              'This PR-delta verdict is **not a clean full audit**. Unchanged findings remain security debt.',
              'New matches fail; no advisory exclusions, target filters or severity threshold are used.',
+             'The verdict includes **both raw-lock and original registry-identity scans**. '
+             'Verified LRU path packages are projected to their original registry source, version and checksum.',
+             'The projected lock is an advisory-matching input; it does **not** describe the built vendor bytes '
+             'or prove a backport fixes an advisory. No backport exemptions or finding subtraction are applied.',
+             'Raw/projected locks, full reports, individual hashes and the validated vendor provenance '
+             'are retained separately in the artifact.',
              'Reports cover RustSec-matched Cargo.lock packages, not new feature/exposure paths, '
              'Git forks of crates.io packages, native libraries, Ruby/npm, or GHSA-only advisories.', '',
              '## Complete current blocking findings', '']
     for advisory, name, version, source in sorted(head_keys):
         marker = 'NEW' if (advisory, name, version, source) in introduced else 'unchanged'
-        lines.append(f'- {marker}: {advisory}, {name} {version}, {source}')
+        identity = (advisory, name, version, source)
+        scans = ', '.join(kind for kind in ('raw', 'registry-identity') if identity in keys['head'][kind])
+        lines.append(f'- {marker}: {advisory}, {name} {version}, {source} (scans: {scans})')
     lines.extend(['', '## Informational notices and maintenance warnings', ''])
-    for category in ('notice', 'unmaintained'):
-        for row in head['warnings'].get(category, []):
-            lines.append(f"- {category}: {row['advisory']['id']}, "
-                         f"{row['package']['name']} {row['package']['version']}")
+    for kind, report in reports['head'].items():
+        for category in ('notice', 'unmaintained'):
+            for row in report['warnings'].get(category, []):
+                lines.append(f"- {category} ({kind}): {row['advisory']['id']}, "
+                             f"{row['package']['name']} {row['package']['version']}")
     summary = '\n'.join(lines) + '\n'
     (output / 'summary.md').write_text(summary)
     print(summary)
@@ -103,8 +141,10 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('scanner', 'database', 'base-lock', 'head-lock', 'output'):
+    for name in ('scanner', 'database', 'base-lock', 'head-lock', 'output', 'repository'):
         parser.add_argument('--' + name, type=Path, required=True)
+    for name in ('base-ref', 'head-ref'):
+        parser.add_argument('--' + name, required=True)
     args = parser.parse_args()
     try:
         return run(args)

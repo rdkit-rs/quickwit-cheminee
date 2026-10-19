@@ -1,3 +1,5 @@
+extern crate lru;
+
 use lru::LruCache;
 use std::borrow::Borrow;
 use std::num::NonZeroUsize;

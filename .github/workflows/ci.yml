@@ -82,6 +82,8 @@ jobs:
             rust_src:
               - quickwit/**/*.rs
               - quickwit/**/*.toml
+              - quickwit/Cargo.lock
+              - quickwit/scripts/ci/lru-backport-locks/*.lock
               - quickwit/**/*.proto
               - quickwit/rest-api-tests/**
               - quickwit/scripts/ci/python_test_env.py
@@ -106,6 +108,25 @@ jobs:
       - name: cargo check without metrics
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: cargo check --features=postgres --tests --bin quickwit
+        working-directory: ./quickwit
+      - name: LRU backport library and panic-safety tests
+        if: always() && steps.modified.outputs.rust_src == 'true'
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/lru-backport-target
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/lru-backport-tests"
+          for version in 0.16.4 0.17.0; do
+            package="$RUNNER_TEMP/lru-backport-tests/lru-$version"
+            cp -R "vendor/lru-$version" "$package"
+            cp "scripts/ci/lru-backport-locks/$version.lock" "$package/Cargo.lock"
+            mkdir "$package/tests"
+            cp scripts/ci/lru_backport_regression.rs "$package/tests/backport.rs"
+            # 0.17 disables automatic test discovery; register only in the test copy.
+            printf '\n[[test]]\nname = "backport"\npath = "tests/backport.rs"\n' >> "$package/Cargo.toml"
+            cargo test --locked --manifest-path "$package/Cargo.toml" --lib --test backport -j 1
+            cargo test --locked --manifest-path "$package/Cargo.toml" --lib --test backport --no-default-features -j 1
+          done
         working-directory: ./quickwit
       - name: cargo check with metrics
         if: always() && steps.modified.outputs.rust_src == 'true'
@@ -162,6 +183,7 @@ jobs:
               - quickwit/**/*.proto
               - .github/workflows/ci.yml
               - quickwit/scripts/ci/**
+              - quickwit/Cargo.lock
             migrations:
               - quickwit/quickwit-metastore/migrations/**
               - quickwit/diesel-guard.toml
