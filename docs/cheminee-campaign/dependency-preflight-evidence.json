@@ -255,7 +255,15 @@
       "passed": 7
     },
     "license_inventory": "passed",
-    "changed_rust_format": "passed"
+    "changed_rust_format": "passed",
+    "python_locked_installer": {
+      "passed": 14,
+      "packaging_source": "checksum-verified pinned packaging 25.0 wheel"
+    },
+    "cli_bucket_preparation": {
+      "passed": 3,
+      "limitation": "botocore stubs; not live LocalStack"
+    }
   },
   "current_candidate_full_ci": "pending",
   "benchmark_trials": 0,
@@ -264,5 +272,111 @@
     "ruby-loaded-guard.log": "eb6856d5a771e3ed6601c6fd29d28969d4ed461379b6f0100df2497c397bf1fb",
     "ruby-wire.log": "eef84aa3409bc1a6f272f2ff6bb71db860a7f67857ecb48c002f04d23dbe5306",
     "transport-test.log": "fb5b72d0dde0bed458683c81d1166af40471e499626c8f3212c1a0267d111f00"
-  }
+  },
+  "python_install_manifests": {
+    "rest": {
+      "lock_sha256": "58db05c48c5774b072351d4c0e531d9e0c317dcb982f06e11e39b7b5dc3c27eb",
+      "python": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+      "bootstrap": {
+        "installer": {
+          "wheel": "installer-0.7.0-py3-none-any.whl",
+          "sha256": "05d1933f0a5ba7d8d6296bb6d5018e7c94fa473ceb10cf198a92ccea19c27b53"
+        },
+        "packaging": {
+          "wheel": "packaging-25.0-py3-none-any.whl",
+          "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
+        }
+      },
+      "packages": {
+        "certifi": {
+          "version": "2026.2.25",
+          "wheel": "certifi-2026.2.25-py3-none-any.whl",
+          "sha256": "027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa"
+        },
+        "charset-normalizer": {
+          "version": "3.4.6",
+          "wheel": "charset_normalizer-3.4.6-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+          "sha256": "9cc4fc6c196d6a8b76629a70ddfcd4635a6898756e2d9cac5565cf0654605d73"
+        },
+        "idna": {
+          "version": "3.15",
+          "wheel": "idna-3.15-py3-none-any.whl",
+          "sha256": "048adeaf8c2d788c40fee287673ccaa74c24ffd8dcf09ffa555a2fbb59f10ac8"
+        },
+        "pyaml": {
+          "version": "23.5.9",
+          "wheel": "pyaml-23.5.9-py3-none-any.whl",
+          "sha256": "b7fa20b43c5b6e5c8b7406a2408fe533efd65a6459feff828f918342f043ef4c"
+        },
+        "pyyaml": {
+          "version": "6.0.1",
+          "wheel": "PyYAML-6.0.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+          "sha256": "d2b04aac4d386b172d5b9692e2d2da8de7bfb6c387fa4f801fbf6fb2e6ba4673"
+        },
+        "requests": {
+          "version": "2.33.0",
+          "wheel": "requests-2.33.0-py3-none-any.whl",
+          "sha256": "3324635456fa185245e24865e810cecec7b4caf933d7eb133dcde67d48cee69b"
+        },
+        "urllib3": {
+          "version": "2.8.0",
+          "wheel": "urllib3-2.8.0-py3-none-any.whl",
+          "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3"
+        }
+      }
+    },
+    "cli": {
+      "lock_sha256": "6c180cba5426b12f144ef23cd9ff60097f7bff964e9e09ed80b4d155ceadb973",
+      "python": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+      "bootstrap": {
+        "installer": {
+          "wheel": "installer-0.7.0-py3-none-any.whl",
+          "sha256": "05d1933f0a5ba7d8d6296bb6d5018e7c94fa473ceb10cf198a92ccea19c27b53"
+        },
+        "packaging": {
+          "wheel": "packaging-25.0-py3-none-any.whl",
+          "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
+        }
+      },
+      "packages": {
+        "boto3": {
+          "version": "1.40.59",
+          "wheel": "boto3-1.40.59-py3-none-any.whl",
+          "sha256": "75752e7dc445131700a58926a50ca705794232f0f47d0e21edb59fbf1898db95"
+        },
+        "botocore": {
+          "version": "1.40.59",
+          "wheel": "botocore-1.40.59-py3-none-any.whl",
+          "sha256": "042dd844ca82155ca1ab9608b9bef36d517515c775d075f57b89257108ae843b"
+        },
+        "jmespath": {
+          "version": "1.0.1",
+          "wheel": "jmespath-1.0.1-py3-none-any.whl",
+          "sha256": "02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"
+        },
+        "python-dateutil": {
+          "version": "2.9.0.post0",
+          "wheel": "python_dateutil-2.9.0.post0-py2.py3-none-any.whl",
+          "sha256": "a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"
+        },
+        "s3transfer": {
+          "version": "0.14.0",
+          "wheel": "s3transfer-0.14.0-py3-none-any.whl",
+          "sha256": "ea3b790c7077558ed1f02a3072fb3cb992bbbd253392f4b6e9e8976941c7d456"
+        },
+        "six": {
+          "version": "1.17.0",
+          "wheel": "six-1.17.0-py2.py3-none-any.whl",
+          "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"
+        },
+        "urllib3": {
+          "version": "2.8.0",
+          "wheel": "urllib3-2.8.0-py3-none-any.whl",
+          "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3"
+        }
+      }
+    }
+  },
+  "python_advisory_inventory_sha256": "344ee900554564167fbbf09db90acc60b9e33f8a16717aee63395d0f6eb79b49",
+  "bootstrap_bundled_code_audit": "open: installer Windows launchers and distlib-derived script code"
 }

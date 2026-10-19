@@ -84,6 +84,8 @@ jobs:
               - quickwit/**/*.toml
               - quickwit/**/*.proto
               - quickwit/rest-api-tests/**
+              - quickwit/scripts/ci/python_test_env.py
+              - quickwit/scripts/ci/test_python_test_env.py
               - .github/workflows/ci.yml
       - name: Setup stable Rust Toolchain
         if: steps.modified.outputs.rust_src == 'true'
@@ -113,15 +115,21 @@ jobs:
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: cargo nextest run --features=postgres,metrics --retries 1
         working-directory: ./quickwit
+      - name: Dependency remediation regression tests
+        if: always() && steps.modified.outputs.rust_src == 'true'
+        run: |
+          cargo nextest run --locked -p quickwit-storage --features gcs -E 'test(opendal_storage::google_cloud_storage)'
+          cargo nextest run --locked -p quickwit-serve --features pprof -E 'test(developer_api::pprof)'
+        working-directory: ./quickwit
       - name: Install python packages
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: |
-          pip install --user --require-hashes -r ${{ github.workspace }}/.github/workflows/requirements.txt
-          pipenv install --deploy --ignore-pipfile
+          python3 -I -m unittest discover -s ../scripts/ci -p test_python_test_env.py
+          python3 -I ../scripts/ci/python_test_env.py --lock Pipfile.lock --venv "$RUNNER_TEMP/quickwit-rest-python"
         working-directory: ./quickwit/rest-api-tests
       - name: Run REST API tests
         if: always() && steps.modified.outputs.rust_src == 'true'
-        run: pipenv run python3 ./run_tests.py --binary ../target/debug/quickwit
+        run: '"$RUNNER_TEMP/quickwit-rest-python/bin/python" ./run_tests.py --binary ../target/debug/quickwit'
         working-directory: ./quickwit/rest-api-tests
 
   lints:

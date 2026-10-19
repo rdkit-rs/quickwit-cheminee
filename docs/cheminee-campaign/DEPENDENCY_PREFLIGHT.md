@@ -57,8 +57,8 @@ OpenAPI Generator shaded dependencies, native RDKit/TensorFlow and runtime OS
 packages must be inventoried. Direct-package lookups alone cannot certify these
 transitive graphs. Garage is not yet selected/installed and remains an admission
 prerequisite. Findings and network/coverage limitations are retained under
-/workspace/recovery/dependency-remediation-2026-10-19. Python findings are being
-remediated separately within this preflight; native/SDK/tooling coverage is open.
+/workspace/recovery/dependency-remediation-2026-10-19. The Python REST/CLI findings have a scoped remediation below; native and broader
+SDK/tooling coverage remains open.
 
 ## Ruby client remediation
 
@@ -94,3 +94,29 @@ The compact [evidence record](dependency-preflight-evidence.json) binds the Carg
 comparison to the candidate lock hash and records scoped test outcomes. Full logs
 are retained in the recovery directory. CI and gate status must be checked against
 the final commit, not inferred from the earlier green head.
+
+## Python test harness remediation
+
+The REST lock updates idna to 3.15 and urllib3 to 2.8.0; the CLI lock updates
+urllib3 to 2.8.0. Pipenv and pip upgrades alone retain affected vendored code.
+CI therefore creates a fresh Python 3.11 stdlib venv without pip and installs only
+compatible wheels whose SHA-256 hashes already exist in the checked-in lock.
+The helper validates the Pipfile hash, supported interpreter/source, wheel identity,
+Python requirements and complete dependency constraints before installation. It
+does not resolve versions or build source distributions. PyPA installer 0.7.0 and
+packaging 25.0 are pinned bootstrap wheels with no declared runtime dependencies;
+console scripts come from PyPA installer. Installer also bundles Windows launcher
+executables and distlib-derived script code: those are an open bundled-code audit
+scope, despite empty Requires-Dist metadata. This change validates the Linux test
+path and does not certify the complete bootstrap graph. Unsupported lock features fail explicitly.
+
+CLI bucket preparation uses its already-locked boto3 directly, preserving bucket
+creation, paginated listing, bulk deletion and error propagation. This removes the
+ambient AWS CLI requirement and obsolete awscli-local/localstack-client packages.
+Both fresh environments installed their seven locked distributions successfully;
+installed distributions exactly match their manifests. The helper passes 14 tests,
+including hash/tag/version/identity/closure rejection; the bucket preparation
+passes three botocore-stub tests. Real LocalStack execution remains a CI check.
+The 15 distinct package versions across both locks and bootstrap had no advisory
+records in the queried live PyPI metadata; this is scoped database evidence, not
+a certification of native libraries, OS packages or other campaign tooling.

@@ -6,20 +6,20 @@ but it can also be used as a convenient way to create integration tests.
 
 # Setting up the Python environment
 
-## Installing Pipenv
+Use Python 3.11 and a fresh virtual environment path:
 
 ```bash
-pip install --user pipenv
+python3.11 -I ../scripts/ci/python_test_env.py --lock Pipfile.lock --venv .venv
+source .venv/bin/activate
 ```
 
-[Pipenv installation](https://pipenv.pypa.io/en/latest/installation/)
-
-## Installing the dependencies in a virtual environment
-
-```bash
-pipenv shell
-pipenv install
-```
+The helper checks that `Pipfile.lock` matches `Pipfile`, downloads compatible
+wheels with the locked SHA-256 hashes, and verifies their complete dependency
+metadata. It uses pinned PyPA installer and packaging wheels, and creates the
+environment without pip, Pipenv, virtualenv, or source builds. The installed
+wheel identities and hashes are retained in `.venv/install-manifest.json`.
+Update the lock separately when dependencies change; installation never resolves
+new versions. A missing wheel or incomplete lock fails before installation.
 
 # Running the tests
 
