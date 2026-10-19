@@ -118,7 +118,8 @@ jobs:
       - name: Dependency remediation regression tests
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: |
-          cargo nextest run --locked -p quickwit-storage --features gcs -E 'test(opendal_storage::google_cloud_storage)'
+          cargo check --locked -p quickwit-storage --features gcs --lib
+          cargo nextest run --locked -p quickwit-storage --features gcs,testsuite -E 'test(opendal_storage::google_cloud_storage)'
           cargo nextest run --locked -p quickwit-serve --features pprof -E 'test(developer_api::pprof)'
         working-directory: ./quickwit
       - name: Install python packages

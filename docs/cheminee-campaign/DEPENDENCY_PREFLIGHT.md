@@ -136,3 +136,13 @@ still contain 18 advisory matches across Logback, Handlebars and Jackson. Class
 identity checks corrected stale Commons Lang shaded metadata; a top-level version
 bump would not clear this gate. Custom Ruby model templates also need reconciliation
 before a generator upgrade. No generator change was made.
+
+On de4f3986, 2,908 workspace tests passed (6 skipped, no retry), as did REST,
+Python setup, all-features Clippy, DataFusion and chemistry's 1,050 total oracle
+checks. The separate GCS test command stopped before execution: AWS replay
+dev-dependencies enable serde_json/preserve_order, tripping the production canary
+when the crate's existing testsuite feature was omitted. CI now checks the normal
+GCS library first, with the canary active, then runs GCS tests with gcs,testsuite.
+This does not enable integration-testsuite or alter the transport/emulator path.
+The production feature tree excludes preserve_order and testsuite; the canary
+source is unchanged. Targeted GCS/pprof execution still requires the rerun.
