@@ -27,3 +27,12 @@ It preserves the dependency graph, lockfile, registry cache, warning flags and
 all-feature coverage. This override is local to the requested Cargo invocation;
 RDKit package selection and C++ compilation are unchanged. Remove the wrapper
 when the locked Kerberos dependency incorporates the upstream fix.
+
+# Published-index restart compatibility
+
+See [the disposable REST probe](INDEX_RESTART_COMPATIBILITY.md) for baseline and
+candidate index reopen/restart qualification, evidence requirements, and the
+limited meaning of a same-binary rehearsal.
+
+The [October 22 PR #6 checkpoint](PR6_QUALIFICATION_2026-10-22.md) records
+measured compatibility results, provenance and remaining qualification gates.
