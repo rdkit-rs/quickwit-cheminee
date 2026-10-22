@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 
+[package.metadata.cargo-machete]
+# Pins Chitchat's transitive LRU version in both compatibility builds.
+# The harness uses LRU through Chitchat.
+ignored = ["lru"]
+
 # Copy this harness to disposable storage before resolving or building it.
 [workspace]
 
