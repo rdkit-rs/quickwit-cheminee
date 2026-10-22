@@ -40,9 +40,25 @@ jobs:
       run:
         working-directory: quickwit
     steps:
+      - name: Bootstrap Git before checkout
+        working-directory: /
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact Git checkout before native builds
+        working-directory: .
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          repository="$(pwd -P)"
+          # Git runs inside the container; trust only this owned checkout path.
+          export GIT_CONFIG_VALUE_0="$repository"
+          echo "GIT_CONFIG_VALUE_0=$repository" >> "$GITHUB_ENV"
+          test "$(git -c safe.directory="$repository" rev-parse --show-toplevel)" = "$repository"
+          test "$(git -c safe.directory="$repository" rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Install build dependencies
         run: |
           apt-get update

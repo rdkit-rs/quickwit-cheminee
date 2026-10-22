@@ -90,3 +90,15 @@ unchanged. Explicit transport and TLS tests are added to CI. Fresh audit and
 runtime qualification are still required; the older eleven-match observation
 must not be presented as a fresh scan. See the dependency preflight for the
 trust-store changes and remaining gates.
+
+## CI checkout provenance correction
+
+The first CI execution at `bf8b4afa` passed chemistry checks, the 17 focused
+probe tests and all four UDP scenarios (65.651 seconds; sampled aggregate peer
+RSS 26,619,904 bytes). The paired build then refused to run because checkout
+had used a REST archive: Git was installed only afterward. No revision-pair
+index result was produced. The workflow now installs Git before checkout and
+verifies the physical repository root and exact expected HEAD before native
+builds, trusting only that checkout path inside the container. Local shell
+checks accepted the exact HEAD and rejected wrong-HEAD and archive-only inputs;
+independent review accepted the correction. Actual CI qualification is required.
