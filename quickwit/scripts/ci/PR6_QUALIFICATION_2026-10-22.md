@@ -78,3 +78,15 @@ an unknown cached binary or a same-binary rehearsal.
 See [index probe instructions](INDEX_RESTART_COMPATIBILITY.md) and
 [Chitchat probe instructions](lru-parent-compatibility/README.md) for commands,
 retained locks, expected receipts and exact claim boundaries.
+
+## Fresh dependency CI follow-up
+
+After the first checkpoint commit, `bf8b4afa` dependency CI failed against
+RustSec `59ef7abf8ce56ea80fe7eba97ba3835449009fa4`: 14 matches, one new relative
+to the PR base (RUSTSEC-2026-0382, rustls-webpki 0.103.15). The follow-up precisely
+updates rustls-webpki to 0.103.16 and both webpki-roots/root-certs to 1.0.10,
+covering RUSTSEC-2026-0381/0382/0383. All other locked dependency edges are
+unchanged. Explicit transport and TLS tests are added to CI. Fresh audit and
+runtime qualification are still required; the older eleven-match observation
+must not be presented as a fresh scan. See the dependency preflight for the
+trust-store changes and remaining gates.

@@ -146,3 +146,28 @@ GCS library first, with the canary active, then runs GCS tests with gcs,testsuit
 This does not enable integration-testsuite or alter the transport/emulator path.
 The production feature tree excludes preserve_order and testsuite; the canary
 source is unchanged. Targeted GCS/pprof execution still requires the rerun.
+
+## October 22 trust-store follow-up
+
+Fresh dependency CI on `bf8b4afa`, using RustSec database
+`59ef7abf8ce56ea80fe7eba97ba3835449009fa4`, found 14 package matches and one
+introduced match relative to the PR base: RUSTSEC-2026-0382 in rustls-webpki
+0.103.15. RUSTSEC-2026-0381 and -0383 also newly appeared in the database for
+existing webpki-roots/root-certs 1.0.8. Historical 11-match results above are
+not current scan results.
+
+The narrow follow-up uses Cargo precise updates to rustls-webpki 0.103.16 and
+webpki-roots/webpki-root-certs 1.0.10. Package count, source identities and all
+other dependency edges remain unchanged. Existing parent constraints accept
+these patched versions. No validation bypass, root override or advisory
+suppression is added. [Upstream verifier fix](https://github.com/rustls/webpki/pull/546)
+rejects the compromised emSign public keys in certificate paths; the
+[root-store fix](https://github.com/rustls/webpki-roots/pull/133) removes the
+compromised root. The intervening 1.0.9 store maintenance also adds Telia and
+SECOM roots and removes Atos 2011; this is not a one-root-only change.
+
+Independent Astra max source review checked constraints and the upstream
+remediation. CI explicitly reruns transport and REST/gRPC TLS tests without
+retries, plus the existing full checks. Final-head audit and runtime results
+remain required. This does not clear the older Azure, protobuf/ZIP, RSA,
+native/runtime or tooling findings, nor admit benchmarks.
