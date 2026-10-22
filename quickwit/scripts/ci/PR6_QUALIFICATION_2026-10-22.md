@@ -1,7 +1,8 @@
 # PR #6 qualification checkpoint — 2026-10-22
 
-This is a test-infrastructure change on top of `b449225b`; it does not change
-application dependency versions or clear security findings. No benchmark,
+The initial `bf8b4afa` checkpoint added test infrastructure on top of `b449225b`
+without changing application dependencies. The later TLS dependency follow-up is
+recorded below; neither checkpoint clears the full security gate. No benchmark,
 production mutation, merge, deployment or release is part of this checkpoint.
 
 ## Decisions and evidence
@@ -43,8 +44,10 @@ production mutation, merge, deployment or release is part of this checkpoint.
 6. The CI pair builder builds the exact pre-repair `c774b166` and PR head with
    descriptor-v1, forces Git build metadata regeneration, restores the head,
    and records binary hashes. The HTTP probe requires embedded revision matches
-   for different-binary qualification. CI uploads synthetic HTTP receipts and
-   logs, not binaries, indexes or private artifacts. New-head CI is required.
+   for different-binary qualification. The new paired-restart artifact selection
+   retains synthetic HTTP receipts and logs, excluding binaries and disposable
+   indexes. Existing descriptor-test artifact globs still include their synthetic
+   indexes. New-head CI is required.
 7. The renewed, scoped protobuf source comparison completed without executing
    payloads, changing code, suppressing advisories or downloading sources.
    Its receipt SHA256 is
@@ -102,3 +105,43 @@ verifies the physical repository root and exact expected HEAD before native
 builds, trusting only that checkout path inside the container. Local shell
 checks accepted the exact HEAD and rejected wrong-HEAD and archive-only inputs;
 independent review accepted the correction. Actual CI qualification is required.
+
+## Benchmark recovery inventory
+
+The bounded October 22 inventory found historical reports, the archive manifest
+and corpus recipe, but not the original controlled-study directory, immutable
+100k corpus, selection manifest, seven archive parts or retained indexes.
+The recorded corpus identity is 20,032,857 bytes, SHA256
+`9a63bf25bc02ba3c965bb050cd74ba1a059bc362b8fb210b8febb6a326ce2e5e`;
+the recipe alone does not prove byte-identical recovery. The October 14 means
+at `6bf1e29c` remain historical: Cheminee 308.46 seconds, matched-field flat
+Quickwit 390.94 seconds and nested Quickwit 395.88 seconds, three fresh runs
+per configuration. No current-head benchmark trial ran. Full preflight/backend
+admission and local build capacity also remain unresolved; the observed workspace
+had approximately 648 MiB free against a 640 MiB emergency floor.
+
+## Completed CI qualification at `cacccfca`
+
+All four workflows passed for `cacccfca928dd85e0d9914cd19c17cda341bdc27`:
+general CI 39752740371, chemistry 39752740378, DataFusion 39752740227 and
+dependency review 39752740573. General CI recorded 2,908 passing workspace
+tests (six skipped), eight transport tests, seven explicit TLS tests, four GCS
+tests and four profiling tests, plus REST and lint checks. These counts overlap;
+they are not a sum of unique test cases.
+
+Chemistry CI passed the 17 probe tests, all four Chitchat UDP combinations and
+the actual two-revision published-index probe. It built the exact `c774b166`
+baseline and `cacccfca` candidate, restored the candidate checkout, and logged
+`qualification passed` after baseline write, candidate reopen/append/restart
+and baseline reopen. The probe enforces embedded revision identity, full source,
+counts, ordered pagination and clean shutdown. This qualifies that disposable
+local-file index path, not crash recovery or HA. Evidence artifact 12415269479
+has SHA256 `8af0ca1a89a3c5890c48e21865352d4d6380d25032a601cbf3dd37a2e5d2a1ee`.
+Job logs and artifact metadata were inspected; a workspace proxy denied direct
+artifact download, so the archived JSON was not independently downloaded.
+
+Fresh dependency CI used RustSec
+`59ef7abf8ce56ea80fe7eba97ba3835449009fa4` and reported 11 retained matches,
+zero introduced. Full security admission remains open. The subsequent
+documentation-only checkpoint records these results without changing executable
+code, dependencies or workflows; these CI results belong to `cacccfca`.
