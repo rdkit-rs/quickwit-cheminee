@@ -367,3 +367,24 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     builds/containers/aliases. Fix the guard's real-run false positive on Faraday
     middleware with relative load-path identification and a regression test. Keep
     full-workspace admission blocked by the measured4.32GiB headroom shortfall.
+
+## Pilot continuation decisions (2026-10-23)
+
+37. Review the actual PR stack before merging. PRs #1 and #2 pass all four
+    workflows at `7b0a2d57` and `427f1fb5`; independent Astra review found no
+    substantive blocker in their bounded scope. PR #3's fresh dependency
+    comparison exposes four introduced TensorFlow-binding findings (protobuf and
+    ZIP). PR #6's green comparison against PR #3 does not clear them. No PR has
+    merged; preserve the stack and the security hold.
+38. Keep Cheminee as the public product and Quickwit as its engine. Prepare a
+    paired native image/generated Ruby SDK from one verified source/schema, plus
+    an explicit native catalog profile. Preserve raw supplier offers and use
+    complete disjoint-u64 audits beyond the existing per-request offset boundary;
+    do not invent a cursor or require local RDKit in supplier scrapers.
+39. Separate a repeated small-fixture functional boundary test from representative
+    acceptance. No retained result proves 100k native Ruby catalog ingestion with
+    a real object store in kind. Current persistent capacity fails even the reserve
+    requirement. The [pilot acceptance contract](PILOT_ACCEPTANCE.md) records
+    measured blockers, admission inputs, fresh-root restore and rollback gates.
+    Do not start the cluster, remove retained evidence or alter daemon/network
+    settings to work around that constraint. RX search remains untouched.

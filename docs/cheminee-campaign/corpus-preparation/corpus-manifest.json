@@ -1,0 +1,118 @@
+{
+  "files": [
+    {
+      "bytes": 35720502,
+      "filename": "catalog-offers-100k.ndjson",
+      "sha256": "7bbf24a94d4d2ffb2080561205236cdce844e8b420fe24107ab72a25e5f59632"
+    },
+    {
+      "bytes": 3688674,
+      "filename": "raw-smiles-100k.smi",
+      "sha256": "9b1bdd383de20d4bbf4b64ba56422a184e29981f20660ae77f092c6d6a7698b0"
+    },
+    {
+      "bytes": 8474227,
+      "filename": "selection-100k.tsv",
+      "sha256": "a9a413ce50a4faf78cbc3ba7775dc5738861dba6de23dbdcffe5ec74e17b0a76"
+    }
+  ],
+  "fixture": "cheminee-pilot-moses-100k-v1",
+  "historical_reference": {
+    "bytes": 20032857,
+    "relationship": "same documented selection rule and observed split counts; historical metadata/bytes unavailable",
+    "sha256": "9a63bf25bc02ba3c965bb050cd74ba1a059bc362b8fb210b8febb6a326ce2e5e"
+  },
+  "immutability": "verify SHA256 before use; generated files set read-only; /tmp is ephemeral, not durable evidence",
+  "license": {
+    "basis": "publisher MIT declaration and bundled notice retained for local acceptance fixture",
+    "copyright": "2018 Insilico Medicine, Inc",
+    "declared": "MIT",
+    "limitations": "no separate data-specific license found in the wheel; upstream ZINC rights not independently re-audited",
+    "metadata_sha256": "8afffff60ea09a50fdd4bcd7cc187acae9ee4ae2fa416be8005b3e5dc2bcdbbc",
+    "notice_member": "molsets-0.3.1.dist-info/LICENSE",
+    "notice_sha256": "9a40669143195de51e7d0ccee88f0d6b4f3d1da91c5a091293e26d128a02d042",
+    "retained_notice": "MOSES-LICENSE.txt"
+  },
+  "old_corpus_recovered": false,
+  "preparer_sha256": "e98b21fb78c9b00ef4167177e1a2c6ccbe7d909262bbdf9c409585bda3db1097",
+  "publisher": {
+    "attestation": "PyPI release has no Trusted Publishing provenance attestation",
+    "project": "MOSES / molsets",
+    "release_json": "https://pypi.org/pypi/molsets/0.3.1/json",
+    "release_page": "https://pypi.org/project/molsets/0.3.1/",
+    "upload_time_utc": "2020-03-26T12:25:09.828842Z",
+    "version": "0.3.1",
+    "wheel_bytes": 51584291,
+    "wheel_sha256": "7f4450e3ebecebe79c3a2a55950c93daddee071120daf64a163d03481e811d34",
+    "wheel_url": "https://files.pythonhosted.org/packages/ca/04/335f23e9ae95ca381ac7c3f335303dbbeb0f8a604d167891cf60c9360178/molsets-0.3.1-py3-none-any.whl"
+  },
+  "selection": {
+    "count": 100000,
+    "key": "SHA256(seed_bytes + raw_SMILES_UTF8), split_ASCII, row_1based",
+    "ordering": "ascending key; first 100000; no normalization or deduplication",
+    "row_numbering": "1-based data rows, excluding CSV header",
+    "seed_display": "tantivy-rdkit-compression-v1\\0",
+    "seed_hex": "74616e746976792d72646b69742d636f6d7072657373696f6e2d763100",
+    "selected_unique_raw_smiles": 100000,
+    "source_total_rows": 1936962,
+    "source_unique_raw_smiles": 1936962,
+    "sources": {
+      "test": {
+        "csv_bytes": 6490097,
+        "csv_sha256": "0248e682a9c29ca7649184dd88a4edc83f48f0e84af6b923990069c3da4501b6",
+        "gzip_bytes": 1367572,
+        "gzip_sha256": "f896fbf3764f88d94670b9959e5872c600c12152a18233823e820761b7a791b2",
+        "member": "moses/dataset/data/test.csv.gz",
+        "raw_smiles_duplicates_against_earlier_rows": 0,
+        "rows": 176074
+      },
+      "test_scaffolds": {
+        "csv_bytes": 6551982,
+        "csv_sha256": "86c298db856515f4b31a90805de16a580c60a6adcc0ad700ae180d88ba0b9bce",
+        "gzip_bytes": 1274114,
+        "gzip_sha256": "adffb2192c1bfe31ab0e13154d4af19a37dc18bdbf3cd7b4491e04405128adde",
+        "member": "moses/dataset/data/test_scaffolds.csv.gz",
+        "raw_smiles_duplicates_against_earlier_rows": 0,
+        "rows": 176225
+      },
+      "train": {
+        "csv_bytes": 58408794,
+        "csv_sha256": "cc9d6e8e9534e25a7a36361529ae739ddda8036e9072b2fc5cea6930a0592144",
+        "gzip_bytes": 10238967,
+        "gzip_sha256": "786f0313aa6b9ba5514df685f885742a70ea8d86f1a4fa48115f7f80a634265c",
+        "member": "moses/dataset/data/train.csv.gz",
+        "raw_smiles_duplicates_against_earlier_rows": 0,
+        "rows": 1584663
+      }
+    },
+    "split_counts": {
+      "test": 9165,
+      "test_scaffolds": 9058,
+      "train": 81777
+    }
+  },
+  "serialization": {
+    "format": "UTF-8 NDJSON; sorted JSON keys; compact separators; final LF",
+    "metadata": "new synthetic fixture metadata; not historical study metadata or vendor availability",
+    "record_ids": "1..100000 in selection order",
+    "supplier_groups": [
+      "fixture-moses-test",
+      "fixture-moses-test_scaffolds",
+      "fixture-moses-train"
+    ],
+    "synthetic_observed_at": "2026-10-23T00:00:00.000000000Z"
+  },
+  "status": "new immutable raw input; no import, engine run or chemistry audit",
+  "validation": {
+    "canonical_structure_uniqueness": "unverified; raw-string uniqueness is not chemical uniqueness",
+    "chemical_diversity": "unverified; source split coverage is not a measured diversity result",
+    "chemical_validity": "unverified; independent RDKit required",
+    "engine_ingestion": "not run",
+    "independent_oracle": "not run",
+    "representativeness": "not established; MOSES is filtered ZINC Clean Leads, not a supplier catalog",
+    "selected_rows": 100000,
+    "unique_offer_ids": 100000,
+    "unique_raw_smiles": 100000,
+    "unique_record_ids": 100000
+  }
+}
