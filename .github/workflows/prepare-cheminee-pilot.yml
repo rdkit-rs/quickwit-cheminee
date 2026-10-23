@@ -133,6 +133,21 @@ jobs:
             .pilot/native/native-linkage.txt .pilot/native/catalog-oracle.ndjson .pilot/artifacts/
           cp sdk/ruby/Gemfile.lock .pilot/artifacts/ruby-Gemfile.lock
           python3 distribution/cheminee-local/finalize_pilot.py --artifacts .pilot/artifacts
+      - name: Print accepted candidate hashes and provenance
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('.pilot/artifacts/pilot-manifest.json').read_text())
+          fields = ('format_version', 'product', 'engine', 'candidate_version', 'source_commit',
+                    'platform', 'ruby_sdk', 'model_assets', 'files', 'qualification',
+                    'publication_authorized', 'deployment_authorized', 'security_hold',
+                    'reproducible_builds_and_redistribution')
+          report = {key: manifest[key] for key in fields}
+          image_fields = ('local_config_digest', 'archive_format', 'archive', 'registry_manifest_digest')
+          report['image'] = {key: manifest['image'][key] for key in image_fields}
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cheminee-pilot-${{ github.event.pull_request.head.sha || github.sha }}
@@ -140,6 +155,33 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
+      - name: Print bounded synthetic acceptance failure diagnostics
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = Path('.pilot/acceptance/result.json')
+          if result.is_file():
+              source = json.loads(result.read_text())
+              fields = ('status', 'failure', 'diagnostic_failure', 'image_id', 'source_commit',
+                        'candidate_version', 'scope', 'unqualified', 'ruby_sdk', 'initial_incarnation',
+                        'catalog_create', 'restart', 'catalog_verify_after_restart', 'resources',
+                        'source_shutdown', 'restore', 'restored_incarnation', 'catalog_after_restore',
+                        'restored_shutdown')
+              # Exclude raw Docker inspect records, environment and command arrays.
+              print(json.dumps({key: source[key] for key in fields if key in source}, indent=2, sort_keys=True))
+          else:
+              print('No acceptance result: the run did not reach acceptance reporting')
+          for name in ('catalog-create.log', 'catalog-verify.log', 'catalog-restored.log'):
+              path = Path('.pilot/acceptance') / name
+              if path.is_file():
+                  with path.open('rb') as stream:
+                      size = path.stat().st_size
+                      stream.seek(max(0, size - 65536))
+                      print(f'--- {name}: last {min(size, 65536)} of {size} bytes (synthetic fixtures only) ---')
+                      print(stream.read().decode('utf-8', errors='replace'))
+          PY
       - name: Retain diagnostic evidence even when qualification fails
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

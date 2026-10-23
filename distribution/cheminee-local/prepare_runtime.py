@@ -34,6 +34,51 @@ from pilot_provenance import (BASE_IMAGE, MODEL_ARCHIVE, MODEL_DIRECTORY, MODEL_
                               verify_models, verify_source, write_json)
 from readiness import wait_ready
 
+USR_MERGE_ALIASES = {"lib": "usr/lib", "lib64": "usr/lib64", "bin": "usr/bin", "sbin": "usr/sbin"}
+
+
+def library_destination(source, filesystem=Path("/")):
+    """Resolve directory aliases while retaining the loader's SONAME filename."""
+    if not source.is_absolute() or ".." in source.parts or not source.name:
+        raise ValueError("runtime library path must be absolute without traversal")
+    filesystem = filesystem.resolve(strict=True)
+    relative = source.relative_to("/")
+    parent = (filesystem / relative).parent.resolve(strict=True)
+    first = relative.parts[0]
+    expected = (filesystem / USR_MERGE_ALIASES[first] / Path(*relative.parts[1:])).parent if first in USR_MERGE_ALIASES else (filesystem / relative).parent
+    if parent != expected:
+        raise ValueError(f"unexpected runtime directory alias: {source.parent}")
+    # Resolving the final file would replace e.g. libfoo.so.1 with libfoo.so.1.2.
+    return parent.relative_to(filesystem) / source.name
+
+
+def copy_runtime_libraries(libraries, root, filesystem=Path("/")):
+    filesystem = filesystem.resolve(strict=True)
+    planned, manifest = {}, {}
+    for name in sorted(libraries):
+        source = Path(name)
+        physical = filesystem / source.relative_to("/")
+        destination = library_destination(source, filesystem)
+        if not physical.is_file():
+            raise ValueError(f"runtime library is not a regular file: {source}")
+        resolved = physical.resolve(strict=True).relative_to(filesystem)
+        checksum, mode = digest(physical), physical.stat().st_mode & 0o777
+        prior = planned.get(destination)
+        if prior is not None and prior[1:] != (checksum, mode):
+            raise ValueError(f"conflicting runtime libraries at {destination}")
+        if (root / destination).exists() or (root / destination).is_symlink():
+            raise ValueError(f"runtime library destination already exists: {destination}")
+        planned[destination] = (physical, checksum, mode)
+        manifest[str(source)] = {"destination": str(destination),
+                                 "resolved_source": "/" + str(resolved), "sha256": checksum}
+    for destination, (physical, _, _) in planned.items():
+        target = root / destination
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if not target.parent.resolve().is_relative_to(root.resolve()):
+            raise ValueError("runtime library destination escapes packaging root")
+        shutil.copy2(physical, target, follow_symlinks=True)
+    return manifest
+
 
 def stop_probe(process):
     if process.poll() is not None:
@@ -112,10 +157,7 @@ def main():
     packaged = root / "usr/local/bin/quickwit"
     subprocess.run(["strip", "-o", str(packaged), str(args.binary)], check=True, timeout=120)
     shutil.copy2("/usr/bin/curl", root / "usr/local/bin/curl")
-    for name in sorted(libraries):
-        destination = root / Path(name).relative_to("/")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(name, destination, follow_symlinks=True)
+    library_manifest = copy_runtime_libraries(libraries, root)
     model_target = root / MODEL_DIRECTORY.lstrip("/")
     for relative in MODEL_FILES:
         target = model_target / relative
@@ -133,6 +175,7 @@ def main():
         "source_commit": args.source_commit, "platform": "linux/amd64", "base_image": BASE_IMAGE,
         "candidate_version": observed["candidate_version"], "server_build": observed["build"],
         "original_binary_sha256": digest(args.binary), "runtime_binary_sha256": digest(packaged),
+        "runtime_libraries": library_manifest,
         "server_openapi_sha256": digest(output / "server-openapi.json"),
         "model_assets": {"directory": MODEL_DIRECTORY, "archive": MODEL_ARCHIVE, "files": MODEL_FILES},
         "recipe_sha256": {name: digest(args.source_root / name) for name in recipes},
