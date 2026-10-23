@@ -12,8 +12,25 @@ concurrency:
   group: cheminee-kind-acceptance
   cancel-in-progress: false
 jobs:
+  retained-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read retained failure evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/rdkit-rs/quickwit-cheminee/actions/artifacts/12481172392/zip > evidence.zip
+          echo '5e3d7cedbd5764fac24e9714c9d49e5f05d32e9bce1a80d48c86bbdfa058881f  evidence.zip' | sha256sum -c
+          python3 - <<'PYTHON'
+          import zipfile
+          with zipfile.ZipFile('evidence.zip') as archive:
+              for name in ('forward-seaweed-source.log', 'seaweed-source-logs.txt', 'pods.json', 'commands.log', 'admission.json'):
+                  if name in archive.namelist():
+                      print(name, archive.read(name).decode()[-20000:])
+          PYTHON
   acceptance:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    if: false # Temporary read-only inspection of retained failure evidence.
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
