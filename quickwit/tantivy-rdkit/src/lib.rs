@@ -254,7 +254,12 @@ struct TanimotoScorer {
 
 impl TanimotoScorer {
     fn raw_score(&self) -> f32 {
-        self.scores[self.column.term_ords(self.candidates.doc()).next().unwrap() as usize]
+        let ordinal = self
+            .column
+            .term_ords(self.candidates.doc())
+            .next()
+            .expect("fingerprint cardinality was validated when creating the scorer");
+        self.scores[ordinal as usize]
     }
 
     fn skip_rejected(&mut self) -> DocId {
