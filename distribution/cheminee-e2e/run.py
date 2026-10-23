@@ -96,7 +96,7 @@ def weed(name, port):
             'volumeMounts': [{'name': 'data', 'mountPath': '/data'}]}],
             'volumes': [{'name': 'data', 'emptyDir': {}}]}})
     apply({'apiVersion': 'v1', 'kind': 'Service', 'metadata': {'name': name},
-        'spec': {'selector': {'app': name}, 'ports': [{'name': str(p), 'port': p} for p in (8333, 8888, 9333, 19333, 18080, 18888, 8080)]}})
+        'spec': {'selector': {'app': name}, 'ports': [{'name': 'p' + str(p), 'port': p} for p in (8333, 8888, 9333, 19333, 18080, 18888, 8080)]}})
     kubectl('wait', '--for=condition=Ready', 'pod/' + name, '--timeout=180s', timeout=190)
     forward(name, port, 8333)
     client = s3(port)
@@ -250,6 +250,7 @@ def main():
                    CATALOG_CORPUS=str(ROOT / 'corpus/catalog-offers-100k.ndjson'),
                    CATALOG_NATIVE_ORACLE=str(ROOT / 'candidate/catalog-oracle.ndjson'))
         def phase(name):
+            print(json.dumps({'event': 'phase_started', 'phase': name, 'time': time.time()}), flush=True)
             env['PHASE_RESULT'] = str(EVIDENCE / (name + '.json'))
             log_path = EVIDENCE / (name + '.log')
             with log_path.open('w') as log:
@@ -257,6 +258,7 @@ def main():
                     stdout=log, stderr=subprocess.STDOUT, check=True, timeout=2800)
             receipt = json.loads(Path(env['PHASE_RESULT']).read_text())
             result['phases'][name] = receipt
+            print(json.dumps({'event': 'phase_completed', 'phase': name, 'receipt': receipt}), flush=True)
             return receipt
         first = phase('create')
         audit(work / 'initial.ndjson', base, first['pointer']['active'], EVIDENCE)

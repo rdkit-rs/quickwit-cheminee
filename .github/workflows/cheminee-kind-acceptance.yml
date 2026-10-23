@@ -49,8 +49,13 @@ jobs:
       - name: Install paired SDK and independent oracle tools
         run: |
           bundle install --gemfile .e2e/source/sdk/ruby/Gemfile
-          gem install --local --no-document .e2e/candidate/quickwit-cheminee.gem --install-dir "$PWD/.e2e/gems"
-          echo "GEM_PATH=$PWD/.e2e/gems:$(ruby -e 'puts Gem.path.join(":")')" >> "$GITHUB_ENV"
+          # Dependencies were installed from the paired frozen bundle above.
+          # --install-dir otherwise searches only the new gem root for dependencies.
+          gem install --local --ignore-dependencies --no-document .e2e/candidate/quickwit-cheminee.gem --install-dir "$PWD/.e2e/gems"
+          export GEM_PATH="$PWD/.e2e/gems:$(ruby -e 'puts Gem.path.join(":")')"
+          echo "GEM_PATH=$GEM_PATH" >> "$GITHUB_ENV"
+          version=$(python3 -c 'import json;print(json.load(open(".e2e/candidate/pilot-manifest.json"))["candidate_version"])')
+          ruby .e2e/source/distribution/cheminee-local/verify_installed_gem.rb .e2e/candidate/quickwit-cheminee.gem "$version" "$PWD/.e2e/gems" > .e2e/evidence/installed-sdk.json
           python3 -m venv .e2e/python
           .e2e/python/bin/pip install boto3==1.40.30 rdkit==2025.9.3
           .e2e/python/bin/pip freeze > .e2e/evidence/python-packages.txt
