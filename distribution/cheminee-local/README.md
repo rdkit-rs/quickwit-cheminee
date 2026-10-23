@@ -1,5 +1,12 @@
 # Local native Compose experiment
 
+The new [versioned private pilot preparation](PILOT.md) adds exact embedded-revision
+checks, required descriptor model assets, a matching installed Ruby gem, and a
+prepared fresh-restore acceptance gate. Candidate production and native acceptance
+are pending in hosted CI; the separately admitted fresh host owns the larger
+kind/object-store test. Historical observations below do not qualify the new recipe.
+Do not run another heavy build on the constrained shared VFS host.
+
 The recorded local Compose smoke used the unoptimized native build at
 `8009925c6b9757edc77ef8e6111309503028e7c5` (historical evidence). The current
 harness and revised resource/restart bounds have not been run live. This is not
@@ -28,33 +35,32 @@ concurrent workload and PID-limit behavior have not been validated.
 
 ## Prepare and start
 
-First build the native executable in Ubuntu 26.04 amd64 with Rust 1.96.1 and the
-checksum-pinned RDKit packages installed by
-[`install-rdkit.sh`](../../quickwit/tantivy-rdkit-mapper/ci/install-rdkit.sh):
+First complete the admitted `descriptor-v1` native build described in [PILOT.md](PILOT.md).
+For a directly invoked packaging step inside that same trusted builder:
 
 ```sh
-cd quickwit
-CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 CARGO_BUILD_JOBS=4 \
-  cargo build --locked -p quickwit-cli --features native-chemistry --bin quickwit
-cd ..
 python3 distribution/cheminee-local/prepare_runtime.py \
   --binary quickwit/target/debug/quickwit \
+  --source-root "$PWD" --model-assets "$QW_CHEMINEE_MODEL_ASSETS" \
   --source-commit "$(git rev-parse HEAD)" --output /tmp/cheminee-runtime
 ```
 
 Run packaging **inside that same trusted builder**, with `curl`, `ldd` and `strip`
 installed. The output must be a new directory. This copies the executable and its
 resolved shared libraries; it does not install compilers in the runtime or copy
-the builder's custom certificate trust store. Source attribution is supplied by the
-caller: the packaging script hashes bytes but cannot prove which source produced
-them. Keep the build log, clean source revision and generated manifest together.
+the builder's custom certificate trust store. The source argument must match both
+the clean checkout and the executable's full embedded server revision. This does
+not prove a reproducible build from those sources. Keep the build log, clean
+source revision and generated manifest together.
 Do not run it on an untrusted executable. Binary reproducibility, data-dependent
 RDKit features and redistribution/license clearance are not established here.
 
 On the Docker host, build from that output and start from the repository root:
 
 ```sh
-docker build -t quickwit-cheminee:local /tmp/cheminee-runtime
+candidate_version="$(python3 -c 'import json; print(json.load(open("/tmp/cheminee-runtime/manifest.json"))["candidate_version"])')"
+docker build --build-arg "CHEMINEE_VERSION=$candidate_version" \
+  --build-arg "SOURCE_COMMIT=$(git rev-parse HEAD)" -t quickwit-cheminee:local /tmp/cheminee-runtime
 export CHEMINEE_IMAGE="$(docker image inspect quickwit-cheminee:local --format '{{.Id}}')"
 chmod 644 distribution/cheminee-local/quickwit.yaml
 docker compose -f docker-compose.yml.example up -d --wait

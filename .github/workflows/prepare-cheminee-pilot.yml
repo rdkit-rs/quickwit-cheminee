@@ -1,0 +1,162 @@
+name: Prepare Cheminee pilot (no publication)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/prepare-cheminee-pilot.yml"
+      - "distribution/cheminee-local/**"
+      - "sdk/ruby/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cheminee-pilot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      EXPECTED_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+      BUNDLE_FROZEN: 'true'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Check source, packaging guards and provisional disk admission
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_REVISION"
+          git diff --exit-code HEAD --
+          python3 -m unittest discover -s distribution/cheminee-local -p 'test_pilot*.py' -v
+          # A conservative CI admission allowance, not measured deployment sizing.
+          python3 -c 'import shutil, sys; free = shutil.disk_usage(".").free; print(f"Available bytes: {free}"); sys.exit(0 if free >= 24 * 1024**3 else "Native pilot build needs 24 GiB free on the disposable runner")'
+          mkdir -p .pilot/native
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          repository: rdkit-rs/cheminee-ruby
+          ref: 1655662d4c8b508e79c64d0401755a0e6ac65654
+          path: .pilot/legacy
+      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9
+        with:
+          toolchain: '1.96.1'
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17.0.13+11'
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a
+        with:
+          ruby-version: '3.3.6'
+          bundler: '2.5.22'
+      - name: Build and verify exact native descriptor-v1 runtime
+        timeout-minutes: 90
+        run: |
+          set -euo pipefail
+          # No shared workspace cache or local VFS Docker host is used by this job.
+          docker run --rm --memory=5g --memory-swap=5g --cpus=2 --pids-limit=1024 \
+            -v "$PWD:/work" -v "$(rustc --print sysroot):/opt/rust:ro" -w /work/quickwit \
+            -e PATH=/opt/rust/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+            -e EXPECTED_REVISION \
+            -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0=/work \
+            -e CARGO_BUILD_JOBS=2 -e CARGO_PROFILE_DEV_DEBUG=0 -e CARGO_PROFILE_TEST_DEBUG=0 \
+            -e CARGO_INCREMENTAL=0 -e CFLAGS=-std=gnu17 \
+            -e PKG_CONFIG_PATH=/opt/cheminee-tensorflow/lib/pkgconfig \
+            -e LD_LIBRARY_PATH=/opt/cheminee-tensorflow/lib \
+            -e QW_CHEMINEE_MODEL_ASSETS=/opt/cheminee-model/assets \
+            -e TF_NUM_INTRAOP_THREADS=1 -e TF_NUM_INTEROP_THREADS=1 -e OMP_NUM_THREADS=1 \
+            ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7 \
+            bash /work/distribution/cheminee-local/build_pilot.sh --admitted-disposable-builder \
+            2>&1 | tee .pilot/native/build.log
+          sudo chown -R "$(id -u):$(id -g)" .pilot
+          python3 -c 'import json, os; value=json.load(open(".pilot/context/manifest.json"))["candidate_version"]; open(os.environ["GITHUB_ENV"], "a").write("SDK_EXPECTED_VERSION=" + value + "\n")'
+      - name: Generate reproducible matching Ruby SDK and test installed gem
+        run: |
+          curl --fail --location --retry 2 --connect-timeout 20 --max-time 180 \
+            https://repo.maven.apache.org/maven2/org/openapitools/openapi-generator-cli/7.11.0/openapi-generator-cli-7.11.0.jar \
+            --output .pilot/generator.jar
+          python3 sdk/ruby/projection_test.py .pilot/context/server-openapi.json
+          for output in generated reproduced; do
+            python3 sdk/ruby/generate.py --combined-schema .pilot/context/server-openapi.json \
+              --generator-jar .pilot/generator.jar --server-revision "$EXPECTED_REVISION" \
+              --gem-version "$SDK_EXPECTED_VERSION" --output ".pilot/$output"
+          done
+          diff -qr .pilot/generated .pilot/reproduced
+          bundle install --gemfile sdk/ruby/Gemfile
+          (cd .pilot/generated && gem build quickwit-cheminee.gemspec --output ../quickwit-cheminee.gem)
+          gem install --local --ignore-dependencies --no-document \
+            --install-dir "$PWD/.pilot/installed" .pilot/quickwit-cheminee.gem
+          export GEM_PATH="$PWD/.pilot/installed:$(ruby -e 'puts Gem.path.join(":")')"
+          export SDK_INSTALL_ROOT="$PWD/.pilot/installed" LEGACY_CHEMINEE_LIB="$PWD/.pilot/legacy/lib"
+          echo "GEM_PATH=$GEM_PATH" >> "$GITHUB_ENV"
+          echo "SDK_INSTALL_ROOT=$SDK_INSTALL_ROOT" >> "$GITHUB_ENV"
+          test_file="$PWD/sdk/ruby/wire_test.rb"
+          examples="$PWD/sdk/ruby/examples"
+          evidence="$PWD/.pilot/native/wire-tests.log"
+          cd /tmp
+          set -o pipefail
+          ruby "$test_file" 2>&1 | tee "$evidence"
+          for test_file in "$examples"/*_test.rb; do
+            ruby "$test_file" 2>&1 | tee -a "$evidence"
+          done
+      - name: Build local image and run installed-gem catalog acceptance
+        timeout-minutes: 40
+        run: |
+          # Reserve space for context, image layers, named data volume and export.
+          python3 -c 'import shutil, sys; free = shutil.disk_usage(".").free; print(f"Available bytes: {free}"); sys.exit(0 if free >= 8 * 1024**3 else "Image acceptance/export needs 8 GiB free")'
+          docker build --network=none --pull=false \
+            --build-arg "CHEMINEE_VERSION=$SDK_EXPECTED_VERSION" \
+            --build-arg "SOURCE_COMMIT=$EXPECTED_REVISION" \
+            --tag "cheminee:$SDK_EXPECTED_VERSION" .pilot/context
+          image_id="$(docker image inspect "cheminee:$SDK_EXPECTED_VERSION" --format '{{.Id}}')"
+          echo "PILOT_IMAGE_ID=$image_id" >> "$GITHUB_ENV"
+          export CATALOG_NATIVE_ORACLE="$PWD/.pilot/native/catalog-oracle.ndjson"
+          python3 distribution/cheminee-local/accept_pilot.py --image "$image_id" \
+            --gem .pilot/quickwit-cheminee.gem --context .pilot/context --output .pilot/acceptance
+      - name: Export accepted private candidate and bind artifact hashes
+        run: |
+          mkdir .pilot/artifacts
+          docker image save --output .pilot/artifacts/cheminee-image.tar "cheminee:$SDK_EXPECTED_VERSION"
+          docker image inspect "$PILOT_IMAGE_ID" > .pilot/artifacts/image-inspect.json
+          cp .pilot/quickwit-cheminee.gem .pilot/artifacts/
+          cp .pilot/context/manifest.json .pilot/artifacts/runtime-manifest.json
+          cp .pilot/context/server-openapi.json .pilot/artifacts/
+          cp .pilot/generated/provenance.json .pilot/artifacts/sdk-provenance.json
+          cp .pilot/generated/openapi.json .pilot/artifacts/sdk-openapi.json
+          cp .pilot/acceptance/result.json .pilot/artifacts/acceptance.json
+          cp .pilot/acceptance/restore/data-inventory.json .pilot/acceptance/restore/journal-inventory.json .pilot/artifacts/
+          cp .pilot/native/build-packages.txt .pilot/native/rust-version.txt \
+            .pilot/native/native-linkage.txt .pilot/native/catalog-oracle.ndjson .pilot/artifacts/
+          cp sdk/ruby/Gemfile.lock .pilot/artifacts/ruby-Gemfile.lock
+          python3 distribution/cheminee-local/finalize_pilot.py --artifacts .pilot/artifacts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cheminee-pilot-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .pilot/artifacts/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Retain diagnostic evidence even when qualification fails
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cheminee-pilot-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .pilot/native/*.log
+            .pilot/native/*.txt
+            .pilot/native/*/results.json
+            .pilot/native/*/service.log
+            .pilot/context/manifest.json
+            .pilot/context/probe/server.log
+            .pilot/acceptance/result.json
+            .pilot/acceptance/*.log
+            .pilot/acceptance/restore/*-inventory.json
+          retention-days: 7
+
+# Engineering candidate only. No registry/RubyGems upload, release, tag, deployment,
+# cloud resources or secrets. PR3 protobuf/ZIP security findings remain a release hold.
+# This is single-node file-backed synthetic acceptance/restore, not the 100k/kind/S3 gate.

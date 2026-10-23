@@ -388,3 +388,13 @@ and indexes remain unavailable; historical benchmark claims are unchanged.
     measured blockers, admission inputs, fresh-root restore and rollback gates.
     Do not start the cluster, remove retained evidence or alter daemon/network
     settings to work around that constraint. RX search remains untouched.
+40. Prepare the source-addressed native image/gem pair and a synthetic 10,001-offer
+    restart/restore harness. Independent source review and 41 Ruby tests / 269
+    assertions plus 19 Python guard tests pass; this is not a native runtime pass.
+    The separate fresh benchmark task has 28.20 GiB persistent free space and
+    cannot admit its provisional 40 GiB local-build budget. Use the exact-head PR
+    candidate workflow to prepare artifacts on a disposable hosted runner, leaving
+    kind/object-store acceptance with the fresh task. No registry publication or
+    credentials are introduced; artifact production and access remain unverified
+    until the run completes. The new MOSES fixture is reproducible and hash-checked,
+    but independent chemical truth and representative performance remain pending.
