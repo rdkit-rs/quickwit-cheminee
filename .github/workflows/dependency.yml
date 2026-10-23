@@ -4,27 +4,65 @@ on: [pull_request]
 permissions:
   contents: read
 
-# Ensures that we cancel running jobs for the same PR / same workflow.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   dependency-review:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
-      - name: "Checkout Repository"
+      - name: Checkout PR head and history for the merge base
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: "Dependency Review"
-        uses: actions/dependency-review-action@f5b971718edcbb31275a1db40004592335c0e031 # v4.8.1
         with:
-          # GHSA-c38w-74pg-36hr, GHSA-4grx-2x9w-596c: minor vuln on the rsa crate, used for google storage.
-          # GHSA-cq8v-f236-94qc: rand 0.8.6 unsound with custom logger + rand::rng(), not affected (log feature disabled, transitive dep from fail/sqlx).
-          # GHSA-2f9f-gq7v-9h6m: thrift 0.17 excessive-allocation on untrusted input. Already a transitive
-          #   dep via parquet on main; PR-4 (streaming Parquet reader) adds it as a direct dep for
-          #   `parquet::format::PageHeader::read_from_in_protocol`. Inputs are parquet files we wrote to
-          #   our own object store (trusted source). Defense-in-depth: the streaming reader caps each
-          #   Thrift parse buffer at `max_page_header_bytes` (1 MiB default) BEFORE handing bytes to
-          #   thrift, so the outer buffer thrift can read from is bounded regardless of any inner
-          #   length prefix. No newer thrift release fixes this — 0.17.0 is the latest on crates.io.
-          allow-ghsas: GHSA-c38w-74pg-36hr,GHSA-4grx-2x9w-596c,GHSA-cq8v-f236-94qc,GHSA-2f9f-gq7v-9h6m
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Test comparison and fail-closed behavior
+        run: python3 -m unittest discover -s quickwit/scripts/ci -p test_dependency_audit.py
+      - name: Install checksum-pinned cargo-audit and fetch current RustSec database
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dependency-audit"
+          cd "$RUNNER_TEMP/dependency-audit"
+          curl --fail --location --retry 2 --max-time 120 \
+            https://github.com/rustsec/rustsec/releases/download/cargo-audit/v0.22.2/cargo-audit-x86_64-unknown-linux-musl-v0.22.2.tgz \
+            --output cargo-audit.tgz
+          echo '7fb9497f8594b389e5fce5ef9b92db08432996895b2e0c5a0167a69ed445c428  cargo-audit.tgz' | sha256sum --check --strict
+          tar -xzf cargo-audit.tgz --strip-components=1 \
+            cargo-audit-x86_64-unknown-linux-musl-v0.22.2/cargo-audit
+          git clone --depth 1 https://github.com/RustSec/advisory-db.git advisory-db
+      - name: Fail on newly introduced RustSec vulnerabilities or unsoundness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dependency-audit/report"
+          git merge-base "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/dependency-audit/report/base-sha.txt"
+          git show "$(cat "$RUNNER_TEMP/dependency-audit/report/base-sha.txt"):quickwit/Cargo.lock" > "$RUNNER_TEMP/dependency-audit/base.lock"
+          git show "$HEAD_SHA:quickwit/Cargo.lock" > "$RUNNER_TEMP/dependency-audit/head.lock"
+          printf '%s\n' "$HEAD_SHA" > "$RUNNER_TEMP/dependency-audit/report/head-sha.txt"
+          # Invoke the binary outside the checkout: never resolve/build the PR's Cargo project.
+          cd "$RUNNER_TEMP/dependency-audit"
+          python3 "$GITHUB_WORKSPACE/quickwit/scripts/ci/dependency_audit.py" \
+            --scanner "$PWD/cargo-audit" --database "$PWD/advisory-db" \
+            --base-lock "$PWD/base.lock" --head-lock "$PWD/head.lock" --output "$PWD/report"
+      - name: Publish complete findings and coverage summary
+        if: always()
+        shell: bash
+        run: |
+          if test -f "$RUNNER_TEMP/dependency-audit/report/summary.md"; then
+            cat "$RUNNER_TEMP/dependency-audit/report/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Retain audit reports, database revision and lockfile hashes
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dependency-audit-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/dependency-audit/report/
+          retention-days: 14
+          if-no-files-found: warn
