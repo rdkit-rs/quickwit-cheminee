@@ -21,7 +21,7 @@ import sys
 source = Path('.e2e/source/distribution/cheminee-local').resolve()
 sys.path.insert(0, str(source))
 from pilot_provenance import digest
-from finalize_pilot import verify_acceptance, verify_archive, verify_gem
+from finalize_pilot import verify_acceptance, verify_archive, verify_gem, verify_s3_initialization
 from pilot_provenance import verify_image, verify_pair
 
 root = Path('.e2e/candidate')
@@ -45,6 +45,7 @@ acceptance = json.loads((root / 'acceptance.json').read_text())
 verify_pair(runtime, sdk, root / 'server-openapi.json', root / 'sdk-openapi.json')
 verify_image(image, runtime)
 verify_acceptance(acceptance, image, runtime, root)
+verify_s3_initialization(json.loads((root / 's3-initialization.json').read_text()), image, runtime)
 verify_archive(root / 'cheminee-image.tar', image['Id'])
 verify_gem(root / 'quickwit-cheminee.gem', sdk, root / 'sdk-openapi.json')
 if acceptance['ruby_sdk']['gem_sha256'] != digest(root / 'quickwit-cheminee.gem'):

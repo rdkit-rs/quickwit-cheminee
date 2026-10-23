@@ -1,11 +1,11 @@
 {
   "repository": "rdkit-rs/quickwit-cheminee",
-  "source_commit": "7a303e31c88a611f54cd57d2a01de28a64a00d10",
-  "run_id": 39902822219,
-  "artifact_id": 12479274343,
-  "artifact_bytes": 962616465,
-  "artifact_sha256": "afd5f309c00195f12aa90910f3a81135b263d5feaa4ef02d7b57d622717c83d3",
-  "image_archive_sha256": "e9aaeb4ebf6214f2bb1da9d10e22ea845b43232e96046102695710829167f75e",
-  "image_config_digest": "sha256:38c7d05baf9920d35208ecf06bf5224c2e0f864a6b12f6bcddc3f9372415e69b",
-  "gem_sha256": "b7eb3baf426a1f7578346ada9fc61e9c04ec8b3a8ce1be482f736618abd2cc0f"
+  "source_commit": "d2db5ee7df68ae376f56dbf2c40a4fad77d579b7",
+  "run_id": 39911775203,
+  "artifact_id": 12483324160,
+  "artifact_bytes": 962804294,
+  "artifact_sha256": "704dc3e31061b106f9835ea3c25aae53ad1cb6254dbdb63b84ff18fd9136cc3d",
+  "image_archive_sha256": "dd687a5d4189d9cfd0609881045f4b52a03dab1a514b5027aa553f8dbfc7fdeb",
+  "image_config_digest": "sha256:b9b22ec2db80d3fa37025aca328fa042aee8d6514edb8a3d542a7a478b5e52d0",
+  "gem_sha256": "a31273132502dca6698e408da2fae74550701ed6078ba3e7eba48a31fa27d28e"
 }
