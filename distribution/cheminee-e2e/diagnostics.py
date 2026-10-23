@@ -42,3 +42,8 @@ collect('kind-container.log', ['docker', 'logs', '--tail=500', 'cheminee-e2e-con
 (root / 'final-capacity.json').write_text(json.dumps({'disk': dict(zip(('total', 'used', 'free'), shutil.disk_usage('.')))}))
 if not (root / 'result.json').exists():
     (root / 'result.json').write_text(json.dumps({'status': 'not_run', 'reason': 'A prerequisite step failed; inspect workflow and admission/artifact evidence.'}))
+
+# Keep bounded diagnostics accessible in job logs as well as the retained archive.
+for path in sorted(root.iterdir()):
+    if path.name.endswith(('-logs.txt', '.log')) or path.name in ('result.json', 'admission.json') or path.name.endswith('-audit.json'):
+        print('EVIDENCE', path.name, path.read_text(errors='replace')[-16000:], flush=True)

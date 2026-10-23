@@ -93,6 +93,7 @@ def weed(name, port):
             'args': ['server', '-dir=/data', '-s3', '-ip=' + name, '-ip.bind=0.0.0.0',
                      '-volume.max=8', '-master.volumeSizeLimitMB=256'],
             'resources': {'requests': {'cpu': '100m', 'memory': '128Mi'}, 'limits': {'cpu': '1', 'memory': '768Mi'}},
+            'readinessProbe': {'tcpSocket': {'port': 8333}, 'periodSeconds': 2, 'failureThreshold': 90},
             'volumeMounts': [{'name': 'data', 'mountPath': '/data'}]}],
             'volumes': [{'name': 'data', 'emptyDir': {}}]}})
     apply({'apiVersion': 'v1', 'kind': 'Service', 'metadata': {'name': name},
@@ -118,6 +119,7 @@ def quickwit(name, store, data_name, image):
             'securityContext': {'runAsUser': 0}, 'volumeMounts': [{'name': 'data', 'mountPath': '/var/lib/cheminee'}]}],
         'containers': [{'name': 'cheminee', 'image': image, 'imagePullPolicy': 'Never',
             'args': ['run', '--config', '/config/quickwit.json'],
+            'readinessProbe': {'httpGet': {'path': '/health/readyz', 'port': 7280}, 'periodSeconds': 2, 'failureThreshold': 90},
             'env': [{'name': k, 'value': v} for k, v in {
                 'QW_DISABLE_TELEMETRY': '1', 'AWS_ACCESS_KEY_ID': 'local-acceptance',
                 'AWS_SECRET_ACCESS_KEY': 'local-acceptance-only', 'AWS_EC2_METADATA_DISABLED': 'true',
