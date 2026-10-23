@@ -1,0 +1,11 @@
+{
+  "repository": "rdkit-rs/quickwit-cheminee",
+  "source_commit": "d2db5ee7df68ae376f56dbf2c40a4fad77d579b7",
+  "run_id": 39911775203,
+  "artifact_id": 12483324160,
+  "artifact_bytes": 962804294,
+  "artifact_sha256": "704dc3e31061b106f9835ea3c25aae53ad1cb6254dbdb63b84ff18fd9136cc3d",
+  "image_archive_sha256": "dd687a5d4189d9cfd0609881045f4b52a03dab1a514b5027aa553f8dbfc7fdeb",
+  "image_config_digest": "sha256:b9b22ec2db80d3fa37025aca328fa042aee8d6514edb8a3d542a7a478b5e52d0",
+  "gem_sha256": "a31273132502dca6698e408da2fae74550701ed6078ba3e7eba48a31fa27d28e"
+}

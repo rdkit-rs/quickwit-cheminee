@@ -1,0 +1,83 @@
+name: Cheminee 100k kind and real S3 acceptance
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/cheminee-kind-acceptance.yml'
+      - 'distribution/cheminee-e2e/**'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: cheminee-kind-acceptance
+  cancel-in-progress: false
+jobs:
+  acceptance:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      BUNDLE_FROZEN: 'true'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Validate harness and admit standard runner
+        run: |
+          mkdir -p .e2e/evidence
+          python3 -m unittest discover -s distribution/cheminee-e2e -p 'test_*.py' -v
+          python3 distribution/cheminee-e2e/admit.py
+      - name: Obtain only the exact accepted pilot artifact (no native build)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 distribution/cheminee-e2e/acquire.py
+      - name: Check out the paired importer source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          revision=$(python3 -c 'import json;print(json.load(open("distribution/cheminee-e2e/candidate.json"))["source_commit"])')
+          git clone --no-checkout --filter=blob:none https://github.com/rdkit-rs/quickwit-cheminee.git .e2e/source
+          git -C .e2e/source checkout --detach "$revision"
+          test "$(git -C .e2e/source rev-parse HEAD)" = "$revision"
+          python3 distribution/cheminee-e2e/verify_candidate.py
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a
+        with:
+          ruby-version: '3.3.6'
+          bundler: '2.5.22'
+      - name: Install paired SDK and independent oracle tools
+        run: |
+          bundle install --gemfile .e2e/source/sdk/ruby/Gemfile
+          # Dependencies were installed from the paired frozen bundle above.
+          # --install-dir otherwise searches only the new gem root for dependencies.
+          gem install --local --ignore-dependencies --no-document .e2e/candidate/quickwit-cheminee.gem --install-dir "$PWD/.e2e/gems"
+          export GEM_PATH="$PWD/.e2e/gems:$(ruby -e 'puts Gem.path.join(":")')"
+          echo "GEM_PATH=$GEM_PATH" >> "$GITHUB_ENV"
+          version=$(python3 -c 'import json;print(json.load(open(".e2e/candidate/pilot-manifest.json"))["candidate_version"])')
+          ruby .e2e/source/distribution/cheminee-local/verify_installed_gem.rb .e2e/candidate/quickwit-cheminee.gem "$version" "$PWD/.e2e/gems" > .e2e/evidence/installed-sdk.json
+          python3 -m venv .e2e/python
+          .e2e/python/bin/pip install boto3==1.40.30 rdkit==2025.9.3
+          .e2e/python/bin/pip freeze > .e2e/evidence/python-packages.txt
+          ruby -c distribution/cheminee-e2e/catalog.rb
+      - name: Reproduce immutable public corpus
+        run: |
+          python3 .e2e/source/docs/cheminee-campaign/corpus-preparation/prepare_corpus.py --output /tmp/cheminee-e2e-moses
+          cmp /tmp/cheminee-e2e-moses/corpus-manifest.json .e2e/source/docs/cheminee-campaign/corpus-preparation/corpus-manifest.json
+          cp -a /tmp/cheminee-e2e-moses .e2e/corpus
+          cp .e2e/corpus/corpus-manifest.json .e2e/corpus/MOSES-LICENSE.txt .e2e/evidence/
+      - name: Execute native facade and real object-store lifecycle
+        timeout-minutes: 90
+        run: .e2e/python/bin/python distribution/cheminee-e2e/run.py
+      - name: Collect bounded failure diagnostics
+        if: always()
+        run: python3 distribution/cheminee-e2e/diagnostics.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: cheminee-kind-100k-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .e2e/evidence/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
+# AI-assisted implementation (OpenAI Codex). No registry publication or merges.
