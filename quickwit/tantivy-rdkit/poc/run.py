@@ -34,6 +34,8 @@ from rdkit.Chem import rdFingerprintGenerator
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--binary', type=Path, required=True)
+parser.add_argument('--leaf-binary', type=Path)
+parser.add_argument('--raw-smiles', action='store_true')
 parser.add_argument('--work-dir', type=Path)
 parser.add_argument('--port-base', type=int, default=17480)
 args = parser.parse_args()
@@ -44,7 +46,7 @@ if (work/'results.json').exists():
 base = f'http://127.0.0.1:{args.port_base}'
 processes = []
 logs = []
-results = {'storage':'local filesystem shared between three processes', 'rdkit':rdBase.rdkitVersion}
+results = {'raw_smiles': args.raw_smiles, 'separate_leaf_binary': bool(args.leaf_binary), 'storage':'local filesystem shared between three processes', 'rdkit':rdBase.rdkitVersion}
 
 def request(path, body=None, expected=200, raw=False):
     data = body if raw else None if body is None else json.dumps(body).encode()
@@ -72,7 +74,8 @@ def start_node(name, offset, services):
     config={'version':'0.8','cluster_id':'cheminee-poc','node_id':name,'listen_address':'127.0.0.1','rest':{'listen_port':args.port_base+offset},'data_dir':str(data.resolve()),'peer_seeds':[f'127.0.0.1:{args.port_base}'],'metastore_uri':(work/'root/indexes').resolve().as_uri(),'default_index_root_uri':(work/'root/indexes').resolve().as_uri()}
     config_path=work/(name+'.json')
     config_path.write_text(json.dumps(config,indent=2))
-    command=[str(args.binary.resolve()),'run','--config',str(config_path)]
+    binary = args.leaf_binary if args.leaf_binary and services == ['searcher'] else args.binary
+    command=[str(binary.resolve()),'run','--config',str(config_path)]
     for service in services: command.extend(['--service',service])
     log=(work/(name+'.log')).open('w')
     logs.append(log)
@@ -109,14 +112,24 @@ try:
         fingerprint=generator.GetFingerprint(molecule)
         binary=DataStructs.BitVectToBinaryText(fingerprint)
         for bit in fingerprint.GetOnBits(): assert binary[bit//8] & (1 << (bit%8))
-        docs.append({'record_id':len(docs),'smiles':Chem.MolToSmiles(molecule),'family':family,field:binary.hex()})
+        docs.append({'record_id':len(docs),'smiles':raw if args.raw_smiles else Chem.MolToSmiles(molecule),'family':family,field:binary.hex()})
         fingerprints.append(fingerprint)
     (work/'molecules.ndjson').write_text('\n'.join(json.dumps(doc,sort_keys=True) for doc in docs)+'\n')
     results['molecules']={'accepted':len(docs),'rejected':rejected,'fixture_sha256':hashlib.sha256((work/'molecules.ndjson').read_bytes()).hexdigest()}
     mapping={'version':'0.8','index_id':'molecules','doc_mapping':{'mode':'strict','field_mappings':[{'name':'record_id','type':'u64','fast':True},{'name':'smiles','type':'text','tokenizer':'raw'},{'name':'family','type':'text','tokenizer':'raw'},{'name':field,'type':'bytes','fast':True,'indexed':False,'input_format':'hex','output_format':'hex'}]},'indexing_settings':{'commit_timeout_secs':1,'merge_policy':{'type':'no_merge'}}}
+    if args.raw_smiles:
+        mapping['doc_mapping']['chemistry'] = {'spec': spec, 'smiles_field': 'smiles', 'prepared_smiles_field': 'prepared_smiles'}
+        mapping['doc_mapping']['field_mappings'].append({'name':'prepared_smiles','type':'text','indexed':False})
     (work/'index.json').write_text(json.dumps(mapping,indent=2))
     request('/api/v1/indexes',mapping)
-    for start in range(0,len(docs),100): ingest('molecules',docs[start:start+100])
+    ingestion_docs = [{key:value for key,value in doc.items() if key != field} for doc in docs] if args.raw_smiles else docs
+    (work/'ingested.ndjson').write_text('\n'.join(json.dumps(doc) for doc in ingestion_docs)+'\n')
+    if args.raw_smiles:
+        assert all(field not in doc for doc in ingestion_docs)
+        invalid = ingest('molecules', [{'record_id':99999,'smiles':'bad-smiles','family':'invalid'}])
+        assert invalid['num_rejected_docs'] == 1 and invalid['num_ingested_docs'] == 0, invalid
+        results['invalid_smiles_ingestion'] = invalid
+    for start in range(0,len(docs),100): ingest('molecules',ingestion_docs[start:start+100])
     path='/api/v1/molecules/cheminee/search/similarity'
     body={'spec':spec,'fingerprint_hex':docs[0][field],'tanimoto_minimum':0,'result_limit':20}
     timings=[];checks=0
@@ -131,6 +144,13 @@ try:
                 for limit in [1,20]:
                     body['result_limit']=limit
                     start=time.perf_counter();response=request(path,body);timings.append((time.perf_counter()-start)*1000)
+                    if args.raw_smiles:
+                        smiles_body = {key:value for key,value in body.items() if key != 'fingerprint_hex'}
+                        smiles_body['smiles'] = docs[query_id]['smiles']
+                        native = request(path+'/smiles', smiles_body)
+                        assert native['num_hits'] == response['num_hits'] and native['hits'] == response['hits'], (native, response)
+                        for hit in native['hits']:
+                            assert hit['document']['prepared_smiles']
                     assert response['num_hits']==len(expected),(body,response,expected)
                     actual=[(hit['score'],int(hit['record_id'])) for hit in response['hits']]
                     assert [record_id for _,record_id in actual]==[record_id for _,record_id in expected[:limit]],(body,actual,expected[:limit])
@@ -163,15 +183,27 @@ try:
         generated_body.result_limit=0
         error=operation.sync_detailed(index_id='molecules',client=client,body=generated_body)
         assert error.status_code==400 and isinstance(error.parsed,models.ChemistryError)
+    if args.raw_smiles:
+        smiles_operation=importlib.import_module('cheminee_client.api.cheminee.cheminee_search_similarity_smiles')
+        smiles_body=models.SmilesSimilarityRequest.from_dict({'spec':spec,'smiles':docs[0]['smiles'],'tanimoto_minimum':0})
+        with client_module.Client(base_url=base) as client:
+            success=smiles_operation.sync_detailed(index_id='molecules',client=client,body=smiles_body)
+            assert success.status_code==200 and success.parsed.num_hits==len(docs)
+            smiles_body.smiles='bad-smiles'
+            error=smiles_operation.sync_detailed(index_id='molecules',client=client,body=smiles_body)
+            assert error.status_code==400 and isinstance(error.parsed,models.ChemistryError)
+        results['native_client']={'success_status':200,'typed_error_status':400}
     results['client']={'generator':'openapi-python-client 0.29.1','success_status':200,'typed_error_status':400,'openapi':spec_json['openapi']}
-    repeated=[dict(docs[0],record_id=100000+index) for index in range(10050)]
+    repeated=[dict(ingestion_docs[0],record_id=100000+index) for index in range(10050)]
     ingest('molecules',repeated)
     exact_body=dict(body,fingerprint_hex=docs[0][field],tanimoto_minimum=1,result_limit=1)
     large=request(path,exact_body)
     expected=sum(fp==fingerprints[0] for fp in fingerprints)+len(repeated)
     assert large['num_hits']==expected and int(large['hits'][0]['record_id'])==0
     results['uncapped']={'matching_records':large['num_hits'],'returned':len(large['hits']),'searched_splits':large['searched_splits']}
-    poison=dict(mapping,index_id='malformed')
+    poison=json.loads(json.dumps(mapping))
+    poison['index_id']='malformed'
+    poison['doc_mapping'].pop('chemistry', None)
     request('/api/v1/indexes',poison)
     ingest('malformed',[dict(docs[0],**{field:'01'})])
     failed=request('/api/v1/malformed/cheminee/search/similarity',body,expected=503)

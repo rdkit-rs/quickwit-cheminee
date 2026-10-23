@@ -20,7 +20,10 @@
 //! to convert a json like documents to a document indexable by tantivy
 //! engine, aka tantivy::Document.
 
+#[allow(missing_docs)]
+mod chemistry;
 mod doc_mapper;
+pub use chemistry::ChemistryMapping;
 mod doc_mapping;
 mod error;
 mod query_builder;
@@ -76,6 +79,9 @@ pub enum Cardinality {
 #[derive(utoipa::OpenApi)]
 #[openapi(components(schemas(
     DocMappingUid,
+    ChemistryMapping,
+    tantivy_rdkit::FingerprintSpec,
+    tantivy_rdkit::FingerprintFormat,
     FastFieldOptions,
     FieldMappingEntryForSerialization,
     IndexRecordOptionSchema,

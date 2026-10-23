@@ -55,6 +55,7 @@ const FIELD_PRESENCE_FIELD: Field = Field::from_field_id(0u32);
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(into = "DocMapperBuilder", try_from = "DocMapperBuilder")]
 pub struct DocMapper {
+    chemistry: Option<crate::ChemistryMapping>,
     /// The UID of the doc mapping.
     doc_mapping_uid: DocMappingUid,
     /// Field in which the source should be stored.
@@ -135,6 +136,7 @@ impl From<DocMapper> for DocMapperBuilder {
             None
         };
         let doc_mapping = DocMapping {
+            chemistry: default_doc_mapper.chemistry,
             doc_mapping_uid: default_doc_mapper.doc_mapping_uid,
             mode: default_doc_mapper.mode,
             field_mappings: default_doc_mapper.field_mappings.into(),
@@ -167,6 +169,9 @@ impl TryFrom<DocMapperBuilder> for DocMapper {
         assert_eq!(field_presence_field, FIELD_PRESENCE_FIELD);
 
         let doc_mapping = builder.doc_mapping;
+        if let Some(chemistry) = &doc_mapping.chemistry {
+            chemistry.validate_mapping(&doc_mapping.field_mappings)?;
+        }
 
         let dynamic_field = if let Mode::Dynamic(json_options) = &doc_mapping.mode {
             Some(schema_builder.add_json_field(DYNAMIC_FIELD_NAME, json_options.clone()))
@@ -280,6 +285,7 @@ impl TryFrom<DocMapperBuilder> for DocMapper {
             }
         }
         Ok(DocMapper {
+            chemistry: doc_mapping.chemistry,
             doc_mapping_uid: doc_mapping.doc_mapping_uid,
             schema,
             index_field_presence: doc_mapping.index_field_presence,
@@ -432,6 +438,16 @@ impl DocMapper {
 
     /// Validates a JSON object according to the doc mapper.
     pub fn validate_json_obj(&self, json_obj: &BorrowedJsonMap) -> Result<(), DocParsingError> {
+        if let Some(chemistry) = &self.chemistry {
+            let owned: JsonObject =
+                serde_json::from_value(serde_json::to_value(json_obj).map_err(|error| {
+                    DocParsingError::ValueError("chemistry".into(), error.to_string())
+                })?)
+                .map_err(|error| {
+                    DocParsingError::ValueError("chemistry".into(), error.to_string())
+                })?;
+            chemistry.prepare(owned)?;
+        }
         let is_strict = self.mode.mode_type() == ModeType::Strict;
         let mut field_path = Vec::new();
         self.field_mappings
@@ -515,6 +531,11 @@ impl DocMapper {
             );
         }
 
+        let json_obj = if let Some(chemistry) = &self.chemistry {
+            chemistry.prepare(json_obj)?
+        } else {
+            json_obj
+        };
         let mode = self.mode.mode_type();
         self.field_mappings.doc_from_json(
             json_obj,

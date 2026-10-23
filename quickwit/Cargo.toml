@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
   "tantivy-rdkit",
+  "tantivy-rdkit-mapper",
   "quickwit-actors",
   "quickwit-aws",
   "quickwit-cli",
@@ -99,6 +100,11 @@ authors = ["Quickwit, Inc. <hello@quickwit.io>"]
 license = "Apache-2.0"
 
 [workspace.dependencies]
+tantivy-rdkit-mapper = { path = "tantivy-rdkit-mapper" }
+rdkit = { git = "https://github.com/rdkit-rs/rdkit", rev = "0ae060c9cfc14626172070989fee890b16454373" }
+cxx = "1.0.203"
+cxx-build = "1.0.203"
+pkg-config = "0.3"
 tantivy-rdkit = { path = "tantivy-rdkit" }
 ahash = "0.8"
 anyhow = "1"
