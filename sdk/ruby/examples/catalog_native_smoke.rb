@@ -5,6 +5,7 @@
 require 'timeout'
 require_relative 'catalog_generation'
 require_relative 'catalog_native_oracle'
+require_relative 'catalog_installed_sdk_check'
 require_relative '../loaded_json_check'
 
 class CatalogNativeSmoke
@@ -45,13 +46,7 @@ class CatalogNativeSmoke
   private
 
   def verify_installed_code!
-    gem_root = File.realpath(Gem.loaded_specs.fetch('quickwit-cheminee').full_gem_path) + '/'
-    loaded = $LOADED_FEATURES.select { |path| %r{/quickwit-cheminee(?:\.rb|/.*\.rb)\z}.match?(path) }
-    unless loaded.any? { |path| path.end_with?('/quickwit-cheminee.rb') } &&
-           loaded.any? { |path| path.end_with?('/quickwit-cheminee/exact_search.rb') } &&
-           loaded.all? { |path| File.realpath(path).start_with?(gem_root) }
-      raise 'SDK code loaded outside its installed gem'
-    end
+    CatalogInstalledSdkCheck.verify!(spec: Gem.loaded_specs.fetch('quickwit-cheminee'), features: $LOADED_FEATURES)
     LoadedJsonCheck.verify!(spec: Gem.loaded_specs.fetch('json'), version: JSON::VERSION, features: $LOADED_FEATURES)
   end
 
