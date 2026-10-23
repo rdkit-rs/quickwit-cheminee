@@ -2,9 +2,11 @@
 
 The [candidate workflow](../../.github/workflows/prepare-cheminee-pilot.yml) and
 `build_pilot.sh` prepare a source-addressed Cheminee candidate using the Quickwit
-engine. Only lightweight provenance/lifecycle tests have run for this version.
-No current native image, matching gem, live restore result or release approval is
-claimed. The fresh test host cannot admit a local build within its current disk
+engine. Candidate `7a303e31` passed local-file native catalog and fresh-restore
+acceptance, but the subsequent real kind/SeaweedFS run exposed missing runtime CA
+roots before ingestion. This revision repairs that packaging gap and adds an S3
+initialization gate; qualification applies only after its exact-head workflow passes.
+No release approval is claimed. The fresh test host cannot admit a local build within its current disk
 budget. The PR workflow therefore prepares the candidate on a disposable hosted
 runner; the fresh host owns kind/object-store acceptance. Do not start a duplicate
 build on either constrained VFS host. GitHub may not offer manual dispatch until
@@ -20,6 +22,21 @@ The candidate version is `<embedded engine version>.pre.pilot.g<full source SHA>
 it is a prerelease identity, never an invented release tag. An unknown, stale or
 short embedded revision fails packaging. The four required model files are checked
 against the native loader's hashes, copied, and configured inside the image.
+
+The builder's distro CA bundle is parsed before packaging, copied to
+`/etc/ssl/certs/ca-certificates.crt`, and recorded with its SHA256 and parsed CA
+counts. The image sets the standard `SSL_CERT_FILE` to that path. It adds no private
+trust anchors and does not disable certificate or hostname verification. The
+`ca-certificates` package version remains in `build-packages.txt`; package repository
+contents are inventoried rather than claimed reproducible.
+
+Before catalog acceptance, `s3_initialization_smoke.py` runs the actual packaged
+native binary on an isolated local network. The positive control must issue an S3
+request and receive the fixture's controlled denial; a separate empty-root control
+must reproduce the native trust-store rejection before any request. Its receipt is
+bound to the exact image, binary, revision and CA hash before export. This is an
+HTTP connector-initialization regression, not a TLS-handshake, object-store or
+100k qualification. PR #7 owns the real kind/SeaweedFS experiment.
 
 The pinned Ruby generator consumes this captured schema, regenerates twice, and
 builds a local gem. Before live acceptance, every installed gem file is checked

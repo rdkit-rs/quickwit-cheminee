@@ -88,6 +88,23 @@ def verify_acceptance(acceptance, image, runtime, root):
             raise ValueError("restore inventory differs from accepted bytes")
 
 
+def verify_s3_initialization(receipt, image, runtime):
+    expected = {"status": "passed", "image_id": image["Id"],
+                "source_commit": runtime["source_commit"],
+                "candidate_version": runtime["candidate_version"],
+                "runtime_binary_sha256": runtime["runtime_binary_sha256"],
+                "ca_bundle_sha256": runtime["ca_bundle"]["sha256"]}
+    if any(receipt.get(key) != value for key, value in expected.items()):
+        raise ValueError("S3 initialization receipt is missing or belongs to another runtime")
+    positive, negative = receipt.get("positive", {}), receipt.get("negative", {})
+    if (positive.get("status") != "passed" or positive.get("request_observed") is not True
+            or positive.get("controlled_s3_error_observed") is not True
+            or positive.get("exit_code") != 1 or positive.get("request_count", 0) < 1
+            or negative.get("status") != "passed" or negative.get("missing_roots_rejected") is not True
+            or negative.get("exit_code") != 101 or negative.get("request_count") != 0):
+        raise ValueError("S3 initialization positive/negative control gates are missing")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifacts", required=True, type=Path)
@@ -97,9 +114,11 @@ def main():
     sdk = json.loads((root / "sdk-provenance.json").read_bytes())
     image = json.loads((root / "image-inspect.json").read_bytes())[0]
     acceptance = json.loads((root / "acceptance.json").read_bytes())
+    s3_initialization = json.loads((root / "s3-initialization.json").read_bytes())
     verify_pair(runtime, sdk, root / "server-openapi.json", root / "sdk-openapi.json")
     verify_image(image, runtime)
     verify_acceptance(acceptance, image, runtime, root)
+    verify_s3_initialization(s3_initialization, image, runtime)
     verify_archive(root / "cheminee-image.tar", image["Id"])
     verify_gem(root / "quickwit-cheminee.gem", sdk, root / "sdk-openapi.json")
     if (acceptance.get("ruby_sdk", {}).get("gem_sha256") != digest(root / "quickwit-cheminee.gem")
@@ -113,10 +132,11 @@ def main():
             "oci_labels": image["Config"]["Labels"], "registry_manifest_digest": None},
         "ruby_sdk": {"gem": "quickwit-cheminee.gem", "version": sdk["gem_version"],
                      "server_openapi_sha256": runtime["server_openapi_sha256"]},
-        "model_assets": runtime["model_assets"],
+        "model_assets": runtime["model_assets"], "ca_bundle": runtime["ca_bundle"],
         "files": {path.name: {"sha256": digest(path), "bytes": path.stat().st_size}
                   for path in sorted(root.iterdir()) if path.is_file()},
         "qualification": {"native_image_and_installed_gem": "passed on an admitted disposable host",
+                          "s3_client_initialization": s3_initialization["scope"],
                           "scope": acceptance["scope"], "unqualified": acceptance["unqualified"]},
         "publication_authorized": False, "deployment_authorized": False,
         "security_hold": "PR3 dependency-security findings (including protobuf/ZIP) require review; this candidate is not release approval",

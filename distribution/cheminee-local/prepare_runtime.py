@@ -26,15 +26,58 @@ import platform
 import re
 import shutil
 import socket
+import ssl
 import subprocess
 import uuid
 
-from pilot_provenance import (BASE_IMAGE, MODEL_ARCHIVE, MODEL_DIRECTORY, MODEL_FILES,
+from pilot_provenance import (BASE_IMAGE, CA_BUNDLE_PATH, MODEL_ARCHIVE, MODEL_DIRECTORY, MODEL_FILES,
                               canonical, capture_server, digest, request_json,
                               verify_models, verify_source, write_json)
 from readiness import wait_ready
 
 USR_MERGE_ALIASES = {"lib": "usr/lib", "lib64": "usr/lib64", "bin": "usr/bin", "sbin": "usr/sbin"}
+CA_BUNDLE = Path(CA_BUNDLE_PATH)
+PEM_CERTIFICATE = re.compile(r"-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----", re.DOTALL)
+
+
+def copy_runtime_ca_bundle(root, filesystem=Path("/")):
+    """Stage the trusted builder's distro roots, independent of SSL_CERT_FILE."""
+    filesystem = filesystem.resolve(strict=True)
+    source = filesystem / CA_BUNDLE.relative_to("/")
+    if source.is_symlink() or not source.is_file() or not source.resolve().is_relative_to(filesystem):
+        raise ValueError("builder CA bundle is not a regular contained file")
+    data = source.read_bytes()
+    try:
+        pem = data.decode("ascii")
+    except UnicodeDecodeError as error:
+        raise ValueError("builder CA bundle is not ASCII PEM") from error
+    certificates = PEM_CERTIFICATE.findall(pem)
+    if not certificates or PEM_CERTIFICATE.sub("", pem).strip():
+        raise ValueError("builder CA bundle must contain only PEM certificates")
+    # No default roots: an empty/invalid input must never pass using host trust.
+    trust = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    try:
+        for certificate in certificates:
+            trust.load_verify_locations(cadata=certificate)
+    except ssl.SSLError as error:
+        raise ValueError("builder CA bundle contains an invalid certificate") from error
+    # OpenSSL reports distinct parsed certificates, deduplicating repeated PEMs.
+    counts = trust.cert_store_stats()
+    if counts["x509_ca"] == 0 or counts["x509"] != counts["x509_ca"]:
+        raise ValueError("builder CA bundle must contain nonempty CA certificates only")
+    target = root / CA_BUNDLE.relative_to("/")
+    if target.exists() or target.is_symlink():
+        raise ValueError("runtime CA bundle destination already exists")
+    if not target.parent.resolve().is_relative_to(root.resolve(strict=True)):
+        raise ValueError("runtime CA bundle destination escapes packaging root")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open("xb") as output:
+        output.write(data)
+    target.chmod(0o644)
+    return {"path": str(CA_BUNDLE), "source": str(CA_BUNDLE),
+            "resolved_source": "/" + str(source.resolve().relative_to(filesystem)),
+            "sha256": digest(target), "certificate_count": counts["x509"],
+            "ca_count": counts["x509_ca"]}
 
 
 def library_destination(source, filesystem=Path("/")):
@@ -158,6 +201,7 @@ def main():
     subprocess.run(["strip", "-o", str(packaged), str(args.binary)], check=True, timeout=120)
     shutil.copy2("/usr/bin/curl", root / "usr/local/bin/curl")
     library_manifest = copy_runtime_libraries(libraries, root)
+    ca_manifest = copy_runtime_ca_bundle(root)
     model_target = root / MODEL_DIRECTORY.lstrip("/")
     for relative in MODEL_FILES:
         target = model_target / relative
@@ -176,6 +220,7 @@ def main():
         "candidate_version": observed["candidate_version"], "server_build": observed["build"],
         "original_binary_sha256": digest(args.binary), "runtime_binary_sha256": digest(packaged),
         "runtime_libraries": library_manifest,
+        "ca_bundle": ca_manifest,
         "server_openapi_sha256": digest(output / "server-openapi.json"),
         "model_assets": {"directory": MODEL_DIRECTORY, "archive": MODEL_ARCHIVE, "files": MODEL_FILES},
         "recipe_sha256": {name: digest(args.source_root / name) for name in recipes},

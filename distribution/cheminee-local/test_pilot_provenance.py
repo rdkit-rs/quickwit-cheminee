@@ -26,7 +26,7 @@ import unittest
 from unittest.mock import patch
 
 import pilot_provenance as provenance
-from finalize_pilot import verify_acceptance, verify_archive, verify_gem
+from finalize_pilot import verify_acceptance, verify_archive, verify_gem, verify_s3_initialization
 from prepare_runtime import stop_probe
 from readiness import checked_restart
 
@@ -42,6 +42,33 @@ def add_file(archive, name, data):
 
 
 class ProvenanceTests(unittest.TestCase):
+    def test_s3_receipt_requires_both_controls_and_exact_image_binary_and_ca(self):
+        runtime = {"source_commit": REVISION, "candidate_version": VERSION,
+                   "runtime_binary_sha256": "c" * 64, "ca_bundle": {"sha256": "d" * 64}}
+        image = {"Id": "sha256:" + "b" * 64}
+        receipt = {"status": "passed", "image_id": image["Id"], "source_commit": REVISION,
+                   "candidate_version": VERSION, "runtime_binary_sha256": "c" * 64,
+                   "ca_bundle_sha256": "d" * 64,
+                   "positive": {"status": "passed", "request_observed": True,
+                                "controlled_s3_error_observed": True, "exit_code": 1, "request_count": 2},
+                   "negative": {"status": "passed", "missing_roots_rejected": True,
+                                "exit_code": 101, "request_count": 0}}
+        verify_s3_initialization(receipt, image, runtime)
+        for key in ("image_id", "source_commit", "runtime_binary_sha256", "ca_bundle_sha256"):
+            wrong = copy.deepcopy(receipt)
+            wrong[key] = "wrong"
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                verify_s3_initialization(wrong, image, runtime)
+        for phase in ("positive", "negative"):
+            wrong = copy.deepcopy(receipt)
+            del wrong[phase]
+            with self.subTest(phase=phase), self.assertRaises(ValueError):
+                verify_s3_initialization(wrong, image, runtime)
+        wrong = copy.deepcopy(receipt)
+        wrong["negative"]["request_count"] = 1
+        with self.assertRaises(ValueError):
+            verify_s3_initialization(wrong, image, runtime)
+
     def test_final_manifest_requires_restore_and_catalog_acceptance_gates(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -130,13 +157,18 @@ class ProvenanceTests(unittest.TestCase):
     def test_image_labels_user_and_asset_configuration_are_checked(self):
         runtime = {"candidate_version": VERSION, "source_commit": REVISION}
         image = {"Id": "sha256:" + "b" * 64, "Architecture": "amd64", "Os": "linux",
-                 "Config": {"User": "10001:10001", "Env": [f"QW_CHEMINEE_MODEL_ASSETS={provenance.MODEL_DIRECTORY}"],
+                 "Config": {"User": "10001:10001", "Env": [f"QW_CHEMINEE_MODEL_ASSETS={provenance.MODEL_DIRECTORY}",
+                                                         f"SSL_CERT_FILE={provenance.CA_BUNDLE_PATH}"],
                             "Labels": {"org.opencontainers.image.title": "Cheminee",
                                        "org.opencontainers.image.version": VERSION,
                                        "org.opencontainers.image.revision": REVISION,
                                        "org.opencontainers.image.base.name": provenance.BASE_IMAGE,
                                        "io.cheminee.publication-authorized": "false"}}}
         provenance.verify_image(image, runtime)
+        missing_roots = copy.deepcopy(image)
+        missing_roots["Config"]["Env"].remove(f"SSL_CERT_FILE={provenance.CA_BUNDLE_PATH}")
+        with self.assertRaisesRegex(ValueError, "CA roots"):
+            provenance.verify_image(missing_roots, runtime)
         for field, value in [("User", "root"), ("Env", [])]:
             wrong = copy.deepcopy(image)
             wrong["Config"][field] = value

@@ -114,6 +114,8 @@ jobs:
             --tag "cheminee:$SDK_EXPECTED_VERSION" .pilot/context
           image_id="$(docker image inspect "cheminee:$SDK_EXPECTED_VERSION" --format '{{.Id}}')"
           echo "PILOT_IMAGE_ID=$image_id" >> "$GITHUB_ENV"
+          python3 distribution/cheminee-local/s3_initialization_smoke.py --image "$image_id" \
+            --context .pilot/context --output .pilot/s3-initialization
           export CATALOG_NATIVE_ORACLE="$PWD/.pilot/native/catalog-oracle.ndjson"
           python3 distribution/cheminee-local/accept_pilot.py --image "$image_id" \
             --gem .pilot/quickwit-cheminee.gem --context .pilot/context --output .pilot/acceptance
@@ -128,6 +130,7 @@ jobs:
           cp .pilot/generated/provenance.json .pilot/artifacts/sdk-provenance.json
           cp .pilot/generated/openapi.json .pilot/artifacts/sdk-openapi.json
           cp .pilot/acceptance/result.json .pilot/artifacts/acceptance.json
+          cp .pilot/s3-initialization/result.json .pilot/artifacts/s3-initialization.json
           cp .pilot/acceptance/restore/data-inventory.json .pilot/acceptance/restore/journal-inventory.json .pilot/artifacts/
           cp .pilot/native/build-packages.txt .pilot/native/rust-version.txt \
             .pilot/native/native-linkage.txt .pilot/native/catalog-oracle.ndjson .pilot/artifacts/
@@ -140,7 +143,7 @@ jobs:
           from pathlib import Path
           manifest = json.loads(Path('.pilot/artifacts/pilot-manifest.json').read_text())
           fields = ('format_version', 'product', 'engine', 'candidate_version', 'source_commit',
-                    'platform', 'ruby_sdk', 'model_assets', 'files', 'qualification',
+                    'platform', 'ruby_sdk', 'model_assets', 'ca_bundle', 'files', 'qualification',
                     'publication_authorized', 'deployment_authorized', 'security_hold',
                     'reproducible_builds_and_redistribution')
           report = {key: manifest[key] for key in fields}
@@ -161,6 +164,9 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
+          s3_result = Path('.pilot/s3-initialization/result.json')
+          if s3_result.is_file():
+              print(s3_result.read_text())
           result = Path('.pilot/acceptance/result.json')
           if result.is_file():
               source = json.loads(result.read_text())
@@ -188,6 +194,8 @@ jobs:
         with:
           name: cheminee-pilot-evidence-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
+            .pilot/s3-initialization/result.json
+            .pilot/s3-initialization/*.log
             .pilot/native/*.log
             .pilot/native/*.txt
             .pilot/native/*/results.json

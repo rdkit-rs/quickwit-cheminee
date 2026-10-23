@@ -21,6 +21,7 @@ import subprocess
 import urllib.request
 
 BASE_IMAGE = "ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7"
+CA_BUNDLE_PATH = "/etc/ssl/certs/ca-certificates.crt"
 MODEL_DIRECTORY = "/opt/cheminee-model/assets"
 MODEL_ARCHIVE = {
     "url": "https://cheminee-models.s3.eu-central-1.amazonaws.com/similarity/similarity-0.1.0.tar.gz",
@@ -144,3 +145,5 @@ def verify_image(info, runtime):
         raise ValueError("image must run as the non-root pilot user")
     if f"QW_CHEMINEE_MODEL_ASSETS={MODEL_DIRECTORY}" not in config.get("Env", []):
         raise ValueError("image does not configure pinned descriptor model assets")
+    if f"SSL_CERT_FILE={CA_BUNDLE_PATH}" not in config.get("Env", []):
+        raise ValueError("image does not configure its packaged native CA roots")
