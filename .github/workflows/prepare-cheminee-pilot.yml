@@ -179,13 +179,15 @@ jobs:
               print(json.dumps({key: source[key] for key in fields if key in source}, indent=2, sort_keys=True))
           else:
               print('No acceptance result: the run did not reach acceptance reporting')
-          for name in ('catalog-create.log', 'catalog-verify.log', 'catalog-restored.log'):
-              path = Path('.pilot/acceptance') / name
+          paths = [Path('.pilot/acceptance') / name for name in
+                   ('catalog-create.log', 'catalog-verify.log', 'catalog-restored.log')]
+          paths += [Path('.pilot/s3-initialization') / name for name in ('positive.log', 'negative.log')]
+          for path in paths:
               if path.is_file():
                   with path.open('rb') as stream:
                       size = path.stat().st_size
                       stream.seek(max(0, size - 65536))
-                      print(f'--- {name}: last {min(size, 65536)} of {size} bytes (synthetic fixtures only) ---')
+                      print(f'--- {path.name}: last {min(size, 65536)} of {size} bytes (synthetic fixtures only) ---')
                       print(stream.read().decode('utf-8', errors='replace'))
           PY
       - name: Retain diagnostic evidence even when qualification fails

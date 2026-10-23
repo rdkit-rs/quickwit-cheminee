@@ -130,6 +130,29 @@ class S3InitializationTests(unittest.TestCase):
                 caught.exception.close()
         self.assertTrue(all(record["signed_with_synthetic_key"] is False for record in records))
 
+    def test_get_object_operation_query_is_accepted_but_other_queries_fail(self):
+        http = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        headers = {"Authorization": f"AWS4-HMAC-SHA256 Credential={ACCESS_KEY}/20261023/us-east-1/s3/aws4_request, "
+                   f"SignedHeaders=host;x-amz-date, Signature={'c' * 64}"}
+        with s3_fixture("127.0.0.1", self.path, self.marker) as (endpoint, records):
+            with http.open(urllib.request.Request(endpoint + self.path, method="HEAD", headers=headers), timeout=2):
+                pass
+            with self.assertRaises(urllib.error.HTTPError) as caught:
+                http.open(urllib.request.Request(endpoint + self.path + "?x-id=GetObject", headers=headers), timeout=2)
+            self.assertEqual(403, caught.exception.code)
+            self.assertIn(self.marker, caught.exception.read().decode())
+            self.validate(dict(self.observation, requests=list(records)))
+            self.assertEqual(self.path + "?x-id=GetObject", records[-1]["path"])
+            for suffix in ("?x-id=PutObject", "?other=value", "?x-id=GetObject&extra=1", "?x-id=GetObject&x-id=GetObject"):
+                with self.subTest(suffix=suffix), self.assertRaises(urllib.error.HTTPError) as caught:
+                    http.open(urllib.request.Request(endpoint + self.path + suffix, headers=headers), timeout=2)
+                self.assertEqual(400, caught.exception.code)
+                caught.exception.close()
+                wrong = copy.deepcopy(self.observation)
+                wrong["requests"][1]["path"] += suffix
+                with self.assertRaises(ValueError):
+                    self.validate(wrong)
+
     def test_positive_keeps_image_roots_while_negative_overrides_both_paths(self):
         positive = create_arguments("probe", "sha256:image", "internal-network", Path("/fixture"), False)
         negative = create_arguments("probe", "sha256:image", "internal-network", Path("/fixture"), True)

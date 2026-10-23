@@ -45,6 +45,12 @@ TRUSTSTORE_PANIC = "TrustStore configured to enable native roots but no valid ro
 MAX_LOG_BYTES = 128 * 1024
 
 
+def expected_target(method, target, path):
+    # AWS SDK appends this operation marker to GetObject; keep all other query
+    # strings rejected and preserve the complete observed target in the receipt.
+    return target == path or (method == "GET" and target == path + "?x-id=GetObject")
+
+
 def docker(arguments, timeout=20):
     return subprocess.check_output(["docker", *arguments], text=True,
                                    stderr=subprocess.STDOUT, timeout=timeout).strip()
@@ -71,7 +77,7 @@ def s3_fixture(address, path, marker):
             signed = bool(re.fullmatch(
                 rf"AWS4-HMAC-SHA256 Credential={ACCESS_KEY}/[0-9]{{8}}/us-east-1/s3/aws4_request, "
                 r"SignedHeaders=[a-z0-9;-]+, Signature=[0-9a-f]{64}", authorization))
-            expected = self.path == path and signed and self.command in ("HEAD", "GET")
+            expected = expected_target(self.command, self.path, path) and signed and self.command in ("HEAD", "GET")
             status = 200 if expected and self.command == "HEAD" else 403 if expected else 400
             # A HEAD success makes FileBackedMetastore fetch its manifest. A
             # nonretryable GET failure proves the SDK decoded an S3 response.
@@ -160,6 +166,8 @@ def validate_probe(observation, log, runtime, path, marker, negative=False):
     else:
         expected = [{"method": method, "path": path, "signed_with_synthetic_key": True, "status": status}
                     for method, status in (("HEAD", 200), ("GET", 403))]
+        if len(requests) == 2 and expected_target("GET", requests[1].get("path"), path):
+            expected[1]["path"] = requests[1]["path"]
         if (observation["exit_code"] != 1 or requests != expected or marker not in log
                 or "AccessDenied" not in log or "panicked at" in log or TRUSTSTORE_PANIC in log
                 or "no native root CA certificates found" in log):
