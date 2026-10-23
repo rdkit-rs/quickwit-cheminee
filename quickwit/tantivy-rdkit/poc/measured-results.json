@@ -1,0 +1,48 @@
+{
+  "build": "Rust 1.96.1 dev unoptimized without debug symbols",
+  "client": {
+    "generator": "openapi-python-client 0.29.1",
+    "openapi": "3.0.3",
+    "success_status": 200,
+    "typed_error_status": 400
+  },
+  "limitations": [
+    "local filesystem, not S3",
+    "no merge/delete/restart or native graph predicate tests",
+    "single fingerprint, sanitize-only preparation, not full Cheminee/RX parity"
+  ],
+  "malformed_data_status": 503,
+  "molecules": {
+    "accepted": 620,
+    "fixture_sha256": "87493e23d1a694fa773a29de334bd72a68b759a17b0ffc7c25c583059859d2f9",
+    "rejected": [
+      "bad-smiles"
+    ]
+  },
+  "no_leaf_status": 500,
+  "parity": {
+    "first_ms": 90.9072910001214,
+    "max_ms": 149.94134499988832,
+    "median_ms": 65.75126999996428,
+    "queries": 168,
+    "reference": "RDKit exhaustive Tanimoto rounded to f32, then score descending and record_id ascending"
+  },
+  "public_source": {
+    "path": "RDKit Data/NCI/first_5K.smi",
+    "sha256": "91e71c015f14939837f2943dcc904f7c87e5a3a0124d82b05c28ad2f23004def"
+  },
+  "quickwit_base": "962685f5a334f6c9d8516d2d7c1fdd08891b687c",
+  "rdkit": "2025.03.1",
+  "root_services": [
+    "metastore",
+    "control-plane",
+    "indexer",
+    "janitor"
+  ],
+  "storage": "local filesystem shared between three processes",
+  "uncapped": {
+    "matching_records": 10051,
+    "returned": 1,
+    "searched_splits": 8
+  }
+}

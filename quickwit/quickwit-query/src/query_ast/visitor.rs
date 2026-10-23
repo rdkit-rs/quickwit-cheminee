@@ -18,7 +18,7 @@ use crate::query_ast::field_presence::FieldPresenceQuery;
 use crate::query_ast::user_input_query::UserInputQuery;
 use crate::query_ast::{
     BoolQuery, CacheNode, FullTextQuery, PhrasePrefixQuery, QueryAst, RangeQuery, RegexQuery,
-    TermQuery, TermSetQuery, WildcardQuery,
+    TanimotoQueryAst, TermQuery, TermSetQuery, WildcardQuery,
 };
 
 /// Simple trait to implement a Visitor over the QueryAst.
@@ -27,6 +27,7 @@ pub trait QueryAstVisitor<'a> {
 
     fn visit(&mut self, query_ast: &'a QueryAst) -> Result<(), Self::Err> {
         match query_ast {
+            QueryAst::Tanimoto(query) => self.visit_tanimoto(query),
             QueryAst::Bool(bool_query) => self.visit_bool(bool_query),
             QueryAst::Term(term_query) => self.visit_term(term_query),
             QueryAst::TermSet(term_set_query) => self.visit_term_set(term_set_query),
@@ -44,6 +45,10 @@ pub trait QueryAstVisitor<'a> {
             QueryAst::Regex(regex) => self.visit_regex(regex),
             QueryAst::Cache(cache_node) => self.visit_cache_node(cache_node),
         }
+    }
+
+    fn visit_tanimoto(&mut self, query: &'a TanimotoQueryAst) -> Result<(), Self::Err> {
+        self.visit(&query.candidates)
     }
 
     fn visit_bool(&mut self, bool_query: &'a BoolQuery) -> Result<(), Self::Err> {
@@ -134,6 +139,13 @@ pub trait QueryAstTransformer {
 
     fn transform(&mut self, query_ast: QueryAst) -> Result<Option<QueryAst>, Self::Err> {
         match query_ast {
+            QueryAst::Tanimoto(mut query) => {
+                let Some(candidates) = self.transform(*query.candidates)? else {
+                    return Ok(None);
+                };
+                query.candidates = Box::new(candidates);
+                Ok(Some(QueryAst::Tanimoto(query)))
+            }
             QueryAst::Bool(bool_query) => self.transform_bool(bool_query),
             QueryAst::Term(term_query) => self.transform_term(term_query),
             QueryAst::TermSet(term_set_query) => self.transform_term_set(term_set_query),

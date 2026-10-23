@@ -96,6 +96,9 @@ pub fn build_docs() -> utoipa::openapi::OpenApi {
     docs_base.merge_components_and_paths(MetricsApi::openapi().with_path_prefix("/metrics"));
     docs_base.merge_components_and_paths(NodeInfoApi::openapi().with_path_prefix("/api/v1"));
     docs_base.merge_components_and_paths(SearchApi::openapi().with_path_prefix("/api/v1"));
+    docs_base.merge_components_and_paths(
+        crate::cheminee_api::ChemineeApi::openapi().with_path_prefix("/api/v1"),
+    );
 
     // Schemas
     docs_base.merge_components_and_paths(MetastoreApiSchemas::openapi());

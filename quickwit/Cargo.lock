@@ -9225,6 +9225,7 @@ dependencies = [
  "serde_with",
  "tantivy",
  "tantivy-fst",
+ "tantivy-rdkit",
  "thiserror 2.0.18",
  "time",
  "tracing",
@@ -9360,6 +9361,7 @@ dependencies = [
  "serde_json",
  "serde_qs 1.1.2",
  "serde_with",
+ "tantivy-rdkit",
  "tempfile",
  "thiserror 2.0.18",
  "time",
@@ -11858,6 +11860,17 @@ dependencies = [
  "ordered-float 5.3.0",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "tantivy-rdkit"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "serde",
+ "sha2 0.11.0",
+ "tantivy",
+ "utoipa",
 ]
 
 [[package]]
