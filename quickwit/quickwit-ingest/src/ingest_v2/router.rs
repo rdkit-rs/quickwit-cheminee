@@ -73,7 +73,7 @@ fn ingest_request_timeout() -> Duration {
             false,
         );
         let minimum_ingest_request_timeout: Duration =
-            PERSIST_REQUEST_TIMEOUT * (MAX_PERSIST_ATTEMPTS as u32) + Duration::from_secs(5);
+            PERSIST_REQUEST_TIMEOUT + Duration::from_secs(5);
         let requested_ingest_request_timeout = Duration::from_millis(duration_ms);
         if requested_ingest_request_timeout < minimum_ingest_request_timeout {
             error!(
@@ -420,18 +420,7 @@ impl IngestRouter {
             };
 
             let persist_future = async move {
-                let persist_result = tokio::time::timeout(
-                    PERSIST_REQUEST_TIMEOUT,
-                    ingester.persist(persist_request),
-                )
-                .await
-                .unwrap_or_else(|_| {
-                    let message = format!(
-                        "persist request timed out after {} seconds",
-                        PERSIST_REQUEST_TIMEOUT.as_secs()
-                    );
-                    Err(IngestV2Error::Timeout(message))
-                });
+                let persist_result = ingester.persist(persist_request).await;
                 (persist_summary, persist_result)
             };
             persist_futures.push(persist_future);
@@ -460,9 +449,18 @@ impl IngestRouter {
         } else {
             IngestWorkbench::new(ingest_request.subrequests, max_num_attempts)
         };
+        // A timeout does not cancel a remote WAL append. Keep the same in-flight
+        // request until the shared persist deadline; replaying it can duplicate documents.
+        let deadline = tokio::time::Instant::now() + PERSIST_REQUEST_TIMEOUT;
         while !workbench.is_complete() {
             workbench.new_attempt();
-            self.batch_persist(&mut workbench, commit_type).await;
+            if tokio::time::timeout_at(deadline, self.batch_persist(&mut workbench, commit_type))
+                .await
+                .is_err()
+            {
+                workbench.record_pending_timeouts();
+                break;
+            }
         }
         workbench.into_ingest_result().await
     }
@@ -483,8 +481,7 @@ impl IngestRouter {
                 timeout_duration.as_millis()
             );
             error!(
-                "ingest request should not timeout as there is a timeout on independent ingest \
-                 requests too. timeout after {}",
+                "ingest request timed out after {}",
                 timeout_duration.as_millis()
             );
             IngestV2Error::Timeout(message)
@@ -1861,3 +1858,7 @@ mod tests {
         assert_eq!(node.node_id, NodeId::from_str("test-ingester-0"));
     }
 }
+
+#[cfg(test)]
+#[path = "router_timeout_tests.rs"]
+mod timeout_tests;

@@ -114,6 +114,7 @@ quickwit-search = { workspace = true, features = ["testsuite"] }
 quickwit-storage = { workspace = true, features = ["testsuite"] }
 
 [features]
+descriptor-v1 = ["native-chemistry", "quickwit-doc-mapper/descriptor-v1", "quickwit-indexing/descriptor-v1", "quickwit-ingest/descriptor-v1"]
 native-chemistry = ["dep:tantivy-rdkit-mapper", "quickwit-doc-mapper/native-chemistry", "quickwit-indexing/native-chemistry"]
 datafusion = ["dep:quickwit-datafusion"]
 pprof = [

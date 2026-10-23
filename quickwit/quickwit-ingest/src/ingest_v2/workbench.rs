@@ -210,6 +210,16 @@ impl IngestWorkbench {
         }
     }
 
+    pub fn record_pending_timeouts(&mut self) {
+        for subworkbench in self.subworkbenches.values_mut() {
+            if subworkbench.is_pending() {
+                subworkbench.num_attempts += 1;
+                subworkbench.last_failure_opt =
+                    Some(SubworkbenchFailure::Persist(PersistFailureReason::Timeout));
+            }
+        }
+    }
+
     pub fn record_persist_failure(&mut self, persist_failure: &PersistFailure) {
         let failure = SubworkbenchFailure::Persist(persist_failure.reason());
         self.record_failure(persist_failure.subrequest_id, failure);
@@ -369,7 +379,7 @@ impl IngestSubworkbench {
         self.persist_success_opt.is_none() && self.last_failure_is_transient()
     }
 
-    /// Returns `false` if and only if the last attempt suggests retrying (on any node) will fail.
+    /// Returns whether the last failure permits an automatic retry.
     /// e.g.:
     /// - the index does not exist
     /// - the source does not exist.
@@ -379,6 +389,8 @@ impl IngestSubworkbench {
             Some(SubworkbenchFailure::SourceNotFound) => false,
             Some(SubworkbenchFailure::Internal) => true,
             Some(SubworkbenchFailure::NoShardsAvailable) => true,
+            // The append may have succeeded even though its acknowledgement was lost.
+            Some(SubworkbenchFailure::Persist(PersistFailureReason::Timeout)) => false,
             Some(SubworkbenchFailure::Persist(_)) => true,
             Some(SubworkbenchFailure::Unavailable) => true,
             Some(SubworkbenchFailure::RateLimited(_)) => true,
@@ -711,6 +723,39 @@ mod tests {
     }
 
     #[test]
+    fn test_pending_timeout_preserves_acknowledged_subrequests() {
+        let subrequests = (0..2)
+            .map(|subrequest_id| IngestSubrequest {
+                subrequest_id,
+                ..Default::default()
+            })
+            .collect();
+        let mut workbench = IngestWorkbench::new(subrequests, 5);
+        workbench.record_persist_success(PersistSuccess {
+            subrequest_id: 0,
+            num_persisted_docs: 3,
+            ..Default::default()
+        });
+        workbench.record_pending_timeouts();
+        assert_eq!(workbench.num_successes, 1);
+        assert_eq!(
+            workbench.subworkbenches[&0]
+                .persist_success_opt
+                .as_ref()
+                .unwrap()
+                .num_persisted_docs,
+            3
+        );
+        assert!(workbench.subworkbenches[&0].last_failure_opt.is_none());
+        assert!(matches!(
+            workbench.subworkbenches[&1].last_failure_opt,
+            Some(SubworkbenchFailure::Persist(PersistFailureReason::Timeout))
+        ));
+        assert!(workbench.is_complete());
+        assert_eq!(pending_subrequests(&workbench.subworkbenches).count(), 0);
+    }
+
+    #[test]
     fn test_ingest_workbench_record_persist_error_timeout() {
         let ingest_subrequests = vec![IngestSubrequest {
             subrequest_id: 0,
@@ -734,6 +779,8 @@ mod tests {
             Some(SubworkbenchFailure::Persist(PersistFailureReason::Timeout))
         ));
         assert!(subworkbench.persist_success_opt.is_none());
+        assert!(!subworkbench.is_pending());
+        assert!(workbench.is_complete());
     }
 
     #[test]

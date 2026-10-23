@@ -398,7 +398,7 @@ dependencies = [
  "arrow-select",
  "flatbuffers",
  "lz4_flex 0.13.1",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -1652,7 +1652,7 @@ dependencies = [
  "arrayvec",
  "cc",
  "cfg-if",
- "constant_time_eq",
+ "constant_time_eq 0.4.2",
  "cpufeatures 0.3.0",
 ]
 
@@ -1829,11 +1829,31 @@ dependencies = [
 
 [[package]]
 name = "bzip2"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bdb116a6ef3f6c3698828873ad02c3014b3c85cadb88496095628e3ef1e347f8"
+dependencies = [
+ "bzip2-sys",
+ "libc",
+]
+
+[[package]]
+name = "bzip2"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3a53fac24f34a81bc9954b5d6cfce0c21e18ec6959f44f56e8e90e4bb7c346c"
 dependencies = [
  "libbz2-rs-sys",
+]
+
+[[package]]
+name = "bzip2-sys"
+version = "0.1.13+1.0.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "225bff33b2141874fe80d71e07d6eec4f85c5c216453dd96388240f96e1acc14"
+dependencies = [
+ "cc",
+ "pkg-config",
 ]
 
 [[package]]
@@ -2011,7 +2031,7 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tracing-subscriber",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -2252,13 +2272,13 @@ version = "0.4.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ce2548391e9c1929c21bf6aa2680af86fe4c1b33e6cea9ac1cfeec0bd11218cf"
 dependencies = [
- "bzip2",
+ "bzip2 0.6.1",
  "compression-core",
  "flate2",
  "liblzma",
  "memchr",
- "zstd",
- "zstd-safe",
+ "zstd 0.13.3",
+ "zstd-safe 7.2.4",
 ]
 
 [[package]]
@@ -2392,6 +2412,12 @@ dependencies = [
  "quote",
  "unicode-xid",
 ]
+
+[[package]]
+name = "constant_time_eq"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "245097e9a4535ee1e3e3931fcfcd55a796a44c643e8596ff6566d68f09b87bbc"
 
 [[package]]
 name = "constant_time_eq"
@@ -2669,6 +2695,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "curl"
+version = "0.4.51"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef3ce06df3ac230a4f5c91bfd3e3961cd66f177bd9964c87deb3cce59a54fb7b"
+dependencies = [
+ "curl-sys",
+ "libc",
+ "openssl-probe 0.1.6",
+ "openssl-sys",
+ "schannel",
+ "socket2 0.6.4",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "curl-sys"
+version = "0.4.91+curl-8.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd39579123e45bf762716bb893d43886ed1cabe6289455be29a4f1d4e37afb06"
+dependencies = [
+ "cc",
+ "libc",
+ "libz-sys",
+ "openssl-sys",
+ "pkg-config",
+ "vcpkg",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "curve25519-dalek"
 version = "4.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2874,7 +2930,7 @@ dependencies = [
  "arrow-schema",
  "async-trait",
  "bytes",
- "bzip2",
+ "bzip2 0.6.1",
  "chrono",
  "datafusion-catalog",
  "datafusion-catalog-listing",
@@ -2916,7 +2972,7 @@ dependencies = [
  "tokio",
  "url",
  "uuid",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -3013,7 +3069,7 @@ dependencies = [
  "async-compression",
  "async-trait",
  "bytes",
- "bzip2",
+ "bzip2 0.6.1",
  "chrono",
  "datafusion-common",
  "datafusion-common-runtime",
@@ -3035,7 +3091,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "url",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -4231,6 +4287,16 @@ name = "fiat-crypto"
 version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28dea519a9695b9977216879a3ebfddf92f1c08c05d984f8996aecd6ecdc811d"
+
+[[package]]
+name = "filetime"
+version = "0.2.29"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c287a33c7f0a620c38e641e7f60827713987b3c0f26e8ddc9462cc69cf75759"
+dependencies = [
+ "cfg-if",
+ "libc",
+]
 
 [[package]]
 name = "find-msvc-tools"
@@ -6971,6 +7037,12 @@ dependencies = [
 
 [[package]]
 name = "openssl-probe"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d05e27ee213611ffe7d6348b942e8f942b37114c00cc03cec254295a4a17852e"
+
+[[package]]
+name = "openssl-probe"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c87def4c32ab89d880effc9e097653c8da5d6ef28e6b539d313baaacfbafcbe"
@@ -7298,7 +7370,7 @@ dependencies = [
  "thrift",
  "tokio",
  "twox-hash",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -7355,6 +7427,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "487f2ccd1e17ce8c1bfab3a65c89525af41cfad4c8659021a1e9a2aacd73b89b"
 
 [[package]]
+name = "password-hash"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7676374caaee8a325c9e7a2ae557f216c5563a171d6997b0ef8a65af35147700"
+dependencies = [
+ "base64ct",
+ "rand_core 0.6.4",
+ "subtle",
+]
+
+[[package]]
 name = "paste"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7395,6 +7478,18 @@ dependencies = [
  "prost 0.14.4",
  "prost-build 0.14.4",
  "serde",
+]
+
+[[package]]
+name = "pbkdf2"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "83a0692ec44e4cf1ef28ca317f14f8f07da2d95ec3fa01f86e4467b725e60917"
+dependencies = [
+ "digest 0.10.7",
+ "hmac 0.12.1",
+ "password-hash",
+ "sha2 0.10.9",
 ]
 
 [[package]]
@@ -7651,7 +7746,7 @@ dependencies = [
  "aes",
  "cbc",
  "der",
- "pbkdf2",
+ "pbkdf2 0.12.2",
  "scrypt",
  "sha2 0.10.9",
  "spki",
@@ -8235,6 +8330,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "protobuf"
+version = "2.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf7e6d18738ecd0902d30d1ad232c9125985a3422929b16c65517b38adc14f96"
+
+[[package]]
 name = "psl"
 version = "2.1.216"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8336,7 +8437,7 @@ dependencies = [
  "url",
  "uuid",
  "webpki-roots 1.0.8",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -8468,7 +8569,7 @@ dependencies = [
  "indicatif",
  "itertools 0.15.0",
  "numfmt",
- "openssl-probe",
+ "openssl-probe 0.2.1",
  "predicates",
  "procfs 0.18.0",
  "quickwit-actors",
@@ -8957,6 +9058,7 @@ dependencies = [
  "quickwit-proto",
  "rand 0.10.2",
  "rand_distr",
+ "rayon",
  "serde",
  "serde_json",
  "serde_json_borrow",
@@ -9305,7 +9407,7 @@ dependencies = [
  "tracing-opentelemetry",
  "ulid",
  "utoipa",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -9328,6 +9430,7 @@ dependencies = [
  "tantivy",
  "tantivy-fst",
  "tantivy-rdkit",
+ "tantivy-rdkit-mapper",
  "thiserror 2.0.18",
  "time",
  "tracing",
@@ -9482,7 +9585,7 @@ dependencies = [
  "tracing-subscriber",
  "utoipa",
  "warp",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -10482,7 +10585,7 @@ version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dab5152771c58876a2146916e53e35057e1a4dfa2b9df0f0305b07f611fdea4d"
 dependencies = [
- "openssl-probe",
+ "openssl-probe 0.2.1",
  "rustls-pki-types",
  "schannel",
  "security-framework",
@@ -10697,7 +10800,7 @@ version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0516a385866c09368f0b5bcd1caff3366aace790fcd46e2bb032697bb172fd1f"
 dependencies = [
- "pbkdf2",
+ "pbkdf2 0.12.2",
  "salsa20",
  "sha2 0.10.9",
 ]
@@ -11937,7 +12040,7 @@ dependencies = [
  "typetag",
  "uuid",
  "winapi",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -12026,12 +12129,16 @@ dependencies = [
 name = "tantivy-rdkit-mapper"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
  "cxx",
  "cxx-build",
  "pkg-config",
  "rdkit",
+ "serde_json",
+ "sha2 0.11.0",
  "tantivy",
  "tantivy-rdkit",
+ "tensorflow",
  "thiserror 2.0.18",
 ]
 
@@ -12045,7 +12152,7 @@ dependencies = [
  "tantivy-bitpacker",
  "tantivy-common",
  "tantivy-fst",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -12072,6 +12179,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 
 [[package]]
+name = "tar"
+version = "0.4.46"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f6221d9a6003c78398e3b239969f352578258df48c8eb051caadae0015bc840"
+dependencies = [
+ "filetime",
+ "libc",
+ "xattr",
+]
+
+[[package]]
 name = "tempfile"
 version = "3.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -12082,6 +12200,49 @@ dependencies = [
  "once_cell",
  "rustix 1.1.4",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tensorflow"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70a5aa784c60e18bcca7f79fde117bd7209a30247d3242e9127a7d9496e66272"
+dependencies = [
+ "byteorder",
+ "crc",
+ "half",
+ "libc",
+ "num-complex",
+ "protobuf",
+ "rustversion",
+ "tensorflow-internal-macros",
+ "tensorflow-sys",
+]
+
+[[package]]
+name = "tensorflow-internal-macros"
+version = "0.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4975c975b6d9c05a7cbf007ebc8e01e92e7e0907be9efcc74074857fc92ceb54"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
+name = "tensorflow-sys"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "24fa07ba31c6802a42d8fcb4ed2c400091d1a3da4531c1dea2c162b4b650505c"
+dependencies = [
+ "curl",
+ "flate2",
+ "libc",
+ "pkg-config",
+ "semver",
+ "tar",
+ "zip",
 ]
 
 [[package]]
@@ -12520,7 +12681,7 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -13247,7 +13408,7 @@ dependencies = [
  "uuid",
  "woothee",
  "xxhash-rust",
- "zstd",
+ "zstd 0.13.3",
 ]
 
 [[package]]
@@ -13963,6 +14124,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "xattr"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32e45ad4206f6d2479085147f02bc2ef834ac85886624a23575ae137c8aa8156"
+dependencies = [
+ "libc",
+ "rustix 1.1.4",
+]
+
+[[package]]
 name = "xmlparser"
 version = "0.13.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -14087,6 +14258,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "zip"
+version = "0.6.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "760394e246e4c28189f19d488c058bf16f564016aefac5d32bb1f3b51d5e9261"
+dependencies = [
+ "aes",
+ "byteorder",
+ "bzip2 0.4.4",
+ "constant_time_eq 0.1.5",
+ "crc32fast",
+ "crossbeam-utils",
+ "flate2",
+ "hmac 0.12.1",
+ "pbkdf2 0.11.0",
+ "sha1 0.10.6",
+ "time",
+ "zstd 0.11.2+zstd.1.5.2",
+]
+
+[[package]]
 name = "zlib-rs"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -14100,11 +14291,30 @@ checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
 
 [[package]]
 name = "zstd"
+version = "0.11.2+zstd.1.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "20cc960326ece64f010d2d2107537f26dc589a6573a316bd5b1dba685fa5fde4"
+dependencies = [
+ "zstd-safe 5.0.2+zstd.1.5.2",
+]
+
+[[package]]
+name = "zstd"
 version = "0.13.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e91ee311a569c327171651566e07972200e76fcfe2242a4fa446149a3881c08a"
 dependencies = [
- "zstd-safe",
+ "zstd-safe 7.2.4",
+]
+
+[[package]]
+name = "zstd-safe"
+version = "5.0.2+zstd.1.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d2a5585e04f9eea4b2a3d1eca508c4dee9592a89ef6f450c11719da0726f4db"
+dependencies = [
+ "libc",
+ "zstd-sys",
 ]
 
 [[package]]

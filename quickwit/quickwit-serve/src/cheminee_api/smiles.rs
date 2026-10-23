@@ -96,7 +96,7 @@ pub fn smiles_similarity_handler(
         .then(search_smiles)
 }
 
-async fn search_smiles(
+pub(super) async fn search_smiles(
     index_id: String,
     request: SmilesSimilarityRequest,
     service: Arc<dyn SearchService>,

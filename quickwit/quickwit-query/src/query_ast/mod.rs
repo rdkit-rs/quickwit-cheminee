@@ -21,6 +21,8 @@ use tantivy::schema::Schema as TantivySchema;
 
 use crate::tokenizers::TokenizerManager;
 
+mod graph_query;
+pub use graph_query::GraphQueryAst;
 mod tanimoto_query;
 pub use tanimoto_query::TanimotoQueryAst;
 mod bool_query;
@@ -59,6 +61,7 @@ use crate::{BooleanOperand, InvalidQuery, NotNaNf32};
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
 pub enum QueryAst {
+    Graph(GraphQueryAst),
     Tanimoto(TanimotoQueryAst),
     Bool(BoolQuery),
     Term(TermQuery),
@@ -85,6 +88,11 @@ impl QueryAst {
         default_search_fields: &[String],
     ) -> anyhow::Result<QueryAst> {
         match self {
+            QueryAst::Graph(mut query) => {
+                query.candidates =
+                    Box::new(query.candidates.parse_user_query(default_search_fields)?);
+                Ok(QueryAst::Graph(query))
+            }
             QueryAst::Tanimoto(mut query) => {
                 query.candidates =
                     Box::new(query.candidates.parse_user_query(default_search_fields)?);
@@ -248,6 +256,7 @@ impl BuildTantivyAst for QueryAst {
         context: &BuildTantivyAstContext,
     ) -> Result<TantivyQueryAst, InvalidQuery> {
         match self {
+            QueryAst::Graph(query) => query.build_tantivy_ast_call(context),
             QueryAst::Tanimoto(query) => query.build_tantivy_ast_call(context),
             QueryAst::Bool(bool_query) => bool_query.build_tantivy_ast_call(context),
             QueryAst::Term(term_query) => term_query.build_tantivy_ast_call(context),

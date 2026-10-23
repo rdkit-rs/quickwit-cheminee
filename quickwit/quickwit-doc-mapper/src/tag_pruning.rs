@@ -40,6 +40,7 @@ pub fn extract_tags_from_query(query_ast: QueryAst) -> Option<TagFilterAst> {
 
 fn extract_unsimplified_tags_filter_ast(query_ast: QueryAst) -> UnsimplifiedTagFilterAst {
     match query_ast {
+        QueryAst::Graph(query) => extract_unsimplified_tags_filter_ast(*query.candidates),
         QueryAst::Tanimoto(query) => extract_unsimplified_tags_filter_ast(*query.candidates),
         QueryAst::Bool(bool_query) => {
             let mut clause_with_resolved_occur: Vec<(Occur, UnsimplifiedTagFilterAst)> = Vec::new();

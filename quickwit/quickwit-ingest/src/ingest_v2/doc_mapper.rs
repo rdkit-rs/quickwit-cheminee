@@ -24,6 +24,7 @@ use quickwit_proto::ingest::{
     DocBatchV2, DocFormat, IngestV2Error, IngestV2Result, ParseFailure, ParseFailureReason,
 };
 use quickwit_proto::types::{DocMappingUid, DocUid};
+use rayon::prelude::*;
 use serde_json_borrow::Value as JsonValue;
 use tracing::{info, instrument};
 
@@ -115,8 +116,25 @@ fn validate_doc_batch_impl(
 ) -> (DocBatchV2, Vec<ParseFailure>) {
     let mut parse_failures: Vec<ParseFailure> = Vec::new();
     let mut invalid_doc_ids: HashSet<DocUid> = HashSet::default();
-    for (doc_uid, doc_bytes) in doc_batch.docs() {
-        if let Err((reason, message)) = validate_document(doc_mapper, &doc_bytes) {
+    // This function already runs in Quickwit's CPU pool. Nested Rayon work uses that
+    // pool, so full native chemistry can use the configured cores without blocking
+    // Tokio or creating a second preparation service. Indexed collection preserves
+    // input order, including per-document rejection reporting.
+    let validation_results: Vec<_> = if doc_mapper.has_descriptor_v1_preparation() {
+        doc_batch
+            .docs()
+            .collect::<Vec<_>>()
+            .into_par_iter()
+            .map(|(doc_uid, doc_bytes)| (doc_uid, validate_document(doc_mapper, &doc_bytes)))
+            .collect()
+    } else {
+        doc_batch
+            .docs()
+            .map(|(doc_uid, doc_bytes)| (doc_uid, validate_document(doc_mapper, &doc_bytes)))
+            .collect()
+    };
+    for (doc_uid, result) in validation_results {
+        if let Err((reason, message)) = result {
             let parse_failure = ParseFailure {
                 doc_uid: Some(doc_uid),
                 reason: reason as i32,
@@ -298,5 +316,45 @@ mod tests {
         let (valid_doc_uid, valid_doc_bytes) = doc_batch.docs().next().unwrap();
         assert_eq!(valid_doc_uid, DocUid::for_test(3));
         assert_eq!(&valid_doc_bytes, r#"{"doc": "test-doc-000"}"#.as_bytes());
+    }
+
+    #[cfg(feature = "descriptor-v1")]
+    #[test]
+    fn full_chemistry_parallel_validation_preserves_raw_bytes_and_rejection_order() {
+        let config: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../tantivy-rdkit-mapper/tests/fixtures/descriptor_v1.index.json"
+        ))
+        .unwrap();
+        let mapper =
+            try_build_doc_mapper(&serde_json::to_string(&config["doc_mapping"]).unwrap()).unwrap();
+        let raw = [
+            r#"{"record_id":1,"input_smiles":"CCO","extra_data":{"record_id":1}}"#,
+            "",
+            r#"{"record_id":3,"input_smiles":"invalid-smiles"}"#,
+            r#"{"record_id":4,"input_smiles":"CCO","NumHeavyAtoms":99}"#,
+            r#"{"record_id":5,"input_smiles":"CCO","extra_data":{"record_id":5}}"#,
+        ];
+        let batch = DocBatchV2::for_test(raw);
+        let (validated, failures) = validate_doc_batch_impl(batch, &mapper);
+        assert_eq!(
+            validated.doc_uids,
+            vec![DocUid::for_test(0), DocUid::for_test(4)]
+        );
+        assert_eq!(
+            failures.iter().map(|f| f.doc_uid()).collect::<Vec<_>>(),
+            vec![
+                DocUid::for_test(1),
+                DocUid::for_test(2),
+                DocUid::for_test(3)
+            ]
+        );
+        assert_eq!(failures[0].reason(), ParseFailureReason::InvalidJson);
+        assert_eq!(failures[1].reason(), ParseFailureReason::InvalidSchema);
+        assert_eq!(failures[2].reason(), ParseFailureReason::InvalidSchema);
+        let bytes = validated
+            .docs()
+            .map(|(_, bytes)| bytes.to_vec())
+            .collect::<Vec<_>>();
+        assert_eq!(bytes, vec![raw[0].as_bytes(), raw[4].as_bytes()]);
     }
 }

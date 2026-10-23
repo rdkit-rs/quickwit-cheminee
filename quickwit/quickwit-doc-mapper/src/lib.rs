@@ -23,7 +23,7 @@
 #[allow(missing_docs)]
 mod chemistry;
 mod doc_mapper;
-pub use chemistry::ChemistryMapping;
+pub use chemistry::{ChemistryMapping, DescriptorLayout};
 mod doc_mapping;
 mod error;
 mod query_builder;
@@ -80,6 +80,7 @@ pub enum Cardinality {
 #[openapi(components(schemas(
     DocMappingUid,
     ChemistryMapping,
+    DescriptorLayout,
     tantivy_rdkit::FingerprintSpec,
     tantivy_rdkit::FingerprintFormat,
     FastFieldOptions,
