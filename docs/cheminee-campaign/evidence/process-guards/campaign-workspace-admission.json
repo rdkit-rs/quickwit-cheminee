@@ -1,0 +1,39 @@
+{
+  "phase": "workspace-check",
+  "created_utc": "2026-10-16T15:24:03.031317+00:00",
+  "pid_namespace": "pid:[4026532218]",
+  "boot_id": "b496a385-e104-4ba3-8fc9-1b62971cb5c3",
+  "runner_pid": 132191,
+  "runner_start_ticks": "3563638",
+  "cwd": "/workspace/quickwit-cheminee-pr3-inspection/quickwit",
+  "policy_sha256": "694b4a0b9c6b462b13488989ab1efa0a608bbc3f23bfd9f4e541141babcc7a98",
+  "command": [
+    "bash",
+    "scripts/ci/with-krb5-c23.sh",
+    "clippy",
+    "--locked",
+    "--workspace",
+    "--tests",
+    "--all-features",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "environment": {
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_BUILD_JOBS": "4",
+    "RUSTUP_TOOLCHAIN": "1.96.1",
+    "CFLAGS": null,
+    "PKG_CONFIG_PATH": null,
+    "QW_KRB5_CRATE": null
+  },
+  "initial_free_bytes": 762191872,
+  "reserve_bytes": 1073741824,
+  "emergency_floor_bytes": 671088640,
+  "growth_budget_mib": 4096,
+  "samples": [],
+  "status": "refused_headroom",
+  "required_free_bytes": 5368709120
+}

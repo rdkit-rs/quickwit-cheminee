@@ -317,7 +317,11 @@ impl From<PersistFailureReason> for IngestFailureReason {
             PersistFailureReason::NoShardsAvailable => IngestFailureReason::NoShardsAvailable,
             PersistFailureReason::WalFull => IngestFailureReason::WalFull,
             PersistFailureReason::Timeout => IngestFailureReason::Timeout,
-            PersistFailureReason::NodeUnavailable => IngestFailureReason::NoShardsAvailable,
+            PersistFailureReason::NodeUnavailable
+            | PersistFailureReason::NoShardsAvailableBeforeAppend
+            | PersistFailureReason::NodeUnavailableBeforeAppend => {
+                IngestFailureReason::NoShardsAvailable
+            }
         }
     }
 }

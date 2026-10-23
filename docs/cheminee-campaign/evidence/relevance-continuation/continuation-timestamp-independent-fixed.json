@@ -1,0 +1,249 @@
+{
+  "status": "passed",
+  "scope": "independent direct timestamp-candidate regression only",
+  "review_time_utc": "2026-10-16T13:02:25.739863+00:00",
+  "original_probe_sha256": "f611947fa0f2fed2a15c62c5bb7236e64f006396d6078ef7bddb6b68ee94a0a0",
+  "running_processes": [
+    {
+      "pid": 35207,
+      "command": [
+        "/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/quickwit",
+        "run",
+        "--config",
+        "/workspace/recovery/composable-native-run1/root.json",
+        "--service",
+        "metastore",
+        "--service",
+        "control-plane",
+        "--service",
+        "indexer",
+        "--service",
+        "janitor"
+      ],
+      "binary_sha256": "d55f0a3d93d698a609e13f1b2688af92fd66d4ee5c777efceb7098f9b6be74da"
+    },
+    {
+      "pid": 35208,
+      "command": [
+        "/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/quickwit",
+        "run",
+        "--config",
+        "/workspace/recovery/composable-native-run1/leaf-a.json",
+        "--service",
+        "searcher"
+      ],
+      "binary_sha256": "d55f0a3d93d698a609e13f1b2688af92fd66d4ee5c777efceb7098f9b6be74da"
+    },
+    {
+      "pid": 35209,
+      "command": [
+        "/workspace/quickwit-cheminee-pr3-inspection/quickwit/target/debug/quickwit",
+        "run",
+        "--config",
+        "/workspace/recovery/composable-native-run1/leaf-b.json",
+        "--service",
+        "searcher"
+      ],
+      "binary_sha256": "d55f0a3d93d698a609e13f1b2688af92fd66d4ee5c777efceb7098f9b6be74da"
+    }
+  ],
+  "checks": [
+    {
+      "case": "unbounded",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0.5
+          }
+        },
+        "size": 0,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QWZXRSG0NEGWYB5ZK22G3. For instance, split 01M51QWZXRSG0NEGWYB5ZK22G3 failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      }
+    },
+    {
+      "case": "unbounded",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0.5
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QWZXRSG0NEGWYB5ZK22G3. For instance, split 01M51QWZXRSG0NEGWYB5ZK22G3 failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      }
+    },
+    {
+      "case": "explicit_timestamp_candidates",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0.5,
+            "candidates": {
+              "type": "range",
+              "field": "observed_at",
+              "lower_bound": {
+                "Included": "2020-01-01T00:00:00Z"
+              },
+              "upper_bound": {
+                "Included": "2020-12-31T00:00:00Z"
+              }
+            }
+          }
+        },
+        "size": 0,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "status": 200,
+      "response": {
+        "took": 18,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 1,
+          "successful": 1,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 1,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      }
+    },
+    {
+      "case": "explicit_timestamp_candidates",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0.5,
+            "candidates": {
+              "type": "range",
+              "field": "observed_at",
+              "lower_bound": {
+                "Included": "2020-01-01T00:00:00Z"
+              },
+              "upper_bound": {
+                "Included": "2020-12-31T00:00:00Z"
+              }
+            }
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "status": 200,
+      "response": {
+        "took": 25,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 1,
+          "successful": 1,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 1,
+            "relation": "eq"
+          },
+          "hits": [
+            {
+              "_index": "composable-timestamp-domain",
+              "_source": {
+                "morgan_eb065480892a33b5cf6dad4e503ded4a8823635e5a0b6975a4ec8628011ccaf9": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "observed_at": "2020-01-01T00:00:00Z",
+                "record_id": 1
+              },
+              "sort": [
+                1.0,
+                1
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -13,7 +13,10 @@
 // limitations under the License.
 
 use std::collections::HashSet;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex as StdMutex};
+
+type RouterProbe = (IngestRouter, Arc<StdMutex<Vec<DocUid>>>, Arc<AtomicUsize>);
 
 use quickwit_proto::control_plane::MockControlPlaneService;
 use quickwit_proto::ingest::ingester::{
@@ -26,16 +29,17 @@ use quickwit_proto::types::{DocUid, IndexUid, Position, ShardId};
 use super::*;
 use crate::IngesterPoolEntry;
 
-async fn delayed_router(
-    delay: Duration,
-    return_timeout: bool,
-) -> (IngestRouter, Arc<StdMutex<Vec<DocUid>>>) {
+async fn delayed_router(delay: Duration, outcome: &'static str) -> RouterProbe {
     let persisted = Arc::new(StdMutex::new(Vec::new()));
     let recorded = persisted.clone();
+    let calls = Arc::new(AtomicUsize::new(0));
+    let call_counter = calls.clone();
     let layer = tower::layer::layer_fn(move |_inner| {
         let recorded = recorded.clone();
+        let call_counter = call_counter.clone();
         tower::service_fn(move |request: PersistRequest| {
             let recorded = recorded.clone();
+            call_counter.fetch_add(1, Ordering::SeqCst);
             let task = tokio::spawn(async move {
                 tokio::time::sleep(delay).await;
                 let mut successes = Vec::new();
@@ -57,15 +61,47 @@ async fn delayed_router(
                         parse_failures: Vec::new(),
                     });
                 }
-                if return_timeout {
-                    Err(IngestV2Error::Timeout("acknowledgement lost".to_string()))
-                } else {
-                    Ok(PersistResponse {
-                        leader_id: request.leader_id,
-                        successes,
-                        failures: Vec::new(),
-                        routing_update: None,
-                    })
+                match outcome {
+                    "timeout" => Err(IngestV2Error::Timeout("acknowledgement lost".into())),
+                    "internal" => Err(IngestV2Error::Internal("acknowledgement lost".into())),
+                    "unavailable" => Err(IngestV2Error::Unavailable("acknowledgement lost".into())),
+                    _ => {
+                        let failures = if matches!(
+                            outcome,
+                            "node_unavailable" | "remote_no_shards" | "unspecified"
+                        ) {
+                            successes
+                                .iter()
+                                .map(|success| quickwit_proto::ingest::ingester::PersistFailure {
+                                    subrequest_id: success.subrequest_id,
+                                    reason: if outcome == "node_unavailable" {
+                                        PersistFailureReason::NodeUnavailable
+                                    } else if outcome == "remote_no_shards" {
+                                        PersistFailureReason::NoShardsAvailable
+                                    } else {
+                                        PersistFailureReason::Unspecified
+                                    } as i32,
+                                    ..Default::default()
+                                })
+                                .collect()
+                        } else {
+                            Vec::new()
+                        };
+                        if outcome == "missing"
+                            || matches!(
+                                outcome,
+                                "node_unavailable" | "remote_no_shards" | "unspecified"
+                            )
+                        {
+                            successes.clear();
+                        }
+                        Ok(PersistResponse {
+                            leader_id: request.leader_id,
+                            successes,
+                            failures,
+                            routing_update: None,
+                        })
+                    }
                 }
             });
             async move { task.await.unwrap() }
@@ -104,7 +140,7 @@ async fn delayed_router(
             ..Default::default()
         }],
     );
-    (router, persisted)
+    (router, persisted, calls)
 }
 
 fn request() -> IngestRequestV2 {
@@ -135,7 +171,7 @@ fn assert_ids_once(persisted: &StdMutex<Vec<DocUid>>) {
 
 #[tokio::test(start_paused = true)]
 async fn slow_persist_keeps_original_acknowledgement_and_ids() {
-    let (router, persisted) = delayed_router(Duration::from_secs(1), false).await;
+    let (router, persisted, calls) = delayed_router(Duration::from_secs(1), "success").await;
     let response = router
         .retry_batch_persist(request(), MAX_PERSIST_ATTEMPTS)
         .await;
@@ -144,11 +180,12 @@ async fn slow_persist_keeps_original_acknowledgement_and_ids() {
     assert_eq!(response.successes[0].num_ingested_docs, 3);
     tokio::time::sleep(Duration::from_secs(5)).await;
     assert_ids_once(&persisted);
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
 }
 
 #[tokio::test(start_paused = true)]
 async fn persist_deadline_does_not_replay_a_late_append() {
-    let (router, persisted) = delayed_router(Duration::from_secs(3), false).await;
+    let (router, persisted, calls) = delayed_router(Duration::from_secs(3), "success").await;
     let start = tokio::time::Instant::now();
     let response = router
         .retry_batch_persist(request(), MAX_PERSIST_ATTEMPTS)
@@ -159,11 +196,12 @@ async fn persist_deadline_does_not_replay_a_late_append() {
     assert_eq!(response.failures[0].reason(), IngestFailureReason::Timeout);
     tokio::time::sleep(Duration::from_secs(5)).await;
     assert_ids_once(&persisted);
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
 }
 
 #[tokio::test(start_paused = true)]
 async fn returned_persist_timeout_does_not_replay_committed_ids() {
-    let (router, persisted) = delayed_router(Duration::from_millis(10), true).await;
+    let (router, persisted, calls) = delayed_router(Duration::from_millis(10), "timeout").await;
     let response = router
         .retry_batch_persist(request(), MAX_PERSIST_ATTEMPTS)
         .await;
@@ -171,4 +209,32 @@ async fn returned_persist_timeout_does_not_replay_committed_ids() {
     assert_eq!(response.failures.len(), 1);
     assert_eq!(response.failures[0].reason(), IngestFailureReason::Timeout);
     assert_ids_once(&persisted);
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+}
+
+#[tokio::test(start_paused = true)]
+async fn ambiguous_persist_acknowledgements_never_replay_appended_ids() {
+    for outcome in [
+        "internal",
+        "unavailable",
+        "node_unavailable",
+        "remote_no_shards",
+        "unspecified",
+        "missing",
+    ] {
+        let (router, persisted, calls) = delayed_router(Duration::from_millis(10), outcome).await;
+        let response = router
+            .retry_batch_persist(request(), MAX_PERSIST_ATTEMPTS)
+            .await;
+        assert!(response.successes.is_empty(), "{outcome}");
+        assert_eq!(response.failures.len(), 1, "{outcome}");
+        assert_eq!(
+            response.failures[0].reason(),
+            IngestFailureReason::Internal,
+            "{outcome}"
+        );
+        tokio::time::sleep(Duration::from_secs(5)).await;
+        assert_ids_once(&persisted);
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
 }

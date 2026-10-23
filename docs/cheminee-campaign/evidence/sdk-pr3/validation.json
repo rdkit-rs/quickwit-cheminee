@@ -1,0 +1,42 @@
+{
+  "scope": "PR3 local generated SDK candidate; no publication or overall release approval",
+  "server_revision": "a3c9789a179ae611a31da03a9f7fa833dc416fd0",
+  "gem_version": "0.9.1.pre.pr3",
+  "gem_sha256": "3644fe2601ca00d94d2affe8786e7e7a85d650c493fe82f11b6ff95976a48cf0",
+  "ruby": "3.3.6",
+  "generator": "7.11.0",
+  "tests": {
+    "server_schema": 3,
+    "server_chemistry_non_native": 6,
+    "server_ingest": 13,
+    "schema_projection": 7,
+    "installed_gem": 12,
+    "installed_gem_assertions": 153,
+    "live_smoke": "non-native dynamic index, 2 accepted/1 rejected, filtered search, count, delete"
+  },
+  "review": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "design": "canonical wire schema and guarded template approach reviewed",
+    "readiness": "approved local integration only after independently rerunning installed tests, projection, provenance and reproduction",
+    "post_review_change": "README template recovery wording updated; regenerated README and template provenance only"
+  },
+  "recovery": {
+    "bundle_sha256": "3143466d909bf0be52901afbae0497a576679e5e64592090a96c6bff22733bbe",
+    "bundle_bytes": 27904,
+    "exact_head": "276bd1ab7455d0141bd8d9427d00acb1bb7ad845",
+    "base": "6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa",
+    "clean_worktree": "/workspace/quickwit-cheminee-query",
+    "full_archive_verified_in_this_environment": false
+  },
+  "remaining": [
+    "native chemistry success",
+    "DSL SDK integration",
+    "live failed-split Ruby test",
+    "refresh safety",
+    "performance/corpus recovery",
+    "Compose and Elasticsearch resource measurements",
+    "durability and HA",
+    "GitHub workflow execution"
+  ]
+}

@@ -82,8 +82,13 @@ jobs:
             rust_src:
               - quickwit/**/*.rs
               - quickwit/**/*.toml
+              - quickwit/Cargo.lock
+              - quickwit/scripts/ci/lru-backport-locks/*.lock
               - quickwit/**/*.proto
               - quickwit/rest-api-tests/**
+              - quickwit/scripts/ci/python_test_env.py
+              - quickwit/scripts/ci/test_python_test_env.py
+              - quickwit/scripts/ci/lru_lifetime_tests.py
               - .github/workflows/ci.yml
       - name: Setup stable Rust Toolchain
         if: steps.modified.outputs.rust_src == 'true'
@@ -105,6 +110,26 @@ jobs:
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: cargo check --features=postgres --tests --bin quickwit
         working-directory: ./quickwit
+      - name: LRU backport library and panic-safety tests
+        if: always() && steps.modified.outputs.rust_src == 'true'
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/lru-backport-target
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/lru-backport-tests"
+          for version in 0.16.4 0.17.0; do
+            package="$RUNNER_TEMP/lru-backport-tests/lru-$version"
+            cp -R "vendor/lru-$version" "$package"
+            cp "scripts/ci/lru-backport-locks/$version.lock" "$package/Cargo.lock"
+            mkdir "$package/tests"
+            cp scripts/ci/lru_backport_regression.rs "$package/tests/backport.rs"
+            # 0.17 disables automatic test discovery; register only in the test copy.
+            printf '\n[[test]]\nname = "backport"\npath = "tests/backport.rs"\n' >> "$package/Cargo.toml"
+            cargo test --locked --manifest-path "$package/Cargo.toml" --lib --test backport -j 1
+            cargo test --locked --manifest-path "$package/Cargo.toml" --lib --test backport --no-default-features -j 1
+          done
+          python3 scripts/ci/lru_lifetime_tests.py --output "$RUNNER_TEMP/lru-lifetime-tests"
+        working-directory: ./quickwit
       - name: cargo check with metrics
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: cargo check --features=postgres,metrics --tests --bin quickwit
@@ -113,15 +138,24 @@ jobs:
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: cargo nextest run --features=postgres,metrics --retries 1
         working-directory: ./quickwit
+      - name: Dependency remediation regression tests
+        if: always() && steps.modified.outputs.rust_src == 'true'
+        run: |
+          cargo test --locked -p quickwit-transport --lib
+          cargo test --locked -p quickwit-integration-tests tls_tests -- --test-threads=1
+          cargo check --locked -p quickwit-storage --features gcs --lib
+          cargo nextest run --locked -p quickwit-storage --features gcs,testsuite -E 'test(opendal_storage::google_cloud_storage)'
+          cargo nextest run --locked -p quickwit-serve --features pprof -E 'test(developer_api::pprof)'
+        working-directory: ./quickwit
       - name: Install python packages
         if: always() && steps.modified.outputs.rust_src == 'true'
         run: |
-          pip install --user --require-hashes -r ${{ github.workspace }}/.github/workflows/requirements.txt
-          pipenv install --deploy --ignore-pipfile
+          python3 -I -m unittest discover -s ../scripts/ci -p test_python_test_env.py
+          python3 -I ../scripts/ci/python_test_env.py --lock Pipfile.lock --venv "$RUNNER_TEMP/quickwit-rest-python"
         working-directory: ./quickwit/rest-api-tests
       - name: Run REST API tests
         if: always() && steps.modified.outputs.rust_src == 'true'
-        run: pipenv run python3 ./run_tests.py --binary ../target/debug/quickwit
+        run: '"$RUNNER_TEMP/quickwit-rest-python/bin/python" ./run_tests.py --binary ../target/debug/quickwit'
         working-directory: ./quickwit/rest-api-tests
 
   lints:
@@ -153,6 +187,7 @@ jobs:
               - quickwit/**/*.proto
               - .github/workflows/ci.yml
               - quickwit/scripts/ci/**
+              - quickwit/Cargo.lock
             migrations:
               - quickwit/quickwit-metastore/migrations/**
               - quickwit/diesel-guard.toml

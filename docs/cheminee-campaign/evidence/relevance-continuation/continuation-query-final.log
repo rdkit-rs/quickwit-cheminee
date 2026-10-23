@@ -1,0 +1,10 @@
+   Compiling quickwit-query v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-query)
+    Finished `test` profile [unoptimized] target(s) in 6.37s
+     Running unittests src/lib.rs (target/debug/deps/quickwit_query-32913bc9aec15de4)
+
+running 2 tests
+test elastic_query_dsl::bool_query::tests::impossible_minimum_preserves_operands_for_validation ... ok
+test query_ast::bool_query::tests::impossible_minimum_validates_inputs_before_becoming_empty ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 160 filtered out; finished in 0.00s
+

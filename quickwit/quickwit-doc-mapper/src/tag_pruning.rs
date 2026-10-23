@@ -40,8 +40,9 @@ pub fn extract_tags_from_query(query_ast: QueryAst) -> Option<TagFilterAst> {
 
 fn extract_unsimplified_tags_filter_ast(query_ast: QueryAst) -> UnsimplifiedTagFilterAst {
     match query_ast {
-        QueryAst::Graph(query) => extract_unsimplified_tags_filter_ast(*query.candidates),
-        QueryAst::Tanimoto(query) => extract_unsimplified_tags_filter_ast(*query.candidates),
+        QueryAst::FingerprintContains(query) => chemistry_candidate_tags(*query.candidates),
+        QueryAst::Graph(query) => chemistry_candidate_tags(*query.candidates),
+        QueryAst::Tanimoto(query) => chemistry_candidate_tags(*query.candidates),
         QueryAst::Bool(bool_query) => {
             let mut clause_with_resolved_occur: Vec<(Occur, UnsimplifiedTagFilterAst)> = Vec::new();
             for (occur, children) in [
@@ -118,6 +119,15 @@ fn extract_unsimplified_tags_filter_ast(query_ast: QueryAst) -> UnsimplifiedTagF
         QueryAst::Regex(_) => UnsimplifiedTagFilterAst::Uninformative,
         QueryAst::Cache(cache_node) => extract_unsimplified_tags_filter_ast(*cache_node.inner),
     }
+}
+
+// Candidates are necessary, not sufficient: the chemistry predicate is unknown to tags.
+// Keeping that unknown conjunct prevents NOT(chemistry(NOT(tag))) from becoming tag.
+fn chemistry_candidate_tags(candidates: QueryAst) -> UnsimplifiedTagFilterAst {
+    UnsimplifiedTagFilterAst::And(vec![
+        extract_unsimplified_tags_filter_ast(candidates),
+        UnsimplifiedTagFilterAst::Uninformative,
+    ])
 }
 
 /// Intermediary AST that may contain leaf that are
@@ -387,7 +397,7 @@ pub fn no_tag(tag: impl ToString) -> TagFilterAst {
 #[cfg(test)]
 mod test {
     use quickwit_query::BooleanOperand;
-    use quickwit_query::query_ast::{QueryAst, UserInputQuery};
+    use quickwit_query::query_ast::{BoolQuery, QueryAst, UserInputQuery};
 
     use super::extract_tags_from_query;
     use crate::tag_pruning::TagFilterAst;
@@ -501,5 +511,48 @@ mod test {
         assert!(!super::match_tag_field_name("tagfield", "tag:val"));
         assert!(!super::match_tag_field_name("tagfield", "tagfiele:val"));
         assert!(!super::match_tag_field_name("tagfield", "t:val"));
+    }
+
+    #[test]
+    fn chemical_verification_remains_unknown_under_negation() {
+        for operator in ["tanimoto", "fingerprint_contains", "graph"] {
+            let mut value = serde_json::json!({
+                "type": operator,
+                "spec": {"format":"morgan-r3-2048-lsb0-v1", "rdkit_version":"2026.09.1", "preparation_id":"sanitize-only-v1"},
+                "candidates": {"type":"term", "field":"family", "value":"a"}
+            });
+            match operator {
+                "tanimoto" => {
+                    value["fingerprint_hex"] = serde_json::json!(format!("01{}", "00".repeat(255)));
+                    value["minimum"] = serde_json::json!(0.5);
+                }
+                "fingerprint_contains" => {
+                    value["fingerprint_hex"] = serde_json::json!(format!("01{}", "00".repeat(255)));
+                    value["direction"] = serde_json::json!("document_contains_query");
+                }
+                _ => {
+                    value["prepared_smiles"] = serde_json::json!("CC");
+                    value["prepared_field"] = serde_json::json!("prepared_smiles");
+                    value["predicate"] = serde_json::json!("substructure");
+                    value["ranking"] = serde_json::json!("best_match");
+                    value["use_chirality"] = serde_json::json!(false);
+                    value["include_identity"] = serde_json::json!(true);
+                }
+            }
+            let positive: QueryAst = serde_json::from_value(value.clone()).unwrap();
+            assert!(extract_tags_from_query(positive).is_some());
+            let candidate: QueryAst = serde_json::from_value(value["candidates"].clone()).unwrap();
+            value["candidates"] = serde_json::to_value(QueryAst::Bool(BoolQuery {
+                must_not: vec![candidate],
+                ..Default::default()
+            }))
+            .unwrap();
+            let negative_candidates: QueryAst = serde_json::from_value(value).unwrap();
+            let negated = QueryAst::Bool(BoolQuery {
+                must_not: vec![negative_candidates],
+                ..Default::default()
+            });
+            assert_eq!(extract_tags_from_query(negated), None, "{operator}");
+        }
     }
 }

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a267110298185b224bf2b9b6f5c887a813d38c8866cc8396db4ab2fdffb1a32d"
+            "sha256": "ae27f0ca1d561646a433db3e5703d4f0cfe32d4a78bcb72ff5b8c3603a2f5708"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,19 +16,12 @@
         ]
     },
     "default": {
-        "awscli-local": {
-            "hashes": [
-                "sha256:07c532c372753bf5f15426451dc91d6eec9de8779748049329a9a882bdac8a0b",
-                "sha256:1901ebef343ba8cbde06f9f6406b5415ef53e93296718c2c31c9d49b0b09bd9d"
-            ],
-            "index": "pypi",
-            "version": "==0.22.2"
-        },
         "boto3": {
             "hashes": [
                 "sha256:75752e7dc445131700a58926a50ca705794232f0f47d0e21edb59fbf1898db95",
                 "sha256:b1a5a203511e594872b39a129365f02eb5846eea990629e8daf47a3c01e7fd49"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==1.40.59"
         },
@@ -47,12 +40,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==1.0.1"
-        },
-        "localstack-client": {
-            "hashes": [
-                "sha256:732a07e23fffd6a581af2714bbe006ad6f884ac4f8ac955211a8a63321cdc409"
-            ],
-            "version": "==2.10"
         },
         "python-dateutil": {
             "hashes": [
@@ -80,12 +67,12 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c",
-                "sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897"
+                "sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+                "sha256:63bf2ead4c879426ebf22ef2a781eeb4aa3b4ae798a0435506f8687fd5bb9b63"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==2.7.0"
+            "version": "==2.8.0"
         }
     },
     "develop": {}

@@ -21,6 +21,7 @@ use crate::{InvalidQuery, NotNaNf32};
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TanimotoQueryAst {
+    #[serde(default = "super::chemistry_match_all")]
     pub candidates: Box<QueryAst>,
     pub spec: FingerprintSpec,
     pub fingerprint_hex: String,
@@ -41,7 +42,7 @@ impl BuildTantivyAst for TanimotoQueryAst {
             .map_err(|error| InvalidQuery::InvalidChemistry(error.to_string()))?;
         let query = TanimotoQuery::new(
             candidates,
-            context.schema,
+            context.chemistry_schema,
             &self.spec,
             fingerprint,
             self.minimum.into(),

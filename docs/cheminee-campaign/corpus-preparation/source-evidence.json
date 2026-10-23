@@ -1,0 +1,73 @@
+{
+  "download": {
+    "all_executor_public_download_payload_bytes": 51586949,
+    "budget_bytes": 262144000,
+    "bytes": 51584291,
+    "redirect_or_mirror_used": false,
+    "sha256": "7f4450e3ebecebe79c3a2a55950c93daddee071120daf64a163d03481e811d34",
+    "source": "https://files.pythonhosted.org/packages/ca/04/335f23e9ae95ca381ac7c3f335303dbbeb0f8a604d167891cf60c9360178/molsets-0.3.1-py3-none-any.whl"
+  },
+  "durability": "/tmp data is ephemeral; recreate from retained script and verify manifest in the admitted environment; not uploaded or committed by this agent",
+  "historical_inputs": [
+    {
+      "bytes": 29830,
+      "path": "/workspace/recovery/pr3-native-preparation-report.md",
+      "sha256": "2202317f8e13455bccaac39ebb4c246f0e54e395afedcd847eabd4c3f14fe079"
+    },
+    {
+      "bytes": 248516,
+      "path": "/workspace/recovery/frozen-tuning-checkpoint.read-reconstruction.json",
+      "sha256": "63e58fa4f5be28ec0e61f3496d43657171a5a8a463412d0b05507dd3558abbeb"
+    }
+  ],
+  "historical_read_result": "selection recipe and old checksum retained; raw bytes, wheel and corpus manifest were not found in the retained recovery tree or /tmp",
+  "license_basis": "publisher MIT declaration and bundled notice retained; no separate data-specific license found in the inspected wheel notice/metadata; upstream ZINC rights not independently re-audited",
+  "observed_on_utc": "2026-10-23",
+  "preparation_validation": {
+    "canonical_uniqueness": "not measured",
+    "chemical_diversity": "not measured",
+    "engine_import": "not run",
+    "json_readback": "passed for all 100000 records, IDs, offer IDs, raw SMILES, exact allowed keys, supplier split labels and fixed timestamp",
+    "rdkit_validation": "not run",
+    "repeat_generation": "same three output sizes and SHA256 values after final Apache 2.0 script header; final script executed successfully",
+    "selected_rows": 100000,
+    "selected_split_counts": {
+      "test": 9165,
+      "test_scaffolds": 9058,
+      "train": 81777
+    },
+    "selected_unique_offer_ids": 100000,
+    "selected_unique_raw_smiles": 100000,
+    "selected_unique_record_ids": 100000,
+    "source_rows": 1936962,
+    "source_unique_raw_smiles": 1936962
+  },
+  "preparer_sha256": "e98b21fb78c9b00ef4167177e1a2c6ccbe7d909262bbdf9c409585bda3db1097",
+  "publisher_metadata": {
+    "bytes": 2658,
+    "saved_as": "pypi-molsets-0.3.1.json",
+    "sha256": "c6734c07f4f938a43a8c428446b8585ecba7ad3ab3eb7c1237f7caaabcb68d31",
+    "url": "https://pypi.org/pypi/molsets/0.3.1/json"
+  },
+  "publisher_pages_read": [
+    {
+      "result": "version, release date, wheel size/SHA256, MIT declaration and lack of publishing attestation verified",
+      "url": "https://pypi.org/project/molsets/0.3.1/"
+    },
+    {
+      "result": "official project connects MOSES to molsets; describes filtered ZINC Clean Leads provenance and split purpose; explanatory page, not the version pin",
+      "url": "https://github.com/molecularsets/moses"
+    },
+    {
+      "result": "MIT copyright 2018 Insilico Medicine, Inc; immutable version evidence is the separately hashed wheel notice",
+      "url": "https://raw.githubusercontent.com/molecularsets/moses/master/LICENSE"
+    },
+    {
+      "result": "HTTP 403 through read-only web tool; stopped, no alternate route attempted",
+      "url": "https://zinc.docking.org/"
+    }
+  ],
+  "retained_manifest_sha256": "dbef14e42992427b6dc69b38b73b3ade3d97f76e10ff062009e906b0bf92924f",
+  "scope": "bounded preparation only; no corpus import, benchmarks, containers, builds or downloaded code execution",
+  "temporary_frozen_output_directory": "/tmp/cheminee-pilot-moses-100k-v1-final"
+}

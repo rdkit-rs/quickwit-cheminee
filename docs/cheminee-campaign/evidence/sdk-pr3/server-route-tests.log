@@ -1,0 +1,29 @@
+
+running 6 tests
+test cheminee_api::tests::null_unknown_and_invalid_values_are_rejected ... ok
+test cheminee_api::tests::defaults_and_worker_query_serialization ... ok
+test cheminee_api::v1::tests::basic_preserves_filter_sort_and_reports_incomplete_search ... ok
+test cheminee_api::tests::specification_is_deterministic_and_exposes_only_similarity ... ok
+test cheminee_api::v1::tests::five_routes_validate_limits_and_unknown_fields ... ok
+test cheminee_api::v1::tests::v1_schema_has_all_routes ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 167 filtered out; finished in 0.01s
+
+
+running 13 tests
+test ingest_api::response::tests::test_from_ingest_v1 ... ok
+test ingest_api::response::tests::test_from_ingest_v2_failure ... ok
+test ingest_api::response::tests::test_merge_responses ... ok
+test ingest_api::response::tests::test_from_ingest_v2_success ... ok
+test ingest_api::response::tests::test_from_ingest_v2_partial_success ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_blocks_when_force_is_specified ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_blocks_when_wait_is_specified ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_return_413_if_above_content_limit ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_return_429_if_above_limits ... ok
+test ingest_api::rest_handler::tests::test_process_lines ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_returns_200_when_ingest_ndjson_and_fetch ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_returns_200_when_ingest_json_and_fetch ... ok
+test ingest_api::rest_handler::tests::test_ingest_api_unsupported_detailed_errors ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 160 filtered out; finished in 0.01s
+

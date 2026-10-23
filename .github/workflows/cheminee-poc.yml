@@ -13,6 +13,9 @@ on:
       - "quickwit/quickwit-doc-mapper/**"
       - "quickwit/quickwit-serve/**"
       - "quickwit/Cargo.*"
+      - "quickwit/vendor/**"
+      - "quickwit/scripts/ci/*compatibility*"
+      - "quickwit/scripts/ci/lru-parent-compatibility/**"
       - ".github/workflows/cheminee-poc.yml"
 
 permissions:
@@ -37,7 +40,25 @@ jobs:
       run:
         working-directory: quickwit
     steps:
+      - name: Bootstrap Git before checkout
+        working-directory: /
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact Git checkout before native builds
+        working-directory: .
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          repository="$(pwd -P)"
+          # Git runs inside the container; trust only this owned checkout path.
+          export GIT_CONFIG_VALUE_0="$repository"
+          echo "GIT_CONFIG_VALUE_0=$repository" >> "$GITHUB_ENV"
+          test "$(git -c safe.directory="$repository" rev-parse --show-toplevel)" = "$repository"
+          test "$(git -c safe.directory="$repository" rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Install build dependencies
         run: |
           apt-get update
@@ -92,11 +113,54 @@ jobs:
         run: /tmp/cheminee-poc-python/bin/python tantivy-rdkit/poc/graph.py --binary target/debug/quickwit --leaf-binary /tmp/quickwit-scoring --expect-native-unavailable --work-dir /tmp/cheminee-no-native-results
       - name: Lint chemistry integration
         run: cargo clippy --locked -p quickwit-ingest -p tantivy-rdkit -p tantivy-rdkit-mapper -p quickwit-doc-mapper -p quickwit-serve --features quickwit-serve/native-chemistry --tests -- -D warnings
+      - name: Test index compatibility oracle and lifecycle
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/ci -p test_index_restart_compatibility.py -v
+      - name: Qualify Chitchat peers across the LRU repair
+        run: |
+          set -euo pipefail
+          harness="$PWD/scripts/ci/lru-parent-compatibility"
+          for mode in baseline candidate; do
+            package="/tmp/chitchat-$mode"
+            mkdir "$package"
+            cp "$harness/Cargo.toml" "$harness/peer.rs" "$harness/observed_udp.rs" "$package/"
+            cp "$harness/$mode.lock" "$package/Cargo.lock"
+            if [ "$mode" = candidate ]; then
+              printf '\n[patch.crates-io]\nlru = { path = "%s/vendor/lru-0.17.0" }\n' "$PWD" >> "$package/Cargo.toml"
+            fi
+            cargo build --locked -j 1 --manifest-path "$package/Cargo.toml" --target-dir /tmp/chitchat-target
+            cp /tmp/chitchat-target/debug/lru-chitchat-peer "/tmp/chitchat-$mode-peer"
+            cargo metadata --locked --filter-platform x86_64-unknown-linux-gnu --format-version 1 \
+              --manifest-path "$package/Cargo.toml" > "$package/metadata.json"
+          done
+          python3 "$harness/run_udp.py" --baseline /tmp/chitchat-baseline-peer \
+            --candidate /tmp/chitchat-candidate-peer --evidence /tmp/chitchat-compatibility \
+            --workspace "$GITHUB_WORKSPACE"
+      - name: Qualify production index across the LRU repair
+        run: |
+          # The helper checks out the exact baseline temporarily. Run its copy
+          # outside the checkout, and restore the candidate even on failure.
+          cp scripts/ci/build_index_compatibility_pair.sh /tmp/build-index-compatibility-pair.sh
+          bash /tmp/build-index-compatibility-pair.sh /tmp/cheminee-compatibility-binaries
+          python3 scripts/ci/index_restart_compatibility.py \
+            --baseline-binary /tmp/cheminee-compatibility-binaries/baseline \
+            --candidate-binary /tmp/cheminee-compatibility-binaries/candidate \
+            --baseline-revision "$(cat /tmp/cheminee-compatibility-binaries/baseline-revision)" \
+            --candidate-revision "$(cat /tmp/cheminee-compatibility-binaries/candidate-revision)" \
+            --work-dir /tmp/cheminee-index-compatibility --port 18380
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cheminee-poc-evidence
           path: |
+            /tmp/chitchat-compatibility/**
+            /tmp/chitchat-baseline/metadata.json
+            /tmp/chitchat-candidate/metadata.json
+            /tmp/cheminee-index-compatibility/result.json
+            /tmp/cheminee-index-compatibility/*.log
+            /tmp/cheminee-index-compatibility/*.json
+            /tmp/cheminee-index-compatibility/http/*.json
+            /tmp/cheminee-compatibility-binaries/SHA256SUMS
+            /tmp/cheminee-compatibility-binaries/*-revision
             /tmp/cheminee-descriptor-results/**
             /tmp/cheminee-descriptor-flat-results/**
             /tmp/cheminee-poc-results/results.json

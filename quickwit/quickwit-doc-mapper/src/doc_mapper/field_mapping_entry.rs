@@ -76,7 +76,7 @@ pub(crate) struct FieldMappingEntryForSerialization {
     #[serde(rename = "type")]
     type_id: String,
     #[serde(flatten)]
-    #[schema(value_type = HashMap<String, Object>)]
+    #[schema(value_type = HashMap<String, serde_json::Value>)]
     pub field_mapping_json: serde_json::Map<String, JsonValue>,
 }
 
@@ -454,7 +454,7 @@ pub struct QuickwitTextOptions {
     pub fast: FastFieldOptions,
 }
 
-#[derive(Default, Clone, Debug, PartialEq, Serialize, Deserialize, utoipa::ToSchema)]
+#[derive(Default, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(
     into = "FastFieldOptionsForSerialization",
     from = "FastFieldOptionsForSerialization"
@@ -475,7 +475,20 @@ impl FastFieldOptions {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+// The public schema must describe the serde wire representation, not the internal enum.
+impl<'s> utoipa::ToSchema<'s> for FastFieldOptions {
+    fn schema() -> (
+        &'s str,
+        utoipa::openapi::RefOr<utoipa::openapi::schema::Schema>,
+    ) {
+        (
+            "FastFieldOptions",
+            <FastFieldOptionsForSerialization as utoipa::ToSchema>::schema().1,
+        )
+    }
+}
+
+#[derive(Serialize, Deserialize, utoipa::ToSchema)]
 #[serde(untagged)]
 enum FastFieldOptionsForSerialization {
     IsEnabled(bool),

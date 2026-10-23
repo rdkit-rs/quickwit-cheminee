@@ -1,0 +1,102 @@
+    Checking serde v1.0.228
+    Checking foldhash v0.2.0
+    Checking futures-util v0.3.32
+    Checking tracing v0.1.44
+    Checking hashbrown v0.17.1
+    Checking num-traits v0.2.19
+    Checking bytes v1.12.1
+    Checking indexmap v2.14.0
+    Checking zerocopy v0.8.53
+    Checking tokio v1.52.3
+    Checking http v1.4.2
+    Checking http-body v1.0.1
+    Checking thiserror v2.0.18
+    Checking hashbrown v0.16.1
+    Checking ordered-float v5.3.0
+    Checking http-body-util v0.1.3
+    Checking subtle v2.6.1
+    Checking axum-core v0.5.6
+    Checking rustls v0.23.41
+    Checking tantivy-common v0.11.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking pin-project v1.1.13
+    Checking pnet_packet v0.35.0
+    Checking ppv-lite86 v0.2.21
+    Checking rand_chacha v0.9.0
+    Checking rand v0.9.4
+    Checking tokio-util v0.7.18
+    Checking ipnetwork v0.20.0
+    Checking h2 v0.4.15
+    Checking tokio-stream v0.1.18
+    Checking tower v0.5.3
+    Checking tokio-rustls v0.26.4
+    Checking metrics-util v0.20.4
+    Checking tantivy-stacker v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking pnet_datalink v0.35.0
+    Checking axum v0.8.9
+    Checking tantivy-sstable v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling quickwit-codegen v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-codegen)
+    Checking pnet_transport v0.35.0
+    Checking const_format v0.2.36
+    Checking futures-executor v0.3.32
+    Checking opentelemetry v0.32.0
+    Checking hyper v1.10.1
+    Checking governor v0.10.4
+    Checking tantivy-columnar v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking quickwit-metrics v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-metrics)
+    Checking typetag v0.2.22
+    Checking tracing-opentelemetry v0.33.0
+    Checking futures v0.3.32
+    Checking bon v3.9.3
+    Checking pnet v0.35.0
+    Checking hyper-util v0.1.20
+    Checking prometheus v0.14.0
+    Checking tantivy-query-grammar v0.26.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking tokio-metrics v0.5.0
+    Checking lru v0.16.4
+    Checking sketches-ddsketch v0.4.0
+    Checking tantivy-tokenizer-api v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+    Checking digest v0.11.3
+    Checking thiserror v1.0.69
+    Checking utoipa v4.2.3
+    Checking prost v0.14.4
+    Checking tantivy v0.26.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling quickwit-proto v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-proto)
+    Checking hyper-timeout v0.5.2
+    Checking tonic v0.14.6
+    Checking sha2 v0.11.0
+    Checking time-fmt v0.3.8
+    Checking mockall v0.14.0
+    Checking serde_with v3.21.0
+    Checking quickwit-common v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-common)
+    Checking tonic-prost v0.14.6
+    Checking prost-types v0.14.4
+    Checking ulid v1.2.1
+    Checking bytestring v1.5.1
+    Checking chrono v0.4.45
+    Checking phf v0.11.3
+    Checking serde_json_borrow v0.9.0
+    Checking quickwit-actors v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-actors)
+   Compiling quickwit-macros v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-macros)
+    Checking serde_yaml v0.9.34+deprecated
+    Checking cron v0.17.0
+    Checking enum-iterator v2.3.0
+    Checking half v2.7.1
+    Checking http-serde v2.1.1
+    Checking ciborium-ll v0.2.2
+    Checking lru v0.17.0
+    Checking chitchat v0.11.1
+    Checking plotters v0.3.7
+    Checking ciborium v0.2.2
+   Compiling quickwit-ingest v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-ingest)
+    Checking tinytemplate v1.2.1
+    Checking criterion v0.8.2
+    Checking rand_distr v0.6.0
+    Checking mrecordlog v0.5.0 (https://github.com/quickwit-oss/mrecordlog?rev=3b3562ef#3b3562ef)
+    Checking quickwit-datetime v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-datetime)
+    Checking tantivy-rdkit v0.1.0 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/tantivy-rdkit)
+    Checking quickwit-query v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-query)
+    Checking quickwit-doc-mapper v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-doc-mapper)
+    Checking quickwit-config v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-config)
+    Checking quickwit-transport v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-transport)
+    Checking quickwit-cluster v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-cluster)
+    Finished `dev` profile [unoptimized] target(s) in 47.95s

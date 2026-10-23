@@ -1,0 +1,172 @@
+{
+  "archive_sha256": "d4b0535539e6a33af4b5e40676f5a542c9391cc98fd16e71f1c27af57573aff6",
+  "transfer_sha256": "79cfdf58bf989c8ce167ec17f4fe09bc1e5caa53fc971efea89761faf37eb1da",
+  "files": [
+    {
+      "path": "gems/json-3.1.0/BSDL",
+      "sha256": "36a9a6e7347214bbba599a412617204e65bff065dcbe5c46f5cb454c80de9eb0",
+      "size": 1291
+    },
+    {
+      "path": "gems/json-3.1.0/CHANGES.md",
+      "sha256": "c64c2a77d4aa960d2fe2963faf1707472369652f26015d69f5027b6a8e9ecc6a",
+      "size": 38891
+    },
+    {
+      "path": "gems/json-3.1.0/COPYING",
+      "sha256": "f5eb1b2956d5f7a67b2e5722a3749bc2fe86f9c580f2e3f5a08519cf073b5864",
+      "size": 2502
+    },
+    {
+      "path": "gems/json-3.1.0/LEGAL",
+      "sha256": "52d0a020667b04369a77dd83d46305388443e119154e80beb280a5cbda7ef33b",
+      "size": 712
+    },
+    {
+      "path": "gems/json-3.1.0/README.md",
+      "sha256": "eb94cad0ba22782eb90b92729e5a44ebf974fc78f8e1d9ae523e953257ee6fc3",
+      "size": 5392
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/fbuffer/fbuffer.h",
+      "sha256": "0bd845431f30af0fb394e943b1e1c912fa6c740c86f218f06b78434222fdf1ab",
+      "size": 6770
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/generator/Makefile",
+      "sha256": "fc74d471a16747c0854843b8b966241e9c691986a66a2b6fcfcba5139b8fa988",
+      "size": 8881
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/generator/extconf.rb",
+      "sha256": "38bd8770568d1d398f8b52b610296646495452224164c4c5163fabb5ac32c86f",
+      "size": 622
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/generator/generator.c",
+      "sha256": "82e0132a1a92f85ed88f927ae08968a1f48b5bccb3ead39baa3810304ed0f234",
+      "size": 71289
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/json.h",
+      "sha256": "d0087c884120ee4415988fe33fdf42028fdd2915e6d0d1c2cae0987a3f8accbd",
+      "size": 4987
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/parser/Makefile",
+      "sha256": "918a39239caab8013a948ba7218e4d930990bfdfe409eb85050d3b2162cfc695",
+      "size": 8979
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/parser/extconf.rb",
+      "sha256": "44b8d45359272dfa0496fd3f072d7cfbb5432473d75a50d8ddf1f4dae503a3cf",
+      "size": 1436
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/parser/parser.c",
+      "sha256": "3f2a6a7becb2f3a6a3bb02777e3a630b6389e4c835d0e695b9358c12b6fc9a76",
+      "size": 100153
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/simd/conf.rb",
+      "sha256": "2acfbc072668770fd4bb4fb6e53b9ec57c9edab22a0f9f397438b3b1db0623a7",
+      "size": 754
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/simd/simd.h",
+      "sha256": "7f251d76e273d35f7c3f687dab7a5fbc779b670eff5bfa3d8f283f1ca9191c2a",
+      "size": 6616
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/vendor/fast_float_parser.h",
+      "sha256": "e56df4ae868d902b3b18df44e56b58f07353d5ab3fed9cd24ab302bf50603562",
+      "size": 33781
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/vendor/fpconv.c",
+      "sha256": "0487fd5cf86f501876c865f6a7505e6e7d82df95ee1446533838f89798ed74a2",
+      "size": 13417
+    },
+    {
+      "path": "gems/json-3.1.0/ext/json/ext/vendor/jeaiii-ltoa.h",
+      "sha256": "f78952561d8675e2c48ff015de476d7a06cf347dae364eacd189d8438fe80748",
+      "size": 8125
+    },
+    {
+      "path": "gems/json-3.1.0/json.gemspec",
+      "sha256": "16874812b898eb2ff9ae70ad5cefae4362043c8a9e043a8dfb4d6223c693b337",
+      "size": 1754
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/common.rb",
+      "sha256": "b80fac55275d3e15e3f37da7fa5f68846c73932fe3178b9db3a705d43a3a0463",
+      "size": 28170
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/ext/generator/state.rb",
+      "sha256": "103dae0b2e13aa9dd5e9985f83480c3db34522f4a6601b4ccc3b4108de0b4ec3",
+      "size": 2032
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/ext/generator.so",
+      "sha256": "9bc25029518d78dba2f1761e4408222931ee026325f7016133b8aa292e86c010",
+      "size": 340200
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/ext/parser.so",
+      "sha256": "200e4547caec32da36c3cbf9d1bf11d23bff76945299dbfa10ffcd3025f2e4a2",
+      "size": 282584
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/ext.rb",
+      "sha256": "6a6da7c32dd607f9af4092ba26aadbe17267abc9a2d779b9a400452714308f3e",
+      "size": 5503
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/truffle_ruby/generator.rb",
+      "sha256": "d50d1a54775cb65e0ca5d48329c5ef8ac5b7df34254b6584890a8e5f2bdf30d9",
+      "size": 28706
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json/version.rb",
+      "sha256": "6e7aa31b20e595f28136b8c91fe545ba073e4c5c3164aa981eb9383b4a07b133",
+      "size": 67
+    },
+    {
+      "path": "gems/json-3.1.0/lib/json.rb",
+      "sha256": "e064e3679a183d90880440b5021b9fb51aa10e0ffa57858a5f62a87a20bdf40b",
+      "size": 15563
+    },
+    {
+      "path": "extensions/x86_64-linux-gnu/3.3.0/json-3.1.0/gem.build_complete",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "extensions/x86_64-linux-gnu/3.3.0/json-3.1.0/gem_make.out",
+      "sha256": "74ece72b35dccad10c5260f40116346dd74ba2a9dfb8bd2eadc59d61cb8cc84e",
+      "size": 1690
+    },
+    {
+      "path": "extensions/x86_64-linux-gnu/3.3.0/json-3.1.0/json/ext/generator.so",
+      "sha256": "9bc25029518d78dba2f1761e4408222931ee026325f7016133b8aa292e86c010",
+      "size": 340200
+    },
+    {
+      "path": "extensions/x86_64-linux-gnu/3.3.0/json-3.1.0/json/ext/parser.so",
+      "sha256": "200e4547caec32da36c3cbf9d1bf11d23bff76945299dbfa10ffcd3025f2e4a2",
+      "size": 282584
+    },
+    {
+      "path": "extensions/x86_64-linux-gnu/3.3.0/json-3.1.0/mkmf.log",
+      "sha256": "4b4c4b99db02908aec010c125fe0609a6ad42d40334a6b2a2fd46b89652ca947",
+      "size": 20398
+    },
+    {
+      "path": "specifications/json-3.1.0.gemspec",
+      "sha256": "f4c7a9d1ffee335d1d7a6bce92e4a1d714915ac6bc0532c473aece855326ae3a",
+      "size": 1566
+    }
+  ],
+  "verified": 33
+}

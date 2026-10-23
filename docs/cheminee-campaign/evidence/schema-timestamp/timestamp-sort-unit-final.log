@@ -1,0 +1,23 @@
+   Compiling quickwit-doc-mapper v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-doc-mapper)
+   Compiling quickwit-config v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-config)
+   Compiling quickwit-transport v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-transport)
+   Compiling quickwit-storage v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-storage)
+   Compiling quickwit-cluster v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-cluster)
+   Compiling quickwit-ingest v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-ingest)
+   Compiling quickwit-metastore v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-metastore)
+   Compiling quickwit-directories v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-directories)
+   Compiling quickwit-opentelemetry v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-opentelemetry)
+   Compiling quickwit-indexing v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-indexing)
+   Compiling quickwit-search v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-search)
+    Finished `test` profile [unoptimized] target(s) in 38.26s
+     Running unittests src/lib.rs (target/debug/deps/quickwit_search-0a7964530c51794f)
+
+running 5 tests
+test leaf::tests::timestamp_sort_pruning_retains_exact_counts_aggregations_and_offsets ... ok
+test leaf::tests::timestamp_sort_cutoffs_preserve_subseconds_ties_and_extremes ... ok
+test leaf::tests::timestamp_sort_unknown_bounds_never_prove_a_split_uncompetitive ... ok
+test leaf::tests::timestamp_sort_upfront_requires_complete_disjointness_proof ... ok
+test leaf::tests::timestamp_sort_cutoff_waits_for_offset_plus_limit_hits ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 204 filtered out; finished in 0.00s
+

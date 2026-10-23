@@ -456,7 +456,7 @@ pub fn delete_index_handler(
     path = "/indexes/{index_id}",
     responses(
         // We return `VersionedIndexMetadata` as it's the serialized model view.
-        (status = 200, description = "Successfully deleted index.", body = [FileEntry])
+        (status = 200, description = "Successfully deleted index.", body = [SplitInfo])
     ),
     params(
         DeleteIndexQueryParam,

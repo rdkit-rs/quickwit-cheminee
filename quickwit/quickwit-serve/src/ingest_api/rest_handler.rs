@@ -42,6 +42,9 @@ pub struct IngestApi;
     quickwit_ingest::FetchResponse,
     quickwit_ingest::IngestResponse,
     quickwit_ingest::CommitType,
+    RestIngestResponse,
+    super::response::RestParseFailure,
+    quickwit_proto::ingest::ParseFailureReason,
 )))]
 pub struct IngestApiSchemas;
 
@@ -132,13 +135,22 @@ fn ingest_handler(
     post,
     tag = "Ingest",
     path = "/{index_id}/ingest",
-    request_body(content = String, description = "Documents to ingest in NDJSON format and limited to 10MB", content_type = "application/json"),
+    request_body(content = String, description = "Raw newline-delimited JSON documents, not a JSON-encoded string. Limited by the configured ingestion body size.", content_type = "application/x-ndjson"),
     responses(
-        (status = 200, description = "Successfully ingested documents.", body = RestIngestResponse)
+        (status = 200, description = "Batch response. Individual documents may be rejected; inspect num_ingested_docs and num_rejected_docs. Missing counts mean acceptance is unknown, not zero. Acknowledgement does not imply search visibility with commit=auto.", body = RestIngestResponse),
+        (status = 400, description = "Invalid request or unsupported options."),
+        (status = 404, description = "Index not found."),
+        (status = 411, description = "Content-Length is required."),
+        (status = 413, description = "Request exceeds configured body limit."),
+        (status = 415, description = "Unsupported Content-Encoding."),
+        (status = 429, description = "Ingestion capacity exhausted."),
+        (status = 500, description = "Internal ingestion failure, including some timeout or missing-source failures; outcome may be uncertain."),
+        (status = 503, description = "Ingestion unavailable or timed out; a late append may still occur. Do not blindly retry.")
     ),
     params(
         ("index_id" = String, Path, description = "The index ID to add docs to."),
         ("commit" = Option<CommitType>, Query, description = "Force or wait for commit at the end of the indexing operation."),
+        ("detailed_response" = Option<bool>, Query, description = "Include per-document parse failures. Requires ingest v2; details contain original documents and must not be routinely logged."),
     )
 )]
 /// Ingest documents
@@ -562,6 +574,55 @@ pub(crate) mod tests {
             .unwrap();
         handle.await.unwrap();
         universe.assert_quit().await;
+    }
+
+    #[tokio::test]
+    async fn test_ingest_v2_detailed_invalid_utf8_response() {
+        use quickwit_proto::ingest::router::{
+            IngestResponseV2, IngestSuccess, MockIngestRouterService,
+        };
+        use quickwit_proto::ingest::{ParseFailure, ParseFailureReason};
+
+        let mut backend = MockIngestRouterService::new();
+        backend.expect_ingest().once().returning(|request| {
+            let batch = request.subrequests[0].doc_batch.as_ref().unwrap();
+            let docs: Vec<_> = batch.docs().collect();
+            assert_eq!(docs.len(), 2);
+            assert_eq!(docs[0].1.as_ref(), b"\xff");
+            assert_eq!(docs[1].1.as_ref(), b"{}");
+            Ok(IngestResponseV2 {
+                successes: vec![IngestSuccess {
+                    subrequest_id: 0,
+                    num_ingested_docs: 1,
+                    parse_failures: vec![ParseFailure {
+                        doc_uid: Some(docs[0].0),
+                        reason: ParseFailureReason::InvalidJson as i32,
+                        message: "invalid UTF-8".to_string(),
+                    }],
+                    ..Default::default()
+                }],
+                failures: Vec::new(),
+            })
+        });
+        let handlers = ingest_api_handlers(
+            IngestRouterServiceClient::from_mock(backend),
+            IngestServiceClient::mocked(),
+            IngestApiConfig::default(),
+            false,
+            true,
+        );
+        let response = warp::test::request()
+            .path("/my-index/ingest?detailed_response=true")
+            .method("POST")
+            .body(&b"\xff\n{}"[..])
+            .reply(&handlers)
+            .await;
+        assert_eq!(response.status(), 200);
+        let body: RestIngestResponse = serde_json::from_slice(response.body()).unwrap();
+        assert_eq!(body.num_docs_for_processing, 2);
+        assert_eq!(body.num_ingested_docs, Some(1));
+        assert_eq!(body.num_rejected_docs, Some(1));
+        assert_eq!(body.parse_failures.unwrap()[0].document, "\u{fffd}");
     }
 
     #[tokio::test]

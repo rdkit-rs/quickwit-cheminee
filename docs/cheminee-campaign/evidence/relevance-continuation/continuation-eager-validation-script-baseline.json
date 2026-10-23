@@ -1,0 +1,5377 @@
+{
+  "scope": "independent read-only continuation regression; no campaign approval",
+  "review_time_utc": "2026-10-16T12:55:20.777092+00:00",
+  "base_url": "http://127.0.0.1:19480",
+  "probe_sha256": "412f50d1f1bffd184ace267be0f4e29fb473540c92b05d40f50a1af7e18f335a",
+  "server_binary": "/workspace/recovery/quickwit-native-current",
+  "server_binary_sha256": "5943eedc612af1e732852222cc4796411b73b052230c2266231c8cd5f766652e",
+  "fixture_results_sha256": "f297ecda1aee5063c6f6c0d34e31e841295f80c7a9d4f5e4339179c9c40cda0f",
+  "observation_only": "Stored-corruption OR(match_all, chemistry), size0, has no pass/fail oracle here.",
+  "checks": [
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 2
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'tanimoto_minimum must be finite and between 0 and 1'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 24,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "threshold_2",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 2
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 32,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "01",
+            "minimum": 0
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 35,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 19,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "fingerprint_contains": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "direction": "document_contains_query"
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must contain at least one set bit'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 22,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_fingerprint",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "molecular_graph": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "prepared_field": "prepared_smiles",
+            "prepared_smiles": "not-smiles",
+            "predicate": "substructure",
+            "ranking": "best_match",
+            "use_chirality": false,
+            "include_identity": true
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 31,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": ""
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint version identifiers must contain 1..128 ASCII bytes'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 24,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "empty_spec_id",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": ""
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 18,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0,
+            "candidates": {
+              "type": "term",
+              "field": "missing_review_field",
+              "value": "x"
+            }
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: field does not exist: `missing_review_field`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 18,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "bad_candidate_field",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "term",
+                    "field": "missing_review_field",
+                    "value": "x"
+                  }
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 18,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0,
+            "candidates": {
+              "type": "user_input",
+              "user_text": "(",
+              "default_operator": "AND",
+              "lenient": false
+            }
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 15,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "candidate_syntax",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "candidates": {
+                    "type": "user_input",
+                    "user_text": "(",
+                    "default_operator": "AND",
+                    "lenient": false
+                  }
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 29,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0,
+            "ann": true
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 692"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 725"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0,
+                  "ann": true
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "message": "OneOrMany could not deserialize any variant:\n  One: invalid type: sequence, expected string or map\n  Many: unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 741"
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "query_string": {
+            "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "unknown field `ann`, expected one of `candidates`, `spec`, `fingerprint_hex`, `minimum` at line 1 column 658",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 21,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "unknown_option_quoted",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "query_string": {
+                  "query": "_tanimoto:'{\"spec\":{\"format\":\"morgan-r3-2048-lsb0-v1\",\"rdkit_version\":\"2026.09.1\",\"preparation_id\":\"sanitize-only-v1\"},\"fingerprint_hex\":\"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"minimum\":0,\"ann\":true}'"
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 12,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "bare",
+      "index": "composable",
+      "request": {
+        "query": {
+          "query_string": {
+            "query": "("
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "and_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "query_string": {
+                  "query": "("
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "query_string": {
+                  "query": "("
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "or_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "query_string": {
+                  "query": "("
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "or_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "query_string": {
+                  "query": "("
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "query_string": {
+                  "query": "("
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "failed to parse query: `(`",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "impossible_left",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "query_string": {
+                  "query": "("
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 11,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "invalid_syntax",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "query_string": {
+                  "query": "("
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 28,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "impossible_must",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "should": [
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 2
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "impossible_must_not",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "should": [
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 2
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 32,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input",
+      "input": "short_fingerprint",
+      "context": "impossible_filter",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "filter": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "should": [
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 2
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "bare",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "tanimoto": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "minimum": 0.5
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "and_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 12,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "and_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 29,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "or_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": null,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "or_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": null,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "not",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "impossible_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 17,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "impossible_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "or_none_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_tanimoto",
+      "context": "or_none_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption_rank",
+      "input": "stored_tanimoto",
+      "context": "or_match_all",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "minimum": 0.5
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "bare",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "fingerprint_contains": {
+            "spec": {
+              "format": "morgan-r3-2048-lsb0-v1",
+              "rdkit_version": "2026.09.1",
+              "preparation_id": "sanitize-only-v1"
+            },
+            "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "direction": "document_contains_query"
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "and_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 12,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "and_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 11,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "or_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": null,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "or_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": null,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "not",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "must_not": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ]
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "impossible_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 16,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "impossible_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 200,
+      "status": 200,
+      "response": {
+        "took": 15,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 2,
+          "successful": 2,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "or_none_left",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_none": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption",
+      "input": "stored_contains",
+      "context": "or_none_right",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_none": {}
+              },
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 0,
+        "track_total_hits": true
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "stored_corruption_rank",
+      "input": "stored_contains",
+      "context": "or_match_all",
+      "index": "composable-leaf-failure",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "fingerprint_contains": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "direction": "document_contains_query"
+                }
+              },
+              {
+                "match_all": {}
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 500,
+      "status": 500,
+      "response": {
+        "status": 500,
+        "error": {
+          "caused_by": null,
+          "reason": "internal error: `search failed for the following splits: 01M51QENDDC1YSZ5VEWSPDEXFF. For instance, split 01M51QENDDC1YSZ5VEWSPDEXFF failed with the following error message: internal error: `tantivy error: An invalid argument was passed: 'indexed fingerprint must contain exactly 256 bytes'``",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input_topk",
+      "input": "short_fingerprint",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ]
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: An invalid argument was passed: 'fingerprint must encode exactly 2048 bits as 512 hexadecimal characters'",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input_topk",
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "tanimoto": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "fingerprint_hex": "01",
+                  "minimum": 0
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 18,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    },
+    {
+      "kind": "query_input_topk",
+      "input": "invalid_smiles",
+      "context": "and_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match_none": {}
+              },
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ]
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 400,
+      "status": 400,
+      "response": {
+        "status": 400,
+        "error": {
+          "caused_by": null,
+          "reason": "invalid query: invalid chemistry query: invalid SMILES: could not convert smiles to romol (nullptr)",
+          "stack_trace": null,
+          "type": null
+        }
+      },
+      "failures": []
+    },
+    {
+      "kind": "query_input_topk",
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "index": "composable",
+      "request": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "match_all": {}
+              },
+              {
+                "molecular_graph": {
+                  "spec": {
+                    "format": "morgan-r3-2048-lsb0-v1",
+                    "rdkit_version": "2026.09.1",
+                    "preparation_id": "sanitize-only-v1"
+                  },
+                  "prepared_field": "prepared_smiles",
+                  "prepared_smiles": "not-smiles",
+                  "predicate": "substructure",
+                  "ranking": "best_match",
+                  "use_chirality": false,
+                  "include_identity": true
+                }
+              }
+            ],
+            "minimum_should_match": 3
+          }
+        },
+        "size": 3,
+        "track_total_hits": true,
+        "sort": [
+          {
+            "_score": "desc"
+          },
+          {
+            "record_id": "asc"
+          }
+        ]
+      },
+      "expected_status": 400,
+      "status": 200,
+      "response": {
+        "took": 13,
+        "timed_out": false,
+        "terminated_early": null,
+        "fields": {},
+        "_shards": {
+          "total": 5,
+          "successful": 5,
+          "skipped": 0,
+          "failed": 0
+        },
+        "hits": {
+          "total": {
+            "value": 0,
+            "relation": "eq"
+          },
+          "hits": []
+        }
+      },
+      "failures": [
+        "unexpected HTTP status",
+        "expected error cause missing"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "input": "threshold_2",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "threshold_2",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "threshold_2",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "threshold_2",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "empty_fingerprint",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "empty_fingerprint",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "empty_fingerprint",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "empty_fingerprint",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "empty_spec_id",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "empty_spec_id",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "empty_spec_id",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "empty_spec_id",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "bad_candidate_field",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "bad_candidate_field",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "bad_candidate_field",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "bad_candidate_field",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "candidate_syntax",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "candidate_syntax",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "candidate_syntax",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "candidate_syntax",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "unknown_option_quoted",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "unknown_option_quoted",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "unknown_option_quoted",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "unknown_option_quoted",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "invalid_syntax",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "invalid_syntax",
+      "context": "impossible_left",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "invalid_syntax",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "invalid_syntax",
+      "context": "impossible_right",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_must",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_must",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_must_not",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_must_not",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_filter",
+      "size": 0,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_filter",
+      "size": 0,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "size": 3,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "short_fingerprint",
+      "context": "impossible_right",
+      "size": 3,
+      "failure": "expected error cause missing"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "size": 3,
+      "failure": "unexpected HTTP status"
+    },
+    {
+      "input": "invalid_smiles",
+      "context": "impossible_right",
+      "size": 3,
+      "failure": "expected error cause missing"
+    }
+  ],
+  "cluster": {
+    "cluster_id": "composable-composable-native-run1",
+    "self_node_id": "root",
+    "ready_nodes": [
+      {
+        "node_id": "leaf-b",
+        "generation_id": 1792154978820803699,
+        "gossip_advertise_addr": "127.0.0.1:19500"
+      },
+      {
+        "node_id": "leaf-a",
+        "generation_id": 1792154978806900343,
+        "gossip_advertise_addr": "127.0.0.1:19490"
+      },
+      {
+        "node_id": "root",
+        "generation_id": 1792154978807040629,
+        "gossip_advertise_addr": "127.0.0.1:19480"
+      }
+    ],
+    "live_nodes": [],
+    "dead_nodes": [],
+    "chitchat_state_snapshot": {
+      "node_states": [
+        {
+          "chitchat_id": {
+            "node_id": "leaf-a",
+            "generation_id": 1792154978806900343,
+            "gossip_advertise_addr": "127.0.0.1:19490"
+          },
+          "heartbeat": 2400,
+          "key_values": {
+            "enabled_services": {
+              "value": "searcher",
+              "version": 1,
+              "status": "Set"
+            },
+            "grpc_advertise_addr": {
+              "value": "127.0.0.1:19491",
+              "version": 2,
+              "status": "Set"
+            },
+            "readiness": {
+              "value": "READY",
+              "version": 5,
+              "status": "Set"
+            },
+            "standalone_compactors": {
+              "value": "false",
+              "version": 4,
+              "status": "Set"
+            }
+          },
+          "max_version": 5,
+          "last_gc_version": 0
+        },
+        {
+          "chitchat_id": {
+            "node_id": "leaf-b",
+            "generation_id": 1792154978820803699,
+            "gossip_advertise_addr": "127.0.0.1:19500"
+          },
+          "heartbeat": 2398,
+          "key_values": {
+            "enabled_services": {
+              "value": "searcher",
+              "version": 1,
+              "status": "Set"
+            },
+            "grpc_advertise_addr": {
+              "value": "127.0.0.1:19501",
+              "version": 2,
+              "status": "Set"
+            },
+            "readiness": {
+              "value": "READY",
+              "version": 5,
+              "status": "Set"
+            },
+            "standalone_compactors": {
+              "value": "false",
+              "version": 4,
+              "status": "Set"
+            }
+          },
+          "max_version": 5,
+          "last_gc_version": 0
+        },
+        {
+          "chitchat_id": {
+            "node_id": "root",
+            "generation_id": 1792154978807040629,
+            "gossip_advertise_addr": "127.0.0.1:19480"
+          },
+          "heartbeat": 2413,
+          "key_values": {
+            "enabled_services": {
+              "value": "janitor,control-plane,metastore,indexer",
+              "version": 1,
+              "status": "Set"
+            },
+            "grpc_advertise_addr": {
+              "value": "127.0.0.1:19481",
+              "version": 2,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDH2X30RRW7QYYGR37J": {
+              "value": "composable-topk:01M51QE4MJ9WWYPD4Z3P43KQFD:_ingest-api-source:10802316322366611078:",
+              "version": 9,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDH84FYK5M3YPCTBY8J": {
+              "value": "otel-logs-v0_9:01M51QDGFEQ94RK0R9JT3FF5V4:_ingest-api-source:2933451207213458127:",
+              "version": 10,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDH93J8F8JXF9PJAQHQ": {
+              "value": "composable:01M51QDQ9XAZ8E8TVWE9E5C8DT:_ingest-api-source:15241498413762458866:",
+              "version": 11,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDHJJDTB079JH35NK7V": {
+              "value": "composable-leaf-failure:01M51QEFH1S40WX6TGVHS3EVYG:_ingest-api-source:18064021260269634547:",
+              "version": 12,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDHNMMC0X261BVTWJCV": {
+              "value": "otel-traces-v0_9:01M51QDJDSMJCNF3G739R8XE8E:_ingest-api-source:10263691161488065911:",
+              "version": 13,
+              "status": "Set"
+            },
+            "indexer.task:01M52C5QDHQZ1ZW4T2G49E7XFY": {
+              "value": "composable-timestamp-domain:01M51QWW00GZTH3RZM3X8EPPKQ:_ingest-api-source:13814275837259753404:",
+              "version": 14,
+              "status": "Set"
+            },
+            "indexing_cpu_capacity": {
+              "value": "4000m",
+              "version": 5,
+              "status": "Set"
+            },
+            "ingester.status": {
+              "value": "ready",
+              "version": 7,
+              "status": "Set"
+            },
+            "readiness": {
+              "value": "READY",
+              "version": 8,
+              "status": "Set"
+            },
+            "standalone_compactors": {
+              "value": "false",
+              "version": 4,
+              "status": "Set"
+            }
+          },
+          "max_version": 14,
+          "last_gc_version": 0
+        }
+      ],
+      "seed_addrs": [
+        "127.0.0.1:19480"
+      ]
+    }
+  },
+  "status": "failed",
+  "request_count": 109,
+  "observation_count": 4
+}

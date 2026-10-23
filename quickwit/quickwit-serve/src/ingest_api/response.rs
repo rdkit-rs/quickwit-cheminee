@@ -24,6 +24,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq, utoipa::ToSchema)]
 pub struct RestParseFailure {
     pub message: String,
+    /// Original document with invalid UTF-8 replaced by U+FFFD for JSON diagnostics.
     pub document: String,
     pub reason: ParseFailureReason,
 }
@@ -38,7 +39,7 @@ pub struct RestIngestResponse {
     /// Number of docs rejected because of parsing errors
     #[serde(skip_serializing_if = "Option::is_none")]
     pub num_rejected_docs: Option<u64>, // TODO(#5604) remove Option
-    /// Detailed description of parsing errors (available if the path param
+    /// Detailed description of parsing errors (available if the query param
     /// `detailed_response` is set to `true`)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_failures: Option<Vec<RestParseFailure>>,
@@ -91,7 +92,7 @@ impl RestIngestResponse {
                 parse_failures.push(RestParseFailure {
                     reason: failure.reason(),
                     message: failure.message,
-                    document: String::from_utf8(doc.to_vec()).unwrap(),
+                    document: String::from_utf8_lossy(doc).into_owned(),
                 });
             }
             resp.parse_failures = Some(parse_failures);

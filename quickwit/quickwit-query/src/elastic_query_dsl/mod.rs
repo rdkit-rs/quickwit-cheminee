@@ -75,6 +75,9 @@ pub(crate) struct MatchNoneQuery;
 #[derive(Deserialize, Debug, Eq, PartialEq, Clone)]
 #[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub(crate) enum ElasticQueryDslInner {
+    Tanimoto(crate::query_ast::TanimotoQueryAst),
+    FingerprintContains(crate::query_ast::FingerprintContainsQueryAst),
+    MolecularGraph(crate::query_ast::GraphQueryAst),
     QueryString(QueryStringQuery),
     Bool(BoolQuery),
     Term(TermQuery),
@@ -112,6 +115,9 @@ pub(crate) trait ConvertibleToQueryAst {
 impl ConvertibleToQueryAst for ElasticQueryDslInner {
     fn convert_to_query_ast(self) -> anyhow::Result<QueryAst> {
         match self {
+            Self::Tanimoto(query) => Ok(QueryAst::Tanimoto(query)),
+            Self::FingerprintContains(query) => Ok(QueryAst::FingerprintContains(query)),
+            Self::MolecularGraph(query) => Ok(QueryAst::Graph(query)),
             Self::QueryString(query_string_query) => query_string_query.convert_to_query_ast(),
             Self::Bool(bool_query) => bool_query.convert_to_query_ast(),
             Self::Term(term_query) => term_query.convert_to_query_ast(),

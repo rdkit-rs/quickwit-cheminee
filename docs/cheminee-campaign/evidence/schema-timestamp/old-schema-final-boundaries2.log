@@ -1,0 +1,13 @@
+   Compiling quickwit-doc-mapper v0.9.1 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/quickwit-doc-mapper)
+    Finished `test` profile [unoptimized] target(s) in 4.70s
+     Running unittests src/lib.rs (target/debug/deps/quickwit_doc_mapper-64bf288cbecc1549)
+
+running 5 tests
+test query_builder::chemistry_tests::incompatible_split_does_not_become_match_none ... ok
+test query_builder::chemistry_tests::chemistry_warms_fingerprints_and_candidate_postings ... ok
+test query_builder::chemistry_tests::containment_warms_fingerprints_and_preserves_candidate_postings ... ok
+test query_builder::chemistry_tests::old_candidate_term_set_and_nonfast_range_keep_empty_domain ... ok
+test query_builder::chemistry_tests::old_physical_chemistry_contract_is_checked_only_for_live_candidates ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 226 filtered out; finished in 0.20s
+

@@ -1,0 +1,19 @@
+{
+  "ruby": "3.3.8",
+  "platform": "x86_64-linux-gnu",
+  "journal_test_json_version": "2.7.2",
+  "pinned_json_version": "3.1.0",
+  "retained_extension_platform": "x86_64-linux",
+  "retained_extension_needed_soname": "libruby.so.3.3",
+  "available_runtime_soname": "libruby-3.3.so.3.3",
+  "activation_probe": "RubyGems reports missing extensions at x86_64-linux-gnu; explicitly selecting existing extension directory then fails loading libruby.so.3.3",
+  "probe_mutation": "process-local spec only; no retained gem metadata or libraries changed",
+  "extension_hashes": {
+    "/workspace/recovery/ruby-dependencies/ruby/3.3.0/gems/json-3.1.0/lib/json/ext/parser.so": "8bf09de18bff09a3f8d2c87170340130bdcf2a59ddcf6f4efcd4828c3a2798f0",
+    "/workspace/recovery/ruby-dependencies/ruby/3.3.0/gems/json-3.1.0/lib/json/ext/generator.so": "a7569f37f9de9d6a717748e2830759ff9e8a8d16081b765d9af50e6758ad33d9"
+  },
+  "no_native_rebuild": true,
+  "no_new_container": true,
+  "no_abi_alias_or_lock_change": true,
+  "matching_runtime_route": "No matching installed runtime identified; native builder has no independent Ruby. Need verified existing JSON3.1.0 extension built for onboarding Ruby3.3.8, or a matching retained runtime artifact. No image export/new container/ABI aliases performed."
+}

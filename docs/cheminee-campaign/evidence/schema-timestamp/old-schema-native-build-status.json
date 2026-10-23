@@ -1,0 +1,448 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "-p",
+    "quickwit-cli",
+    "--features",
+    "native-chemistry",
+    "--bin",
+    "quickwit"
+  ],
+  "start_utc": "2026-10-16T14:48:09.959920+00:00",
+  "minimum_free_bytes": 671088640,
+  "stopped_for_disk_headroom": false,
+  "samples": [
+    {
+      "monotonic": 33483.406786135,
+      "free_bytes": 2793988096
+    },
+    {
+      "monotonic": 33484.406948196,
+      "free_bytes": 2854064128
+    },
+    {
+      "monotonic": 33485.407253308,
+      "free_bytes": 2861920256
+    },
+    {
+      "monotonic": 33486.407420548,
+      "free_bytes": 2859753472
+    },
+    {
+      "monotonic": 33487.407592295,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33488.407760776,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33489.407931541,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33490.408113535,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33491.414071192,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33492.414242058,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33493.414415067,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33494.414757243,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33495.414919307,
+      "free_bytes": 2853220352
+    },
+    {
+      "monotonic": 33496.415164064,
+      "free_bytes": 2852626432
+    },
+    {
+      "monotonic": 33497.415332923,
+      "free_bytes": 2832461824
+    },
+    {
+      "monotonic": 33498.415509263,
+      "free_bytes": 2832461824
+    },
+    {
+      "monotonic": 33499.415720973,
+      "free_bytes": 2876542976
+    },
+    {
+      "monotonic": 33500.415895768,
+      "free_bytes": 2868162560
+    },
+    {
+      "monotonic": 33501.417750917,
+      "free_bytes": 2875183104
+    },
+    {
+      "monotonic": 33502.417935817,
+      "free_bytes": 2863853568
+    },
+    {
+      "monotonic": 33503.418122975,
+      "free_bytes": 2819760128
+    },
+    {
+      "monotonic": 33504.418299041,
+      "free_bytes": 2837716992
+    },
+    {
+      "monotonic": 33505.418499674,
+      "free_bytes": 2825244672
+    },
+    {
+      "monotonic": 33506.418743056,
+      "free_bytes": 2837979136
+    },
+    {
+      "monotonic": 33507.418932425,
+      "free_bytes": 2835550208
+    },
+    {
+      "monotonic": 33508.419117938,
+      "free_bytes": 2858156032
+    },
+    {
+      "monotonic": 33509.419278112,
+      "free_bytes": 2847932416
+    },
+    {
+      "monotonic": 33510.419490015,
+      "free_bytes": 2834956288
+    },
+    {
+      "monotonic": 33511.419734187,
+      "free_bytes": 2841698304
+    },
+    {
+      "monotonic": 33512.419996616,
+      "free_bytes": 2832330752
+    },
+    {
+      "monotonic": 33513.420234448,
+      "free_bytes": 2865889280
+    },
+    {
+      "monotonic": 33514.424127893,
+      "free_bytes": 2903539712
+    },
+    {
+      "monotonic": 33515.424285976,
+      "free_bytes": 2892955648
+    },
+    {
+      "monotonic": 33516.424452077,
+      "free_bytes": 2891247616
+    },
+    {
+      "monotonic": 33517.424917258,
+      "free_bytes": 2882768896
+    },
+    {
+      "monotonic": 33518.425199735,
+      "free_bytes": 2872594432
+    },
+    {
+      "monotonic": 33519.425528175,
+      "free_bytes": 2870693888
+    },
+    {
+      "monotonic": 33520.42814294,
+      "free_bytes": 2875564032
+    },
+    {
+      "monotonic": 33521.428296262,
+      "free_bytes": 2867564544
+    },
+    {
+      "monotonic": 33522.428465341,
+      "free_bytes": 2852950016
+    },
+    {
+      "monotonic": 33523.428670271,
+      "free_bytes": 2837528576
+    },
+    {
+      "monotonic": 33524.428933899,
+      "free_bytes": 2824888320
+    },
+    {
+      "monotonic": 33525.429093494,
+      "free_bytes": 2827452416
+    },
+    {
+      "monotonic": 33526.429280066,
+      "free_bytes": 2810859520
+    },
+    {
+      "monotonic": 33527.429505286,
+      "free_bytes": 2810859520
+    },
+    {
+      "monotonic": 33528.43611714,
+      "free_bytes": 2874998784
+    },
+    {
+      "monotonic": 33529.436326862,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33530.436558404,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33531.436798784,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33532.436985267,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33533.437403586,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33534.437587862,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33535.437871587,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33536.438060379,
+      "free_bytes": 2867068928
+    },
+    {
+      "monotonic": 33537.438316582,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33538.438504022,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33539.438725567,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33540.43892533,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33541.43911665,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33542.439319817,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33543.43952979,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33544.439749628,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33545.439940032,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33546.440132057,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33547.440332264,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33548.440769719,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33549.441043828,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33550.441230865,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33551.441416736,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33552.441623603,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33553.441838898,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33554.442045007,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33555.442235028,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33556.442491694,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33557.442716308,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33558.442931948,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33559.443111965,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33560.443298801,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33561.443517195,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33562.443729544,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33563.443975377,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33564.444159683,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33565.44433805,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33566.448682366,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33567.44884887,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33568.449011473,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33569.449176294,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33570.449341697,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33571.449502258,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33572.449682198,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33573.44984353,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33574.450004999,
+      "free_bytes": 2859921408
+    },
+    {
+      "monotonic": 33575.450171207,
+      "free_bytes": 2867732480
+    },
+    {
+      "monotonic": 33576.450384874,
+      "free_bytes": 2870697984
+    },
+    {
+      "monotonic": 33577.45055556,
+      "free_bytes": 2854559744
+    },
+    {
+      "monotonic": 33578.45079547,
+      "free_bytes": 2824638464
+    },
+    {
+      "monotonic": 33579.450981138,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33580.451201639,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33581.451386882,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33582.451577217,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33583.45178562,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33584.451977638,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33585.45611977,
+      "free_bytes": 2793984000
+    },
+    {
+      "monotonic": 33586.460126334,
+      "free_bytes": 2769321984
+    },
+    {
+      "monotonic": 33587.460388208,
+      "free_bytes": 2744283136
+    },
+    {
+      "monotonic": 33588.460583917,
+      "free_bytes": 2735087616
+    },
+    {
+      "monotonic": 33589.460774378,
+      "free_bytes": 2735087616
+    }
+  ],
+  "exit_code": 0,
+  "free_bytes_after": 2534346752
+}

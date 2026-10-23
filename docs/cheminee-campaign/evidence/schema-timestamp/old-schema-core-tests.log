@@ -1,0 +1,63 @@
+   Compiling proc-macro2 v1.0.106
+   Compiling serde_core v1.0.228
+   Compiling futures-core v0.3.32
+   Compiling memchr v2.8.2
+   Compiling bitpacking v0.9.3
+   Compiling slab v0.4.12
+   Compiling tantivy-bitpacker v0.10.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling quote v1.0.46
+   Compiling foldhash v0.2.0
+   Compiling nom v7.1.3
+   Compiling hashbrown v0.16.1
+   Compiling syn v2.0.118
+   Compiling regex-automata v0.4.14
+   Compiling deranged v0.5.8
+   Compiling serde_json v1.0.150
+   Compiling erased-serde v0.4.10
+   Compiling measure_time v0.9.0
+   Compiling time v0.3.53
+   Compiling tempfile v3.27.0
+   Compiling regex v1.13.0
+   Compiling uuid v1.23.4
+   Compiling darling_core v0.23.0
+   Compiling prettyplease v0.2.37
+   Compiling lru v0.16.4
+   Compiling aho-corasick v1.1.4
+   Compiling serde_derive v1.0.228
+   Compiling async-trait v0.1.89
+   Compiling futures-macro v0.3.32
+   Compiling darling_macro v0.23.0
+   Compiling typetag-impl v0.2.22
+   Compiling darling v0.23.0
+   Compiling bon-macros v3.9.3
+   Compiling futures-util v0.3.32
+   Compiling thiserror-impl v2.0.18
+   Compiling thiserror v2.0.18
+   Compiling futures-channel v0.3.32
+   Compiling smallvec v1.15.2
+   Compiling serde v1.0.228
+   Compiling tantivy-common v0.11.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling tantivy-tokenizer-api v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling tantivy-query-grammar v0.26.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling sketches-ddsketch v0.4.0
+   Compiling tantivy-stacker v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling tantivy-sstable v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling typetag v0.2.22
+   Compiling tantivy-columnar v0.7.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling bon v3.9.3
+   Compiling tantivy v0.26.0 (https://github.com/quickwit-oss/tantivy/?rev=057458b#057458bf)
+   Compiling tantivy-rdkit v0.1.0 (/workspace/quickwit-cheminee-pr3-inspection/quickwit/tantivy-rdkit)
+    Finished `test` profile [unoptimized] target(s) in 22.42s
+     Running tests/composable.rs (target/debug/deps/composable-68db6b975bb1ef30)
+
+running 7 tests
+test containment_directions_thresholds_candidates_and_seek ... ok
+test empty_candidates_preserve_graph_matcher_setup_errors ... ok
+test graph_and_fingerprint_require_columns_only_for_live_candidates ... ok
+test graph_and_fingerprint_errors_are_scoped_to_explicit_candidates ... ok
+test explicit_score_and_id_order_survives_per_split_top_k ... ok
+test graph_checks_only_distinct_live_candidates_and_never_truncates_before_verification ... ok
+test graph_and_fingerprint_ignore_deleted_invalid_values ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+

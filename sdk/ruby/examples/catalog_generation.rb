@@ -1,0 +1,273 @@
+# frozen_string_literal: true
+
+# Single-host importer example, outside the gem. All writers must use this journal.
+# It is not a server alias, distributed lock, durable write fence, or exactly-once API.
+gem 'quickwit-cheminee', ENV.fetch('SDK_EXPECTED_VERSION', '0.9.1.pre.contract1')
+require 'json'
+require 'digest'
+require 'fileutils'
+require 'securerandom'
+require 'set'
+require 'time'
+require 'quickwit-cheminee'
+require 'quickwit-cheminee/exact_search'
+
+class CatalogGeneration
+  class Unsafe < StandardError; end
+  require_relative 'catalog_native_preparation'
+  require_relative 'catalog_partitioned_audit'
+  LEGACY_PROFILE = { 'name' => 'raw-offers-v1' }.freeze
+
+  def self.create(**options)
+    new(**options, create: true)
+  end
+
+  def initialize(api:, directory:, expected_suppliers:, native_preparation: nil, index_heap_size_bytes: nil, create: false)
+    @api = api
+    @directory = File.expand_path(directory)
+    @preparation = NativePreparation.new(native_preparation) unless native_preparation.nil?
+    @profile = @preparation ? @preparation.profile : LEGACY_PROFILE
+    unless index_heap_size_bytes.nil? || (index_heap_size_bytes.is_a?(Integer) && index_heap_size_bytes.positive?)
+      raise Unsafe, 'invalid index heap size'
+    end
+    @index_heap_size_bytes = index_heap_size_bytes
+    @profile = @profile.merge('index_heap_size_bytes' => @index_heap_size_bytes) if @index_heap_size_bytes
+    raise Unsafe, 'invalid supplier scope' unless expected_suppliers.is_a?(Array) && !expected_suppliers.empty? && expected_suppliers.all? { |s| s.is_a?(String) && !s.empty? }
+    @suppliers = expected_suppliers.map { |name| name.dup.freeze }.sort.freeze
+    raise Unsafe, 'duplicate supplier scope' unless @suppliers.uniq == @suppliers
+    if create
+      Dir.mkdir(@directory, 0o700) # Exclusive: never initialize over a lost/partial journal.
+      File.open(File.dirname(@directory), File::RDONLY) { |parent| parent.fsync }
+      File.open(File.join(@directory, 'writer.lock'), File::WRONLY | File::CREAT | File::EXCL, 0o600) { |f| f.fsync }
+      save('scope.json', { 'suppliers' => @suppliers, 'profile' => @profile })
+      save('active.json', { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} })
+      save('identities.json', { 'offers' => {}, 'records' => {} })
+    end
+    locked { } # Opening an existing journal never repairs missing state.
+  end
+
+  def pointer
+    locked { read('active.json') }
+  end
+
+  def verify_active
+    locked do
+      active = read('active.json')
+      generation = active['active'] || raise(Unsafe, 'no active generation')
+      audit(generation_state(generation))
+      active
+    end
+  end
+
+  # manifest: {suppliers: [names], snapshots: [{supplier:, sequence:, complete:,
+  # observed_at:, offers: [{offer_id:, record_id:, smiles:, ...}]}]}
+  # Do not manufacture `complete: true` from a successful HTTP scrape request.
+  def stage(manifest, allow_empty_suppliers: [])
+    normalized = JSON.parse(JSON.generate(manifest))
+    suppliers = normalized.fetch('suppliers').sort
+    snapshots = normalized.fetch('snapshots')
+    raise Unsafe, 'supplier coverage mismatch' unless suppliers == @suppliers && snapshots.map { |s| s.fetch('supplier') }.sort == suppliers
+    raise Unsafe, 'incomplete snapshot' unless snapshots.all? { |s| s['complete'] == true && s['sequence'].is_a?(Integer) && s['sequence'] >= 0 }
+    raise Unsafe, 'invalid empty-supplier override' unless allow_empty_suppliers.is_a?(Array) && (allow_empty_suppliers - @suppliers).empty?
+    records = snapshots.flat_map do |snapshot|
+      observed = Time.iso8601(snapshot.fetch('observed_at')).utc.iso8601(9)
+      raise Unsafe, 'empty supplier snapshot requires reviewed override' if snapshot.fetch('offers').empty? && !allow_empty_suppliers.include?(snapshot['supplier'])
+      snapshot.fetch('offers').map do |offer|
+        raise Unsafe, 'invalid offer identity' unless offer['offer_id'].is_a?(String) && !offer['offer_id'].empty?
+        raise Unsafe, 'invalid structure' unless offer['smiles'].is_a?(String) && !offer['smiles'].empty?
+        raise Unsafe, 'invalid record_id' unless offer['record_id'].is_a?(Integer) && (0..((1 << 64) - 1)).cover?(offer['record_id'])
+        @preparation&.validate_input!(offer)
+        raise Unsafe, 'conflicting offer supplier' if offer.key?('supplier') && offer['supplier'] != snapshot['supplier']
+        if offer.key?('observed_at') && Time.iso8601(offer['observed_at']).utc.iso8601(9) != observed
+          raise Unsafe, 'conflicting offer observed_at'
+        end
+        offer.merge('supplier' => snapshot['supplier'], 'observed_at' => observed)
+      end
+    end
+    raise Unsafe, 'duplicate record_id' unless records.map { |r| r['record_id'] }.uniq.length == records.length
+    raise Unsafe, 'duplicate offer identity' unless records.map { |r| r.values_at('supplier', 'offer_id') }.uniq.length == records.length
+    sequences = snapshots.to_h { |s| [s['supplier'], s['sequence']] }
+    locked do
+      active = read('active.json')
+      raise Unsafe, 'stale source sequence' if sequences.any? { |supplier, sequence| sequence <= active['high_water'].fetch(supplier, -1) }
+      identities = read('identities.json')
+      records.each do |record|
+        key = JSON.generate(record.values_at('supplier', 'offer_id'))
+        id = record['record_id']
+        old_id = identities['offers'][key]
+        old_offer = identities['records'][id.to_s]
+        raise Unsafe, 'offer record_id changed' if old_id && old_id != id
+        raise Unsafe, 'record_id recycled' if old_offer && old_offer != key
+        identities['offers'][key] = id
+        identities['records'][id.to_s] = key
+      end
+      # Reservations survive failed staging, withdrawals and rollback; IDs are never recycled.
+      save('identities.json', identities)
+      generation = "offers-#{SecureRandom.hex(12)}"
+      state = { 'generation' => generation, 'status' => 'creating', 'base_revision' => active['revision'], 'profile' => @profile,
+                'sequences' => sequences, 'records' => records.sort_by { |r| r['record_id'] }, 'batches' => {} }
+      save("#{generation}.json", state)
+      begin
+        @api.create_index(mapping(generation), overwrite: false)
+        state['status'] = 'staging'
+        save("#{generation}.json", state)
+      rescue StandardError
+        state['status'] = 'quarantined'
+        state['quarantine_reason'] ||= 'write acknowledgement or journal outcome unknown'
+        save("#{generation}.json", state)
+        raise
+      end
+      generation
+    end
+  end
+
+  def ingest(generation, batch_id:, record_ids:)
+    locked do
+      state = generation_state(generation)
+      raise Unsafe, 'generation is not writable' unless state['status'] == 'staging'
+      quarantine(state, 'uncertain batch on recovery') if state['batches'].values.any? { |b| b['status'] == 'in_flight' }
+      raise Unsafe, 'invalid batch ID' unless batch_id.is_a?(String) && !batch_id.empty?
+      raise Unsafe, 'invalid batch record IDs' unless record_ids.is_a?(Array)
+      record_ids = record_ids.dup.freeze
+      raise Unsafe, 'invalid batch record IDs' unless record_ids.all? { |id| id.is_a?(Integer) && (0..((1 << 64) - 1)).cover?(id) }
+      selected_ids = record_ids.to_set
+      records = state['records'].select { |r| selected_ids.include?(r['record_id']) }
+      raise Unsafe, 'invalid batch membership' unless selected_ids.length == record_ids.length && records.length == record_ids.length && !records.empty?
+      digest = Digest::SHA256.hexdigest(JSON.generate(records))
+      old = state['batches'][batch_id]
+      if old
+        raise Unsafe, 'batch ID reused with different content' unless old['digest'] == digest
+        return old['ack'] if old['status'] == 'acknowledged'
+        quarantine(state, 'uncertain previous batch')
+      end
+      if state['batches'].values.any? { |batch| batch['record_ids'].any? { |id| selected_ids.include?(id) } }
+        raise Unsafe, 'records already assigned to another batch'
+      end
+      batch = { 'digest' => digest, 'record_ids' => record_ids, 'status' => 'in_flight' }
+      state['batches'][batch_id] = batch
+      save("#{generation}.json", state) # fsync before dispatch; crash here requires quarantine.
+      begin
+        response = @api.ingest(generation, records.map { |r| JSON.generate(r) }.join("\n") + "\n",
+                               commit: 'wait_for', detailed_response: true)
+        unless response.num_ingested_docs == records.length && response.num_rejected_docs == 0
+          quarantine(state, 'partial or unknown acceptance')
+        end
+        batch['ack'] = { 'accepted' => response.num_ingested_docs, 'rejected' => response.num_rejected_docs }
+        batch['status'] = 'acknowledged'
+        save("#{generation}.json", state)
+        batch['ack']
+      rescue StandardError
+        state['status'] = 'quarantined'
+        state['quarantine_reason'] ||= 'write acknowledgement or journal outcome unknown'
+        save("#{generation}.json", state)
+        raise
+      end
+    end
+  end
+
+  def promote(generation)
+    locked do
+      state = generation_state(generation)
+      active = read('active.json')
+      # The fsynced pointer is authoritative after an interrupted publication.
+      if active['active'] == generation && %w[sealed promoted].include?(state['status'])
+        state['status'] = 'promoted'
+        save("#{generation}.json", state)
+        return generation
+      end
+      quarantine(state, 'uncertain batch on recovery') if state['batches'].values.any? { |b| b['status'] != 'acknowledged' }
+      raise Unsafe, 'generation is not promotable' unless %w[staging sealed].include?(state['status'])
+      assigned = state['batches'].values.flat_map { |b| b['record_ids'] }.sort
+      raise Unsafe, 'not all records acknowledged' unless assigned == state['records'].map { |r| r['record_id'] }
+      # Sole-writer lock prevents this importer from appending while auditing.
+      begin
+        audit(state)
+      rescue StandardError
+        quarantine(state, 'generation audit failed')
+      end
+      active = read('active.json')
+      raise Unsafe, 'activation revision changed; build a fresh generation' unless active['revision'] == state['base_revision']
+      raise Unsafe, 'stale source sequence' if state['sequences'].any? { |s, n| n <= active['high_water'].fetch(s, -1) }
+      state['status'] = 'sealed'
+      save("#{generation}.json", state)
+      save('active.json', { 'revision' => active['revision'] + 1, 'active' => generation, 'previous' => active['active'],
+                            'high_water' => active['high_water'].merge(state['sequences']) })
+      state['status'] = 'promoted'
+      save("#{generation}.json", state)
+      generation
+    end
+  end
+
+  def rollback(expected_revision:)
+    locked do
+      active = read('active.json') || raise(Unsafe, 'no active generation')
+      raise Unsafe, 'activation revision changed' unless active['revision'] == expected_revision
+      previous = active['previous'] || raise(Unsafe, 'no retained rollback generation')
+      audit(generation_state(previous))
+      save('active.json', active.merge('revision' => active['revision'] + 1,
+                                      'active' => previous, 'previous' => active['active']))
+      previous # High-water sequences deliberately do not roll back.
+    end
+  end
+
+  private
+
+  def mapping(generation)
+    config = { version: '0.9', index_id: generation, doc_mapping: { mode: 'dynamic',
+      dynamic_mapping: { stored: true }, field_mappings: [{ name: 'record_id', type: 'u64', fast: true, stored: true }] },
+      indexing_settings: { commit_timeout_secs: 1 } }
+    @preparation&.configure_mapping!(config.fetch(:doc_mapping))
+    config[:indexing_settings][:resources] = { heap_size: "#{@index_heap_size_bytes} B" } if @index_heap_size_bytes
+    config
+  end
+
+  def audit(state)
+    PartitionedAudit.new(api: @api, state: state, preparation: @preparation).verify!
+  end
+
+  def generation_state(generation)
+    raise Unsafe, 'invalid generation name' unless /\Aoffers-[0-9a-f]{24}\z/.match?(generation)
+    state = read("#{generation}.json") || raise(Unsafe, 'unknown generation')
+    raise Unsafe, 'generation profile changed' unless state.fetch('profile', LEGACY_PROFILE) == @profile
+    state
+  end
+
+  def quarantine(state, reason)
+    state['status'] = 'quarantined'
+    state['quarantine_reason'] = reason
+    save("#{state['generation']}.json", state)
+    raise Unsafe, reason
+  end
+
+  def locked
+    File.open(File.join(@directory, 'writer.lock'), File::RDWR) do |lock|
+      lock.flock(File::LOCK_EX)
+      %w[scope.json active.json identities.json].each do |name|
+        raise Unsafe, "missing journal file: #{name}" unless File.file?(File.join(@directory, name))
+      end
+      scope = read('scope.json')
+      raise Unsafe, 'supplier scope changed' unless scope.fetch('suppliers') == @suppliers
+      raise Unsafe, 'source profile changed' unless scope.fetch('profile', LEGACY_PROFILE) == @profile
+      active = read('active.json')
+      [active['active'], active['previous']].compact.each { |generation| generation_state(generation) }
+      yield
+    end
+  end
+
+  def read(name)
+    path = File.join(@directory, name)
+    File.file?(path) ? JSON.parse(File.read(path)) : nil
+  end
+
+  def save(name, value)
+    target = File.join(@directory, name)
+    temporary = "#{target}.#{SecureRandom.hex(6)}.tmp"
+    File.open(temporary, File::WRONLY | File::CREAT | File::EXCL, 0o600) do |file|
+      file.write(JSON.generate(value)); file.flush; file.fsync
+    end
+    File.rename(temporary, target)
+    File.open(@directory, File::RDONLY) { |directory| directory.fsync }
+  ensure
+    File.unlink(temporary) if temporary && File.file?(temporary)
+  end
+end

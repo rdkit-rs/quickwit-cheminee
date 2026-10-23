@@ -1,0 +1,23 @@
+{
+  "time_utc": "2026-10-16T14:00:46.967400+00:00",
+  "server_source_commit": "8009925c6b9757edc77ef8e6111309503028e7c5",
+  "runtime_url_inside_native_builder": "http://127.0.0.1:19480",
+  "live_schema_url_inside_native_builder": "http://127.0.0.1:19480/openapi.json",
+  "ruby_proxy_url": "http://172.17.0.2:19980",
+  "live_schema_semantically_equals_export": true,
+  "retained_schema_sha256": "241ce38b4d2af85b0d14843bbb0528651ab0fcd8862200be449a1705aa2347a8",
+  "live_schema_sha256": "59aedb81d5b16c4bde77b6e7456d2194c442c0581c98d24a3582c345545d555a",
+  "files": {
+    "quickwit/target/debug/quickwit": "0f12ffeff21f33173cdc9dbde85646a9466cc077cc50ae70faa81479ee83db29",
+    "quickwit-cheminee-0.9.1.pre.contract1.gem": "43208077f9e1907390e306cff34cd901970c964557d4c6119516f4a4319036a9",
+    "sdk/ruby/examples/catalog_generation.rb": "9103b337f68ed481c0d9de76e24fd3b5a91660d217d1a56c0a7cdfaaaa07a352",
+    "sdk/ruby/examples/catalog_generation_smoke.rb": "c2f776790be2d3ad759a6904c013b46eda6b30a749b9abc38d3ac7fee90e2b6e",
+    "sdk/ruby/generated/provenance.json": "f6d51b82ebfaaac0fe8af2dc2f0b8cdf2bb3aa8a78bf7853f319bd849673751d"
+  },
+  "limitations": [
+    "Debug native build; no reproducible binary claim",
+    "Single-host distributed fixtures, not HA",
+    "Existing HTTP probe has 4 observation-only cases",
+    "No performance measurement in these smoke tests"
+  ]
+}

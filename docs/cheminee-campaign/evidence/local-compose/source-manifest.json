@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-10-16T14:13:51.022472+00:00",
+  "image_id": "sha256:c2805dfb0bae95824a80c7f2296e060b1a30cefa01bf53d8d353e4d5baf76a89",
+  "image_size_bytes": 305602041,
+  "source_sha256": {
+    "docker-compose.yml.example": "3835e9c7ced6ea710090baaa617452934a512036b022635f21b4731381688d60",
+    "distribution/cheminee-local/quickwit.yaml": "310b2bc06c9faec4728f85b24a597837c22cdddc8f70028d8323a60782981d66",
+    "distribution/cheminee-local/smoke.py": "fdaa31bf489d96bc3721f8e5a44288ce31bf5f3dce26f28ca91a32e5612e545d",
+    "distribution/cheminee-local/Dockerfile.runtime": "2a3b0e84bb9c75516880285789438c8a407b3bde925f4b6f381dbdb156ce09dd",
+    "distribution/cheminee-local/README.md": "cbfa1cb8d77895a9218806d8da58bf9170dfcd872bf39eab8180e83107a30cb6",
+    "distribution/cheminee-local/prepare_runtime.py": "64b465850d5c3f888495215e36edd5b6b74086162af437700946c841bca5aa68"
+  },
+  "limitations": [
+    "single reused host, warmed fixture runs",
+    "no Elasticsearch coexistence",
+    "debug build, stripped runtime",
+    "no power loss or HA test"
+  ]
+}

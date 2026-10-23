@@ -1,0 +1,389 @@
+{
+  "time_utc": "2026-10-16T14:06:50.310472+00:00",
+  "scope": "1000 synthetic raw offers; single node, no Elasticsearch; graceful restart only",
+  "stages": [
+    {
+      "phase": "idle",
+      "method": "GET",
+      "elapsed_seconds": 0.004983866001566639
+    },
+    {
+      "phase": "create",
+      "method": "POST",
+      "elapsed_seconds": 0.026806195000972366
+    },
+    {
+      "phase": "import",
+      "method": "POST",
+      "elapsed_seconds": 6.009565304997523
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.02201596900340519
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.018414935999317095
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015631524001946673
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.0197415299990098
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.021698431999539025
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.018066660999465967
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.01732011200147099
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.017765873002645094
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.01888211999903433
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.015278562997991685
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.02390897100121947
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.025423602000955725
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.020907881000312045
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.016130564999912167
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.023250930000358494
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.023095439999451628
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.027695860000676475
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.022848938999231905
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.022954919997573597
+    },
+    {
+      "phase": "query",
+      "method": "POST",
+      "elapsed_seconds": 0.014300790000561392
+    },
+    {
+      "phase": "restart",
+      "method": "GET",
+      "elapsed_seconds": 0.004948423000314506
+    },
+    {
+      "phase": "cleanup",
+      "method": "DELETE",
+      "elapsed_seconds": 0.026247213001624914
+    }
+  ],
+  "memory_samples": [
+    {
+      "phase": "idle",
+      "monotonic": 31003.851158456,
+      "cgroup_current_bytes": 18944000,
+      "cgroup_peak_bytes": 19128320
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31004.427639476,
+      "cgroup_current_bytes": 17289216,
+      "cgroup_peak_bytes": 19128320
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31005.009819662,
+      "cgroup_current_bytes": 17809408,
+      "cgroup_peak_bytes": 19128320
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31005.586412518,
+      "cgroup_current_bytes": 19210240,
+      "cgroup_peak_bytes": 19210240
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31006.173750398,
+      "cgroup_current_bytes": 17600512,
+      "cgroup_peak_bytes": 19210240
+    },
+    {
+      "phase": "idle",
+      "monotonic": 31006.762266071,
+      "cgroup_current_bytes": 17620992,
+      "cgroup_peak_bytes": 19210240
+    },
+    {
+      "phase": "import",
+      "monotonic": 31007.347756007,
+      "cgroup_current_bytes": 19722240,
+      "cgroup_peak_bytes": 20070400
+    },
+    {
+      "phase": "import",
+      "monotonic": 31007.939640748,
+      "cgroup_current_bytes": 19890176,
+      "cgroup_peak_bytes": 20070400
+    },
+    {
+      "phase": "import",
+      "monotonic": 31008.539476304,
+      "cgroup_current_bytes": 19349504,
+      "cgroup_peak_bytes": 20070400
+    },
+    {
+      "phase": "import",
+      "monotonic": 31009.123771559,
+      "cgroup_current_bytes": 19628032,
+      "cgroup_peak_bytes": 20070400
+    },
+    {
+      "phase": "import",
+      "monotonic": 31009.701315134,
+      "cgroup_current_bytes": 21295104,
+      "cgroup_peak_bytes": 21557248
+    },
+    {
+      "phase": "import",
+      "monotonic": 31010.286664774,
+      "cgroup_current_bytes": 20021248,
+      "cgroup_peak_bytes": 21557248
+    },
+    {
+      "phase": "import",
+      "monotonic": 31010.87097913,
+      "cgroup_current_bytes": 27316224,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "import",
+      "monotonic": 31011.444208734,
+      "cgroup_current_bytes": 25927680,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "import",
+      "monotonic": 31012.020526841,
+      "cgroup_current_bytes": 25214976,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "import",
+      "monotonic": 31012.602424454,
+      "cgroup_current_bytes": 25071616,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "query",
+      "monotonic": 31013.187002427,
+      "cgroup_current_bytes": 24461312,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31013.753002473,
+      "cgroup_current_bytes": 26378240,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31014.313851691,
+      "cgroup_current_bytes": 24780800,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31014.889300071,
+      "cgroup_current_bytes": 24727552,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31015.461576563,
+      "cgroup_current_bytes": 24465408,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31016.014648507,
+      "cgroup_current_bytes": 27164672,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31016.582310526,
+      "cgroup_current_bytes": 26054656,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31017.150072437,
+      "cgroup_current_bytes": 24657920,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31017.710044267,
+      "cgroup_current_bytes": 26427392,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31018.269535685,
+      "cgroup_current_bytes": 26161152,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31018.832307309,
+      "cgroup_current_bytes": 25931776,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31019.398917429,
+      "cgroup_current_bytes": 25939968,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31019.986400667,
+      "cgroup_current_bytes": 24584192,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31020.553901204,
+      "cgroup_current_bytes": 24670208,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31021.130353879,
+      "cgroup_current_bytes": 26025984,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31021.692882368,
+      "cgroup_current_bytes": 26034176,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31022.265075137,
+      "cgroup_current_bytes": 24403968,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31022.822016797,
+      "cgroup_current_bytes": 26169344,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31023.392941633,
+      "cgroup_current_bytes": 26206208,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31023.967447879,
+      "cgroup_current_bytes": 24576000,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31024.533229679,
+      "cgroup_current_bytes": 26238976,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31025.101172261,
+      "cgroup_current_bytes": 26255360,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31025.678590376,
+      "cgroup_current_bytes": 24629248,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31026.246130132,
+      "cgroup_current_bytes": 26537984,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "restart",
+      "monotonic": 31026.813901678,
+      "cgroup_current_bytes": 26546176,
+      "cgroup_peak_bytes": 27316224
+    },
+    {
+      "phase": "cleanup",
+      "monotonic": 31027.399274194,
+      "cgroup_current_bytes": 17793024,
+      "cgroup_peak_bytes": 17793024
+    }
+  ],
+  "status": "failed",
+  "image": "sha256:c2805dfb0bae95824a80c7f2296e060b1a30cefa01bf53d8d353e4d5baf76a89",
+  "script_sha256": "74e3c0153e41a124ae328ee7358e400164ee6f4538e600012d193c2546c150bc",
+  "error": "HTTPError: HTTP Error 500: Internal Server Error"
+}

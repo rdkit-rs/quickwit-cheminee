@@ -1,0 +1,45 @@
+2026-10-16 bounded harness validation
+
+Exact clean base restored: a90687162c9037e159781b76e97ec43e0bb3a436.
+Public prerequisite fetched by exact SHA from rdkit-rs/quickwit-cheminee:
+6bf1e29cdbf03409287b2f7d0e59a4c19534d8fa (depth 1; no main checkout).
+Supported Library text read recovered complete 943243-character transfer artifact
+libfile_04c2f50d59fc81919397d3e9def0f5db. Strict base64 and SHA-256 passed:
+bundle e549ae94807b20dde89426edb0bd3b34eee1de9267f8ca0745cc3b9183d3b3f0
+gem 43208077f9e1907390e306cff34cd901970c964557d4c6119516f4a4319036a9
+handoff afc65fdb6d43dba138fcca0b3e3fbb87a2c9dce56ef156810a01d09074047f2b
+git bundle verify passed against the exact prerequisite; advertised HEAD matched.
+Original v5 archive hash was verified by parent; direct download failed here.
+
+Checks performed (all lightweight):
+python3 -m unittest discover -s docs/cheminee-campaign/resource-measurements -p 'test_*.py' -v
+=> 9 tests, OK (mocked admission/readiness; no native runtime)
+python3 -m py_compile distribution/cheminee-local/readiness.py distribution/cheminee-local/smoke.py docs/cheminee-campaign/resource-measurements/run.py
+=> exit 0
+git diff --check
+=> exit 0
+Compose config --format json for base + Elasticsearch override using placeholder
+full image IDs => parsed successfully. Assertions verified pull_policy never,
+loopback port bindings, positive memory limits and CPU limits for both services.
+No Compose up, image pulls or native builds. A checksum-mismatch CLI preflight
+retained status failed, live_measurements pending, before any Docker operations.
+
+Resources observed before download: workspace ~30 GiB free, /tmp ~8.8 GiB free,
+2097002 free workspace inodes. cgroup memory.max 17179869184 bytes;
+cpu.max 400000 100000; no swap reported. After restoration/edits workspace had
+31986655232 bytes available. These are observations, not benchmark measurements
+or admission for a runtime. No VFS containers were created.
+
+Remaining: actual compatible verified runtime artifact, sole-owner resource
+admission, live initial readiness/failure behavior, phase coverage, import/query
+correctness on the runtime, graceful restart, storage/resource observations and
+optional Elasticsearch coexistence. Active ES workloads remain out of scope.
+Packaged gem retained with its older-source attribution, not exercised or edited.
+No Ruby SDK/server/shared CI edits; no publication/push/merge/deployment.
+
+Independent gpt-6-astra max static review completed. Findings addressed: remote
+Docker endpoint mismatch, filesystem admission, provenance-image link, membership
+wait mislabeled as query coverage, late readiness/membership success, final-health
+cadence, helper hash attribution and host-namespace prerequisites. Reviewer supports
+an unexecuted preparation artifact only. No live acceptance claimed. Final small
+post-review changes were inspected and lightweight checks rerun by the author.

@@ -1,0 +1,10 @@
+Ignoring json-3.1.0 because its extensions are not built. Try: gem pristine json --version 3.1.0
+Run options: --seed 42474
+
+# Running:
+
+................
+
+Finished in 0.047186s, 339.0865 runs/s, 1822.5899 assertions/s.
+
+16 runs, 86 assertions, 0 failures, 0 errors, 0 skips

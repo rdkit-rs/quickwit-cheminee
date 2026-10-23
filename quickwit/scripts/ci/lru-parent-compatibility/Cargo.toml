@@ -1,0 +1,30 @@
+[package]
+name = "lru-chitchat-peer"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[package.metadata.cargo-machete]
+# Pins Chitchat's transitive LRU version in both compatibility builds.
+# The harness uses LRU through Chitchat.
+ignored = ["lru"]
+
+# Copy this harness to disposable storage before resolving or building it.
+[workspace]
+
+[[bin]]
+name = "lru-chitchat-peer"
+path = "peer.rs"
+
+[dependencies]
+anyhow = "=1.0.103"
+async-trait = "=0.1.89"
+chitchat = "=0.11.1"
+# Pin the transitive edge to the application baseline in both harness builds.
+lru = "=0.17.0"
+serde_json = "=1.0.150"
+tokio = { version = "=1.52.3", features = ["rt-multi-thread", "macros", "io-std", "io-util", "time"] }
+
+[profile.dev]
+debug = 0
+incremental = false

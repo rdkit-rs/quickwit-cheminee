@@ -34,7 +34,7 @@ const BODY_LENGTH_LIMIT: ByteSize = ByteSize::mib(1);
 // TODO: Make all elastic endpoint models `utoipa` compatible
 // and register them here.
 #[derive(utoipa::OpenApi)]
-#[openapi(paths(elastic_cluster_info_filter,))]
+#[openapi(paths(elastic_cluster_info_filter, elastic_index_search_filter))]
 pub struct ElasticCompatibleApi;
 
 #[utoipa::path(get, tag = "Cluster Info", path = "/_elastic")]
@@ -221,7 +221,29 @@ pub(crate) fn elastic_cat_indices_filter()
         .and(warp::query())
 }
 
-#[utoipa::path(get, tag = "Search", path = "/{index}/_search")]
+/// Search the supported Elasticsearch-style query subset, including composable chemistry.
+///
+/// The JSON is intentionally represented as an open object: the runtime's custom
+/// deserializers validate the supported DSL, not an arbitrary Elasticsearch API.
+/// Partial results are allowed by default. For exhaustive results explicitly set
+/// allow_partial_search_results=false, track_total_hits=true in the body, and
+/// verify _shards.failed==0. relation=eq alone does not prove completeness.
+#[utoipa::path(
+    post,
+    tag = "Search",
+    path = "/_elastic/{index}/_search",
+    request_body(content = Object, description = "JSON search body (maximum 1 MiB). Supported fields include query, from, size, sort, track_total_hits and search_after. Chemistry candidates use typed QueryAst, not Elasticsearch DSL. No arbitrary Elasticsearch compatibility is implied.", content_type = "application/json"),
+    responses(
+        (status = 200, description = "Search response with hits and _shards. May be incomplete when partial results are enabled; preserve and inspect completeness metadata.", body = Object),
+        (status = 400, description = "Invalid or unsupported query.", body = Object),
+        (status = 404, description = "Index not found.", body = Object),
+        (status = 500, description = "Search failure, including a failed split in strict mode.", body = Object)
+    ),
+    params(
+        ("index" = String, Path, description = "Index ID or patterns. Use one immutable generation for stable paging."),
+        ("allow_partial_search_results" = Option<bool>, Query, description = "Defaults to true on the server. Set false for exhaustive search; strict mode rejects scroll.")
+    )
+)]
 pub(crate) fn elastic_index_search_filter()
 -> impl Filter<Extract = (Vec<String>, SearchQueryParams, SearchBody), Error = Rejection> + Clone {
     warp::path!("_elastic" / String / "_search")

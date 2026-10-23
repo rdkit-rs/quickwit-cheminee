@@ -1,0 +1,9 @@
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 16.311s
+
+OK
+{"status": "admitted_dry_run; dependency checks and command not executed", "initial_free_bytes": 3145728, "growth_budget_mib": 2, "reserve_bytes": 1048576}
+{"status": "refused_headroom", "initial_free_bytes": 3145727, "growth_budget_mib": 2, "reserve_bytes": 1048576}
+{"status": "completed", "minimum_observed_free_bytes": 8388608, "maximum_observed_drawdown_bytes": 1048576}
+{"status": "refused_uncalibrated", "initial_free_bytes": 9441267712, "growth_budget_mib": null, "reserve_bytes": 1048576}
