@@ -65,13 +65,61 @@ generation and preserves source high-water sequences. No automatic cleanup is
 provided: retain active, rollback and reader-pinned generations. The smoke script
 alone deletes its own disposable indexes.
 
-The example is bounded to 10,000 offers because its audit uses the adapter's tested
-offset boundary. Audit pages of 100 and a single serialized writer are test choices,
-not benchmark-derived recommendations. There is no cursor, distributed CAS, lease,
-or garbage collection contract here. This example's dynamic mapping preserves raw
-SMILES, salts and stereochemical text; it does **not** configure native chemistry
-preparation. The separate native smoke tests the chemistry query mapping. Integrating
-both mappings and proving refresh safety under node/power loss remain release gates.
+The audit partitions the full u64 `record_id` domain into disjoint inclusive ranges
+containing at most 10,000 expected offers each. Ranges include gaps, zero and u64::MAX;
+sparse IDs above JavaScript's exact-integer range are never converted to floats.
+Each partition has an exact strict count, pages of at most 100, a stable exact total
+on every page, and complete ID/source comparison. Global exact counts bracket the
+audit. The unchanged `ExactSearch` adapter still limits `from + size` to 10,000 per
+request and rejects partial or malformed responses. These ranges provide no cursor
+or snapshot isolation; the immutable-generation/sole-writer assumption still applies.
+
+This removes the previous 10,000-offer staging cap; it does not qualify the journal
+for a large catalog. The full manifest and identity registry remain in memory, and
+the full generation journal is rewritten for each batch. Batch membership uses a
+bounded selected-ID set instead of scanning an ID array for each record. Page size,
+batch size and serialized writes are acceptance choices, not measured tuning advice.
+There is no distributed CAS, lease or garbage collection contract.
+
+## Explicit native preparation profile
+
+The default remains the legacy dynamic raw-source mapping. Existing legacy journals
+open without migration. Native preparation must be selected when creating a fresh
+journal, with the same configuration supplied on every open:
+
+```ruby
+native = {
+  spec: CatalogGeneration::NativePreparation::SPEC,
+  prepared_smiles_field: 'prepared_smiles'
+}
+store = CatalogGeneration.create(api: api, directory: '/data/native-catalog-journal',
+  expected_suppliers: %w[Acme Beta], native_preparation: native,
+  index_heap_size_bytes: 32 * 1024 * 1024)
+```
+
+This narrow profile uses the actual mapper's canonical Cheminee preparation with
+RDKit 2026.09.1, `descriptor_v1: true`, and `descriptor_layout: nested`. It maps raw
+`smiles` separately from stored, fast prepared SMILES; the contract-hashed Morgan
+field uses hex input/output, Pattern uses base64, and all 43 numeric descriptors
+and other descriptor values are stored. A matching `descriptor-v1` server build,
+RDKit libraries and model assets are required. The importer needs no local chemistry
+runtime or external preprocessing. Raw offers alone enter ingestion; callers cannot
+supply any derived fields. Original supplier/offer identity and provenance remain
+separate from normalized structures.
+
+The native audit compares every original offer field exactly and validates the
+complete declared derived structure: prepared SMILES presence, fingerprint encodings
+and widths, descriptor names/numeric types, scaffold IDs and cluster range. It does
+**not** prove that well-shaped derived values are chemically correct. The separate
+acceptance oracle below checks values. Nested source arrays do not imply correlated
+array-element query semantics.
+
+The profile, native specification, prepared field and optional index heap size are
+pinned in both scope and generation journals. Changing them requires a fresh journal
+and generations; opening an existing journal with different settings fails. The
+32 MiB heap above is a bounded acceptance parameter, not measured production sizing.
+Omitting `index_heap_size_bytes` preserves the server default. `verify_active` audits
+the selected active generation without changing the pointer and returns that pointer.
 
 `catalog_generation_smoke.rb` uses real HTTP and synthetic offers. It injects lost
 acknowledgements after actual ingestion, mixed rejects, equal-count duplicate/missing
@@ -85,6 +133,12 @@ It uses real private journal files, process exits and competing local publishers
 with a fake peer whose acceptance/call ledger is shared across child processes.
 No server or indexing heap is needed. This validates importer recovery decisions;
 it does not establish server persistence, chemistry correctness or power-loss safety.
+
+Also run `catalog_partitioned_audit_test.rb` and `catalog_native_preparation_test.rb`
+from this directory. Their fake wire peer covers the exact partition edge, 10,001
+sparse u64 IDs, duplicate/missing/extra/altered records, strict response failures,
+native output shape, profile mismatch, legacy journals, refresh and rollback. These
+tests are importer-policy evidence only; they are not real-server or scale evidence.
 
 - A process exit after sealing but before pointer replacement leaves the old
   pointer active. Recovery can audit and publish if the base revision still matches.
@@ -126,3 +180,52 @@ Scraper JSON strings must be valid UTF-8. JSON 3.1 rejects multibyte UTF-8 bytes
 still tagged `ASCII-8BIT`, before staging creates a server index. Explicitly decode
 using the known source encoding and validate first; never silently replace or drop
 invalid bytes. See the SDK README for safe conversion examples.
+
+## Native HTTP acceptance harness
+
+`catalog_native_smoke.rb` sends 10,001 synthetic offers repeating the 20 small
+structures in `catalog_native_fixture.ndjson`, then refreshes to 10,000 offers with
+one withdrawal and a price change and rolls back. It exercises both sides of the
+10,000-result partition edge, sparse IDs above 2^53, u64::MAX, retained identity
+reservations and sequence high-water checks. It has a ten-minute phase deadline,
+200-row batches, and a pinned 32 MiB index heap. It validates code is loaded from
+the installed gem and checks loaded JSON provenance. No real supplier data is used.
+
+Generate the expected values with the existing `descriptor_audit` example, built
+from the same source using `--features descriptor-v1`:
+
+```sh
+descriptor_audit < sdk/ruby/examples/catalog_native_fixture.ndjson > /tmp/catalog-oracle.ndjson
+# Use the candidate_version from the paired runtime manifest and its installed gem.
+export SDK_EXPECTED_VERSION='candidate-version-from-runtime-manifest'
+export SDK_INSTALL_ROOT=/absolute/path/to/isolated-gem-install
+export GEM_PATH="$SDK_INSTALL_ROOT:$(ruby -e 'puts Gem.path.join(":")')"
+SDK_SMOKE_HOST=127.0.0.1:7280 \
+CATALOG_NATIVE_ORACLE=/tmp/catalog-oracle.ndjson \
+CATALOG_NATIVE_STATE=/tmp/catalog-native-acceptance \
+ruby sdk/ruby/examples/catalog_native_smoke.rb
+```
+
+The state directory must not exist and its parent must exist. The harness leaves its
+synthetic indexes and private journal for its runner to retain or clean up. After a
+graceful server restart using the same data, repeat with `CATALOG_NATIVE_PHASE=verify`
+to check the saved pointer, all active records, derived values and query results.
+After a runner verifies a backup and restores both server data and the full journal
+to fresh locations, use `CATALOG_NATIVE_PHASE=restored` and the restored state path.
+That phase verifies the receipt, explicitly rolls back to the retained refreshed
+generation, and checks its content, identity reservations and unchanged high-water.
+The Ruby harness does not itself create or validate the backup.
+
+The CLI oracle shares native preparation code with the server, so its 20-structure
+comparison proves mapping/transport agreement. The first eight structures also
+match the retained independent Cheminee golden fixture. Integer descriptors and
+fingerprints compare exactly; floating descriptors permit at most one ULP, matching
+the existing descriptor REST acceptance's JSON round-trip allowance. Small facade
+queries check curated identity/substructure memberships and similarity scores
+computed directly from retained Cheminee golden fingerprint bits. These are explicit
+truth sources, not expectations copied from a server query response.
+
+Writing this harness or passing fake-peer tests does not establish a native HTTP
+pass. Its result must come from an actual native server and matching installed gem.
+The 10,001 repeated synthetic offers are not a representative 100k catalog test,
+kind/object-store evidence, a performance result, HA, or node/power-loss durability.

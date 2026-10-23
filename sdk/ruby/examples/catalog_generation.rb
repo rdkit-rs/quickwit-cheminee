@@ -7,21 +7,31 @@ require 'json'
 require 'digest'
 require 'fileutils'
 require 'securerandom'
+require 'set'
 require 'time'
 require 'quickwit-cheminee'
 require 'quickwit-cheminee/exact_search'
 
 class CatalogGeneration
   class Unsafe < StandardError; end
-  MAX_AUDIT_DOCS = 10_000 # Current ExactSearch offset safety bound, not a tuning recommendation.
+  require_relative 'catalog_native_preparation'
+  require_relative 'catalog_partitioned_audit'
+  LEGACY_PROFILE = { 'name' => 'raw-offers-v1' }.freeze
 
   def self.create(**options)
     new(**options, create: true)
   end
 
-  def initialize(api:, directory:, expected_suppliers:, create: false)
+  def initialize(api:, directory:, expected_suppliers:, native_preparation: nil, index_heap_size_bytes: nil, create: false)
     @api = api
     @directory = File.expand_path(directory)
+    @preparation = NativePreparation.new(native_preparation) unless native_preparation.nil?
+    @profile = @preparation ? @preparation.profile : LEGACY_PROFILE
+    unless index_heap_size_bytes.nil? || (index_heap_size_bytes.is_a?(Integer) && index_heap_size_bytes.positive?)
+      raise Unsafe, 'invalid index heap size'
+    end
+    @index_heap_size_bytes = index_heap_size_bytes
+    @profile = @profile.merge('index_heap_size_bytes' => @index_heap_size_bytes) if @index_heap_size_bytes
     raise Unsafe, 'invalid supplier scope' unless expected_suppliers.is_a?(Array) && !expected_suppliers.empty? && expected_suppliers.all? { |s| s.is_a?(String) && !s.empty? }
     @suppliers = expected_suppliers.map { |name| name.dup.freeze }.sort.freeze
     raise Unsafe, 'duplicate supplier scope' unless @suppliers.uniq == @suppliers
@@ -29,7 +39,7 @@ class CatalogGeneration
       Dir.mkdir(@directory, 0o700) # Exclusive: never initialize over a lost/partial journal.
       File.open(File.dirname(@directory), File::RDONLY) { |parent| parent.fsync }
       File.open(File.join(@directory, 'writer.lock'), File::WRONLY | File::CREAT | File::EXCL, 0o600) { |f| f.fsync }
-      save('scope.json', { 'suppliers' => @suppliers })
+      save('scope.json', { 'suppliers' => @suppliers, 'profile' => @profile })
       save('active.json', { 'revision' => 0, 'active' => nil, 'previous' => nil, 'high_water' => {} })
       save('identities.json', { 'offers' => {}, 'records' => {} })
     end
@@ -38,6 +48,15 @@ class CatalogGeneration
 
   def pointer
     locked { read('active.json') }
+  end
+
+  def verify_active
+    locked do
+      active = read('active.json')
+      generation = active['active'] || raise(Unsafe, 'no active generation')
+      audit(generation_state(generation))
+      active
+    end
   end
 
   # manifest: {suppliers: [names], snapshots: [{supplier:, sequence:, complete:,
@@ -57,6 +76,7 @@ class CatalogGeneration
         raise Unsafe, 'invalid offer identity' unless offer['offer_id'].is_a?(String) && !offer['offer_id'].empty?
         raise Unsafe, 'invalid structure' unless offer['smiles'].is_a?(String) && !offer['smiles'].empty?
         raise Unsafe, 'invalid record_id' unless offer['record_id'].is_a?(Integer) && (0..((1 << 64) - 1)).cover?(offer['record_id'])
+        @preparation&.validate_input!(offer)
         raise Unsafe, 'conflicting offer supplier' if offer.key?('supplier') && offer['supplier'] != snapshot['supplier']
         if offer.key?('observed_at') && Time.iso8601(offer['observed_at']).utc.iso8601(9) != observed
           raise Unsafe, 'conflicting offer observed_at'
@@ -64,7 +84,6 @@ class CatalogGeneration
         offer.merge('supplier' => snapshot['supplier'], 'observed_at' => observed)
       end
     end
-    raise Unsafe, 'audit exceeds tested offset boundary' if records.length > MAX_AUDIT_DOCS
     raise Unsafe, 'duplicate record_id' unless records.map { |r| r['record_id'] }.uniq.length == records.length
     raise Unsafe, 'duplicate offer identity' unless records.map { |r| r.values_at('supplier', 'offer_id') }.uniq.length == records.length
     sequences = snapshots.to_h { |s| [s['supplier'], s['sequence']] }
@@ -85,7 +104,7 @@ class CatalogGeneration
       # Reservations survive failed staging, withdrawals and rollback; IDs are never recycled.
       save('identities.json', identities)
       generation = "offers-#{SecureRandom.hex(12)}"
-      state = { 'generation' => generation, 'status' => 'creating', 'base_revision' => active['revision'],
+      state = { 'generation' => generation, 'status' => 'creating', 'base_revision' => active['revision'], 'profile' => @profile,
                 'sequences' => sequences, 'records' => records.sort_by { |r| r['record_id'] }, 'batches' => {} }
       save("#{generation}.json", state)
       begin
@@ -111,8 +130,9 @@ class CatalogGeneration
       raise Unsafe, 'invalid batch record IDs' unless record_ids.is_a?(Array)
       record_ids = record_ids.dup.freeze
       raise Unsafe, 'invalid batch record IDs' unless record_ids.all? { |id| id.is_a?(Integer) && (0..((1 << 64) - 1)).cover?(id) }
-      records = state['records'].select { |r| record_ids.include?(r['record_id']) }
-      raise Unsafe, 'invalid batch membership' unless record_ids.uniq.length == record_ids.length && records.length == record_ids.length && !records.empty?
+      selected_ids = record_ids.to_set
+      records = state['records'].select { |r| selected_ids.include?(r['record_id']) }
+      raise Unsafe, 'invalid batch membership' unless selected_ids.length == record_ids.length && records.length == record_ids.length && !records.empty?
       digest = Digest::SHA256.hexdigest(JSON.generate(records))
       old = state['batches'][batch_id]
       if old
@@ -120,8 +140,9 @@ class CatalogGeneration
         return old['ack'] if old['status'] == 'acknowledged'
         quarantine(state, 'uncertain previous batch')
       end
-      prior_ids = state['batches'].values.flat_map { |b| b['record_ids'] }
-      raise Unsafe, 'records already assigned to another batch' unless (prior_ids & record_ids).empty?
+      if state['batches'].values.any? { |batch| batch['record_ids'].any? { |id| selected_ids.include?(id) } }
+        raise Unsafe, 'records already assigned to another batch'
+      end
       batch = { 'digest' => digest, 'record_ids' => record_ids, 'status' => 'in_flight' }
       state['batches'][batch_id] = batch
       save("#{generation}.json", state) # fsync before dispatch; crash here requires quarantine.
@@ -192,24 +213,23 @@ class CatalogGeneration
   private
 
   def mapping(generation)
-    { version: '0.9', index_id: generation, doc_mapping: { mode: 'dynamic',
+    config = { version: '0.9', index_id: generation, doc_mapping: { mode: 'dynamic',
       dynamic_mapping: { stored: true }, field_mappings: [{ name: 'record_id', type: 'u64', fast: true, stored: true }] },
       indexing_settings: { commit_timeout_secs: 1 } }
+    @preparation&.configure_mapping!(config.fetch(:doc_mapping))
+    config[:indexing_settings][:resources] = { heap_size: "#{@index_heap_size_bytes} B" } if @index_heap_size_bytes
+    config
   end
 
   def audit(state)
-    exact = QuickwitCheminee::ExactSearch.new(api: @api, generation: state['generation'])
-    query = { match_all: {} }
-    raise Unsafe, 'published count mismatch' unless exact.count(query: query) == state['records'].length
-    actual = (0...state['records'].length).step(100).flat_map do |offset|
-      exact.search(query: query, limit: [100, state['records'].length - offset].min, offset: offset, order: :record_id)[:hits][:hits].map { |hit| JSON.parse(JSON.generate(hit[:_source])) }
-    end
-    raise Unsafe, 'offer membership or contents differ' unless actual == state['records']
+    PartitionedAudit.new(api: @api, state: state, preparation: @preparation).verify!
   end
 
   def generation_state(generation)
     raise Unsafe, 'invalid generation name' unless /\Aoffers-[0-9a-f]{24}\z/.match?(generation)
-    read("#{generation}.json") || raise(Unsafe, 'unknown generation')
+    state = read("#{generation}.json") || raise(Unsafe, 'unknown generation')
+    raise Unsafe, 'generation profile changed' unless state.fetch('profile', LEGACY_PROFILE) == @profile
+    state
   end
 
   def quarantine(state, reason)
@@ -225,7 +245,9 @@ class CatalogGeneration
       %w[scope.json active.json identities.json].each do |name|
         raise Unsafe, "missing journal file: #{name}" unless File.file?(File.join(@directory, name))
       end
-      raise Unsafe, 'supplier scope changed' unless read('scope.json').fetch('suppliers') == @suppliers
+      scope = read('scope.json')
+      raise Unsafe, 'supplier scope changed' unless scope.fetch('suppliers') == @suppliers
+      raise Unsafe, 'source profile changed' unless scope.fetch('profile', LEGACY_PROFILE) == @profile
       active = read('active.json')
       [active['active'], active['previous']].compact.each { |generation| generation_state(generation) }
       yield
